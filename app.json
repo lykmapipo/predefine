@@ -1,0 +1,34 @@
+{
+  "name": "predefine",
+  "description": "A representation of stored and retrieved information that does not qualify to belongs to their own domain model.",
+  "repository": "https://github.com/lykmapipo/predefine.git",
+  "keywords": [
+    "lykmapipo",
+    "mongoose",
+    "mongoose-module",
+    "predefined",
+    "predefine",
+    "settings",
+    "config",
+    "env",
+    "preference"
+  ],
+  "addons": [
+    "mongolab"
+  ],
+  "env":
+  {
+    "RUNTIME_ENV":
+    {
+      "value": "heroku"
+    },
+    "NPM_CONFIG_PRODUCTION":
+    {
+      "value": "false"
+    },
+    "YARN_PRODUCTION":
+    {
+      "value": "false"
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "name": "@lykmapipo/predefine",
+  "version": "0.1.0",
+  "description": "A representation of stored and retrieved information that does not qualify to belongs to their own domain model.",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test",
+    "integration:test": "grunt integration",
+    "http:test": "grunt http",
+    "unit:test": "grunt unit",
+    "doc": "grunt doc",
+    "dev": "npm run seed && npm run start",
+    "start": "BASE_PATH=./examples node ./examples/app.js",
+    "seed": "BASE_PATH=./examples node ./examples/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lykmapipo/predefine.git"
+  },
+  "keywords": [
+    "lykmapipo",
+    "mongoose",
+    "mongoose-module",
+    "predefined",
+    "predefine",
+    "settings",
+    "config",
+    "env",
+    "preference"
+  ],
+  "contributors": [
+    {
+      "name": "lykmapipo",
+      "email": "lallyelias87@gmail.com",
+      "url": "https://github.com/lykmapipo"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lykmapipo/predefine/issues",
+    "email": "lallyelias87@gmail.com"
+  },
+  "homepage": "https://github.com/lykmapipo/predefine",
+  "devDependencies": {
+    "@benmaruchu/faker": "^4.2.1",
+    "@codetanzania/majifix-common": "^0.11.1",
+    "@lykmapipo/mongoose-test-helpers": "^0.3.0",
+    "chai": "^4.2.0",
+    "grunt": "^1.0.3",
+    "grunt-apidoc": "^0.11.0",
+    "grunt-contrib-jshint": "^2.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-mocha-test": "^0.13.3",
+    "jshint-stylish": "^2.2.1",
+    "mocha": "^6.0.2",
+    "mongoose": ">=5.4.19",
+    "sinon": "^7.2.7",
+    "sinon-chai": "^3.3.0",
+    "sinon-mongoose": "^2.2.1",
+    "supertest": "^4.0.0"
+  },
+  "peerDependencies": {
+    "mongoose": ">=5.4.19"
+  },
+  "dependencies": {
+    "@lykmapipo/common": ">=0.8.0",
+    "@lykmapipo/env": ">=0.6.1",
+    "@lykmapipo/express-common": ">=0.12.1",
+    "@lykmapipo/include": ">=0.2.0",
+    "@lykmapipo/mongoose-common": ">=0.12.0",
+    "async": ">=2.6.2",
+    "lodash": ">=4.17.11",
+    "mongoose-geojson-schemas": ">=0.10.1",
+    "mongoose-rest-actions": ">=0.23.1",
+    "randomcolor": ">=0.5.4"
+  },
+  "engines": {
+    "node": ">=8.11.1",
+    "npm": ">=5.6.0"
+  }
+}
