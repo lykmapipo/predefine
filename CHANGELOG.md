@@ -1,3 +1,9 @@
+#### 0.1.1 (2019-03-15)
+
+##### New Features
+
+*  allow post http verb ([60267802](https://github.com/lykmapipo/predefine/commit/60267802285d8e16fd72b56ca8ab3e5bb67137b1))
+
 #### 0.1.0 (2019-03-14)
 
 ##### New Features
