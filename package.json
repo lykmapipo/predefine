@@ -44,7 +44,7 @@
   "devDependencies": {
     "@benmaruchu/faker": "^4.2.1",
     "@codetanzania/majifix-common": "^0.12.1",
-    "@lykmapipo/express-test-helpers": "^0.1.1",
+    "@lykmapipo/express-test-helpers": "^0.1.2",
     "@lykmapipo/mongoose-test-helpers": "^0.5.4",
     "chai": "^4.2.0",
     "grunt": "^1.0.4",
@@ -66,7 +66,7 @@
   "dependencies": {
     "@lykmapipo/common": ">=0.17.2",
     "@lykmapipo/env": ">=0.7.4",
-    "@lykmapipo/express-rest-actions": ">=0.1.0",
+    "@lykmapipo/express-rest-actions": ">=0.1.1",
     "@lykmapipo/include": ">=0.2.2",
     "@lykmapipo/mongoose-common": ">=0.22.0",
     "async": ">=2.6.2",

@@ -23,7 +23,6 @@
 const { pkg } = require('@lykmapipo/common');
 const { include } = require('@lykmapipo/include');
 const { apiVersion } = require('@lykmapipo/env');
-const app = require('@lykmapipo/express-common');
 const Predefine = include(__dirname, 'lib', 'predefine.model');
 const predefineRouter = include(__dirname, 'lib', 'predefine.http.router');
 
@@ -77,21 +76,3 @@ exports.predefineRouter = predefineRouter;
  * @version 0.1.0
  */
 exports.apiVersion = apiVersion();
-
-
-/**
- * @name app
- * @description express app
- * @type {Object}
- *
- * @author lally elias <lallyelias87@gmail.com>
- * @since 0.1.0
- * @version 0.1.0
- */
-Object.defineProperty(exports, 'app', {
-  get() {
-    /* @todo bind oauth middlewares authenticate, token, authorize */
-    app.mount(predefineRouter);
-    return app;
-  }
-});

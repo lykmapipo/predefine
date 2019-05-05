@@ -4,7 +4,8 @@
 /* dependencies */
 const { connect } = require('@lykmapipo/mongoose-common');
 const { include } = require('@lykmapipo/include');
-const { info, app } = include(__dirname, '..');
+const { app, mount, start } = require('@lykmapipo/express-common');
+const { info, predefineRouter } = include(__dirname, '..');
 
 
 // establish mongodb connection
@@ -18,8 +19,11 @@ connect(error => {
     response.json(info);
   });
 
+  // mount router
+  mount(predefineRouter);
+
   // fire the app
-  app.start((error, env) => {
+  start((error, env) => {
     // re-throw if error
     if (error) { throw error; }
 
