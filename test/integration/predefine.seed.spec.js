@@ -53,7 +53,7 @@ describe('Predefine Seed', () => {
   });
 
   it('should seed provided', (done) => {
-    const seed = { namespace: 'Predefine', key: 'purge', value: 'purge' };
+    const seed = { key: 'purge', value: 'purge' };
     Predefine.seed(seed, (error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -64,7 +64,7 @@ describe('Predefine Seed', () => {
   });
 
   it('should seed provided', (done) => {
-    const seed = { namespace: 'Predefine', key: 'purge', value: 'purge' };
+    const seed = { key: 'purge', value: 'purge' };
     Predefine.seed([seed], (error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -75,8 +75,8 @@ describe('Predefine Seed', () => {
   });
 
   it('should seed provided', (done) => {
-    const seed = 'Predefine';
-    const _seed = { namespace: 'Predefine', key: 'purge', value: 'purge' };
+    const seed = 'Setting';
+    const _seed = { key: 'purge', value: 'purge' };
     Predefine.seed([seed, _seed], (error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -88,7 +88,7 @@ describe('Predefine Seed', () => {
   });
 
   it('should not throw if provided exist', (done) => {
-    const seed = { namespace: 'Predefine', key: 'purge', value: 'purge' };
+    const seed = { key: 'purge', value: 'purge' };
     Predefine.seed(seed, (error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
