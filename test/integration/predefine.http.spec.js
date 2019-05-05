@@ -5,7 +5,12 @@
 const { expect } = require('chai');
 const { include } = require('@lykmapipo/include');
 const request = require('supertest');
-const { Predefine, apiVersion, app } = include(__dirname, '..', '..');
+const { app, mount } = require('@lykmapipo/express-common');
+const {
+  Predefine,
+  apiVersion,
+  predefineRouter
+} = include(__dirname, '..', '..');
 
 
 describe('Predefine Rest API', function () {
@@ -23,6 +28,8 @@ describe('Predefine Rest API', function () {
       done(error, created);
     });
   });
+
+  mount(predefineRouter);
 
   it('should handle HTTP GET on /predefines', (done) => {
     request(app)
