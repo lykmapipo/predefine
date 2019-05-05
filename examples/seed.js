@@ -8,7 +8,6 @@ const { include } = require('@lykmapipo/include');
 const { connect } = require('@lykmapipo/mongoose-common');
 const { Predefine } = include(__dirname, '..');
 
-
 // naive logger
 const log = (stage, error, result) => {
   if (error) {
