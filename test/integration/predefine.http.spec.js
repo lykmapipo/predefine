@@ -2,137 +2,122 @@
 
 
 /* dependencies */
-const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
-const request = require('supertest');
-const { app, mount } = require('@lykmapipo/express-common');
 const {
-  Predefine,
-  apiVersion,
-  predefineRouter
-} = include(__dirname, '..', '..');
+  clear: clearHttp,
+  expect,
+  testRouter,
+} = require('@lykmapipo/express-test-helpers');
+const { Predefine, predefineRouter } = include(__dirname, '..', '..');
 
 
 describe('Predefine Rest API', function () {
 
-  let predefine;
+  let predefine = Predefine.fake();
+
+  before(() => clearHttp());
 
   before((done) => {
     Predefine.deleteMany(done);
   });
 
-  before((done) => {
-    predefine = Predefine.fake();
-    predefine.post((error, created) => {
-      predefine = created;
-      done(error, created);
-    });
-  });
-
-  mount(predefineRouter);
-
-  it('should handle HTTP GET on /predefines', (done) => {
-    request(app)
-      .get(`/${apiVersion}/predefines`)
-      .set('Accept', 'application/json')
-      .expect(200)
+  it('should handle HTTP POST on /predefines', (done) => {
+    const { testPost } = testRouter('predefines', predefineRouter);
+    testPost(predefine.toObject())
+      .expect(201)
       .expect('Content-Type', /json/)
-      .end((error, response) => {
+      .end((error, { body }) => {
         expect(error).to.not.exist;
-        expect(response).to.exist;
-
-        //assert payload
-        const result = response.body;
-        expect(result.data).to.exist;
-        expect(result.total).to.exist;
-        expect(result.limit).to.exist;
-        expect(result.skip).to.exist;
-        expect(result.page).to.exist;
-        expect(result.pages).to.exist;
-        expect(result.lastModified).to.exist;
-        done(error, response);
+        expect(body).to.exist;
+        const created = new Predefine(body);
+        expect(created._id).to.exist.and.be.eql(predefine._id);
+        expect(created.name).to.exist.and.be.eql(predefine.name);
+        done(error, body);
       });
   });
 
-  it('should handle HTTP GET on /predefines/id:', (done) => {
-    request(app)
-      .get(`/${apiVersion}/predefines/${predefine._id}`)
-      .set('Accept', 'application/json')
+  it('should handle HTTP GET on /predefines', (done) => {
+    const { testGet } = testRouter('predefines', predefineRouter);
+    testGet()
       .expect(200)
-      .end((error, response) => {
+      .expect('Content-Type', /json/)
+      .end((error, { body }) => {
         expect(error).to.not.exist;
-        expect(response).to.exist;
+        expect(body).to.exist;
+        expect(body.data).to.exist;
+        expect(body.total).to.exist;
+        expect(body.limit).to.exist;
+        expect(body.skip).to.exist;
+        expect(body.page).to.exist;
+        expect(body.pages).to.exist;
+        expect(body.lastModified).to.exist;
+        done(error, body);
+      });
+  });
 
-        const found = new Predefine(response.body);
-
-        expect(found._id).to.exist;
-        expect(found._id).to.be.eql(predefine._id);
-        expect(found.value).to.be.equal(predefine.value);
-
-        done(error, response);
+  it('should handle HTTP GET on /predefines/:id', (done) => {
+    const { testGet } = testRouter('predefines', predefineRouter);
+    testGet(predefine._id.toString())
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((error, { body }) => {
+        expect(error).to.not.exist;
+        expect(body).to.exist;
+        const found = new Predefine(body);
+        expect(found._id).to.exist.and.be.eql(predefine._id);
+        expect(found.name).to.exist.and.be.eql(predefine.name);
+        done(error, body);
       });
   });
 
   it('should handle HTTP PATCH on /predefines/id:', (done) => {
-    const { name } = predefine.fakeOnly('name');
-    request(app)
-      .patch(`/${apiVersion}/predefines/${predefine._id}`)
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .send({ name })
+    const { testPatch } = testRouter('predefines', predefineRouter);
+    const { description } = predefine.fakeOnly('description');
+    testPatch(predefine._id.toString(), { description })
       .expect(200)
-      .end((error, response) => {
+      .expect('Content-Type', /json/)
+      .end((error, { body }) => {
         expect(error).to.not.exist;
-        expect(response).to.exist;
-
-        const patched = new Predefine(response.body);
-
-        expect(patched._id).to.exist;
-        expect(patched._id).to.be.eql(predefine._id);
-        expect(patched.value).to.be.equal(predefine.value);
-
-        //set
-        predefine = patched;
-
-        done(error, response);
+        expect(body).to.exist;
+        const patched = new Predefine(body);
+        expect(patched._id).to.exist.and.be.eql(predefine._id);
+        expect(patched.name).to.exist.and.be.eql(predefine.name);
+        done(error, body);
       });
   });
 
   it('should handle HTTP PUT on /predefines/id:', (done) => {
-    const { name } = predefine.fakeOnly('name');
-    request(app)
-      .put(`/${apiVersion}/predefines/${predefine._id}`)
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .send({ name })
+    const { testPut } = testRouter('predefines', predefineRouter);
+    const { description } = predefine.fakeOnly('description');
+    testPut(predefine._id.toString(), { description })
       .expect(200)
-      .end((error, response) => {
+      .expect('Content-Type', /json/)
+      .end((error, { body }) => {
         expect(error).to.not.exist;
-        expect(response).to.exist;
-
-        const updated = new Predefine(response.body);
-
-        expect(updated._id).to.exist;
-        expect(updated._id).to.be.eql(predefine._id);
-        expect(updated.value).to.be.equal(predefine.value);
-
-        //set
-        predefine = updated;
-
-        done(error, response);
+        expect(body).to.exist;
+        const patched = new Predefine(body);
+        expect(patched._id).to.exist.and.be.eql(predefine._id);
+        expect(patched.name).to.exist.and.be.eql(predefine.name);
+        done(error, body);
       });
   });
 
   it('should handle HTTP DELETE on /predefines/id:', (done) => {
-    request(app)
-      .delete(`/${apiVersion}/predefines/${predefine._id}`)
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .expect(405)
-      .end((error, response) => {
-        done(null, response);
+    const { testDelete } = testRouter('predefines', predefineRouter);
+    testDelete(predefine._id.toString())
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((error, { body }) => {
+        expect(error).to.not.exist;
+        expect(body).to.exist;
+        const patched = new Predefine(body);
+        expect(patched._id).to.exist.and.be.eql(predefine._id);
+        expect(patched.name).to.exist.and.be.eql(predefine.name);
+        done(error, body);
       });
   });
+
+  after(() => clearHttp());
 
   after((done) => {
     Predefine.deleteMany(done);
