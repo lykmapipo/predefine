@@ -69,6 +69,7 @@
     "@lykmapipo/express-rest-actions": ">=0.4.1",
     "@lykmapipo/include": ">=0.2.3",
     "@lykmapipo/mongoose-common": ">=0.23.0",
+    "@lykmapipo/mongoose-exportable": ">=0.3.1",
     "async": ">=2.6.2",
     "lodash": ">=4.17.11",
     "mongoose-geojson-schemas": ">=0.10.4",
