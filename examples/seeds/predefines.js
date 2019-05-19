@@ -1,7 +1,14 @@
 'use strict';
 
 module.exports = exports = [{
-  namespace: 'Setting',
-  key: 'DATE_FORMAT',
-  value: 'YYYY-MM-DD'
+  namespace: 'Currency',
+  name: 'US Dollar',
+  code: 'USD'
+  abbreviation: 'USD',
+  symbol: '$'
+}, {
+  namespace: 'Unit',
+  name: 'Kilogram',
+  code: 'Kg'
+  abbreviation: 'Kg'
 }];
