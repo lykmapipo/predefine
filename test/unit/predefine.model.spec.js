@@ -17,7 +17,7 @@ describe('Predefine Instance', () => {
     expect(predefine.preValidate.name).to.be.equal('preValidate');
   });
 
-  it('should set abbreviation on pre validate', (done) => {
+  it('should set abbreviation on pre validate', done => {
     const predefine = Predefine.fakeExcept('abbreviation');
 
     expect(predefine.abbreviation).to.not.exist;
@@ -31,7 +31,7 @@ describe('Predefine Instance', () => {
 
 describe('Predefine Validations', () => {
 
-  it('should throw if no name', (done) => {
+  it('should throw if no name', done => {
     const predefine = Predefine.fakeOnly('description');
     predefine.validate((error) => {
       expect(error).to.exist;
