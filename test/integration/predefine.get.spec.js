@@ -10,20 +10,20 @@ const { Predefine } = include(__dirname, '..', '..');
 
 describe('Predefine Get', () => {
 
-  before((done) => {
+  before(done => {
     Predefine.deleteMany(done);
   });
 
   let predefines = Predefine.fake(32);
 
-  before((done) => {
+  before(done => {
     Predefine.insertMany(predefines, (error, created) => {
       predefines = created;
       done(error, created);
     });
   });
 
-  it('should be able to get without options', (done) => {
+  it('should be able to get without options', done => {
     Predefine.get((error, results) => {
       expect(error).to.not.exist;
       expect(results).to.exist;
@@ -46,7 +46,7 @@ describe('Predefine Get', () => {
     });
   });
 
-  it('should be able to get with options', (done) => {
+  it('should be able to get with options', done => {
     const options = { page: 1, limit: 20 };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
@@ -70,7 +70,7 @@ describe('Predefine Get', () => {
     });
   });
 
-  it('should be able to search with options', (done) => {
+  it('should be able to search with options', done => {
     const options = { filter: { q: predefines[0].name } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
@@ -94,7 +94,7 @@ describe('Predefine Get', () => {
     });
   });
 
-  it('should parse filter options', (done) => {
+  it('should parse filter options', done => {
     const options = { filter: { name: predefines[0].name } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
@@ -118,7 +118,7 @@ describe('Predefine Get', () => {
     });
   });
 
-  after((done) => {
+  after(done => {
     Predefine.deleteMany(done);
   });
 

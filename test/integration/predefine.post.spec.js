@@ -9,13 +9,13 @@ const { Predefine } = include(__dirname, '..', '..');
 
 describe('Predefine Static Post', () => {
 
-  before((done) => {
+  before(done => {
     Predefine.deleteMany(done);
   });
 
   let predefine = Predefine.fake();
 
-  it('should be able to post', (done) => {
+  it('should be able to post', done => {
     Predefine.post(predefine, (error, created) => {
       expect(error).to.not.exist;
       expect(created).to.exist;
@@ -25,7 +25,7 @@ describe('Predefine Static Post', () => {
     });
   });
 
-  after((done) => {
+  after(done => {
     Predefine.deleteMany(done);
   });
 
@@ -33,13 +33,13 @@ describe('Predefine Static Post', () => {
 
 describe('Predefine Instance Post', () => {
 
-  before((done) => {
+  before(done => {
     Predefine.deleteMany(done);
   });
 
   let predefine = Predefine.fake();
 
-  it('should be able to post', (done) => {
+  it('should be able to post', done => {
     predefine.post((error, created) => {
       expect(error).to.not.exist;
       expect(created).to.exist;
@@ -49,7 +49,7 @@ describe('Predefine Instance Post', () => {
     });
   });
 
-  after((done) => {
+  after(done => {
     Predefine.deleteMany(done);
   });
 

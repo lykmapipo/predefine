@@ -10,20 +10,20 @@ const { Predefine } = include(__dirname, '..', '..');
 
 describe('Predefine getById', () => {
 
-  before((done) => {
+  before(done => {
     Predefine.deleteMany(done);
   });
 
   let predefine = Predefine.fake();
 
-  before((done) => {
+  before(done => {
     predefine.post((error, created) => {
       predefine = created;
       done(error, created);
     });
   });
 
-  it('should be able to get an instance', (done) => {
+  it('should be able to get an instance', done => {
     Predefine.getById(predefine._id, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist;
@@ -32,7 +32,7 @@ describe('Predefine getById', () => {
     });
   });
 
-  it('should be able to get with options', (done) => {
+  it('should be able to get with options', done => {
     const options = {
       _id: predefine._id,
       select: 'name'
@@ -60,7 +60,7 @@ describe('Predefine getById', () => {
 
   });
 
-  it('should throw if not exists', (done) => {
+  it('should throw if not exists', done => {
     const predefine = Predefine.fake();
     Predefine.getById(predefine._id, (error, found) => {
       expect(error).to.exist;
@@ -71,7 +71,7 @@ describe('Predefine getById', () => {
     });
   });
 
-  after((done) => {
+  after(done => {
     Predefine.deleteMany(done);
   });
 

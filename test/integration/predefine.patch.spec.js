@@ -10,20 +10,20 @@ const { Predefine } = include(__dirname, '..', '..');
 
 describe('Predefine Static Patch', () => {
 
-  before((done) => {
+  before(done => {
     Predefine.deleteMany(done);
   });
 
   let predefine = Predefine.fake();
 
-  before((done) => {
+  before(done => {
     predefine.post((error, created) => {
       predefine = created;
       done(error, created);
     });
   });
 
-  it('should be able to patch', (done) => {
+  it('should be able to patch', done => {
     predefine = predefine.fakeOnly('description');
     Predefine.patch(predefine._id, predefine, (error, updated) => {
       expect(error).to.not.exist;
@@ -34,7 +34,7 @@ describe('Predefine Static Patch', () => {
     });
   });
 
-  it('should throw if not exists', (done) => {
+  it('should throw if not exists', done => {
     const fake = Predefine.fake().toObject();
     Predefine.patch(fake._id, _.omit(fake, '_id'), (error, updated) => {
       expect(error).to.exist;
@@ -45,7 +45,7 @@ describe('Predefine Static Patch', () => {
     });
   });
 
-  after((done) => {
+  after(done => {
     Predefine.deleteMany(done);
   });
 
@@ -54,20 +54,20 @@ describe('Predefine Static Patch', () => {
 
 describe('Predefine Instance Patch', () => {
 
-  before((done) => {
+  before(done => {
     Predefine.deleteMany(done);
   });
 
   let predefine = Predefine.fake();
 
-  before((done) => {
+  before(done => {
     predefine.post((error, created) => {
       predefine = created;
       done(error, created);
     });
   });
 
-  it('should be able to patch', (done) => {
+  it('should be able to patch', done => {
     predefine = predefine.fakeOnly('description');
     predefine.patch((error, updated) => {
       expect(error).to.not.exist;
@@ -78,7 +78,7 @@ describe('Predefine Instance Patch', () => {
     });
   });
 
-  it('should throw if not exists', (done) => {
+  it('should throw if not exists', done => {
     predefine.patch((error, updated) => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
@@ -87,7 +87,7 @@ describe('Predefine Instance Patch', () => {
     });
   });
 
-  after((done) => {
+  after(done => {
     Predefine.deleteMany(done);
   });
 

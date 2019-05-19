@@ -14,7 +14,7 @@ describe('Predefine Seed', () => {
   const SEEDS_PATH = process.env.SEEDS_PATH;
   let predefines = [];
 
-  before((done) => {
+  before(done => {
     Predefine.deleteMany(done);
   });
 
@@ -22,7 +22,7 @@ describe('Predefine Seed', () => {
     process.env.SEEDS_PATH = path.join(__dirname, '..', 'fixtures');
   });
 
-  it('should be able to seed', (done) => {
+  it('should be able to seed', done => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -32,7 +32,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should not throw if seed exist', (done) => {
+  it('should not throw if seed exist', done => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -41,7 +41,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should seed provided', (done) => {
+  it('should seed provided', done => {
     const seed = {
       namespace: 'Currency',
       name: 'US Dollar',
@@ -58,7 +58,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should seed provided', (done) => {
+  it('should seed provided', done => {
     const seed = {
       namespace: 'Currency',
       name: 'US Dollar',
@@ -75,7 +75,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should not throw if provided exist', (done) => {
+  it('should not throw if provided exist', done => {
     const seed = {
       namespace: 'Currency',
       name: 'US Dollar',
@@ -92,7 +92,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should be able to seed from environment', (done) => {
+  it('should be able to seed from environment', done => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -102,7 +102,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should not throw if seed from environment exist', (done) => {
+  it('should not throw if seed from environment exist', done => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -112,7 +112,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  after((done) => {
+  after(done => {
     Predefine.deleteMany(done);
   });
 
