@@ -42,18 +42,13 @@ describe('Predefine Seed', () => {
   });
 
   it('should seed provided', (done) => {
-    const seed = 'Setting';
-    Predefine.seed(seed, (error, seeded) => {
-      expect(error).to.not.exist;
-      expect(seeded).to.exist;
-      expect(seeded).to.length.at.least(1);
-      expect(_.find(seeded, { namespace: seed })).to.exist;
-      done(error, seeded);
-    });
-  });
-
-  it('should seed provided', (done) => {
-    const seed = { key: 'purge', value: 'purge' };
+    const seed = {
+      namespace: 'Currency',
+      name: 'US Dollar',
+      code: 'USD',
+      abbreviation: 'USD',
+      symbol: '$'
+    };
     Predefine.seed(seed, (error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -64,7 +59,13 @@ describe('Predefine Seed', () => {
   });
 
   it('should seed provided', (done) => {
-    const seed = { key: 'purge', value: 'purge' };
+    const seed = {
+      namespace: 'Currency',
+      name: 'US Dollar',
+      code: 'USD',
+      abbreviation: 'USD',
+      symbol: '$'
+    };
     Predefine.seed([seed], (error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -74,21 +75,14 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should seed provided', (done) => {
-    const seed = 'Setting';
-    const _seed = { key: 'purge', value: 'purge' };
-    Predefine.seed([seed, _seed], (error, seeded) => {
-      expect(error).to.not.exist;
-      expect(seeded).to.exist;
-      expect(seeded).to.length.at.least(1);
-      expect(_.find(seeded, { namespace: seed })).to.exist;
-      expect(_.find(seeded, _seed)).to.exist;
-      done(error, seeded);
-    });
-  });
-
   it('should not throw if provided exist', (done) => {
-    const seed = { key: 'purge', value: 'purge' };
+    const seed = {
+      namespace: 'Currency',
+      name: 'US Dollar',
+      code: 'USD',
+      abbreviation: 'USD',
+      symbol: '$'
+    };
     Predefine.seed(seed, (error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -103,7 +97,7 @@ describe('Predefine Seed', () => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
       expect(seeded).to.length.at.least(1);
-      expect(_.find(seeded, { namespace: 'Setting' })).to.exist;
+      expect(_.find(seeded, { namespace: 'Currency' })).to.exist;
       done(error, seeded);
     });
   });
@@ -113,7 +107,7 @@ describe('Predefine Seed', () => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
       expect(seeded).to.length.at.least(1);
-      expect(_.find(seeded, { namespace: 'Setting' })).to.exist;
+      expect(_.find(seeded, { namespace: 'Currency' })).to.exist;
       done(error, seeded);
     });
   });

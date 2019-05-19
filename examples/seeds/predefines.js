@@ -3,12 +3,12 @@
 module.exports = exports = [{
   namespace: 'Currency',
   name: 'US Dollar',
-  code: 'USD'
+  code: 'USD',
   abbreviation: 'USD',
   symbol: '$'
 }, {
   namespace: 'Unit',
   name: 'Kilogram',
-  code: 'Kg'
+  code: 'Kg',
   abbreviation: 'Kg'
 }];
