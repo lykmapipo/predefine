@@ -31,25 +31,13 @@ describe('Predefine Instance', () => {
 
 describe('Predefine Validations', () => {
 
-  it('should throw if no key', (done) => {
+  it('should throw if no name', (done) => {
     const predefine = Predefine.fakeOnly('description');
     predefine.validate((error) => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
-      expect(error.errors.key).to.exist;
-      expect(error.errors.key.name)
-        .to.be.equal('ValidatorError');
-      done();
-    });
-  });
-
-  it('should throw if no value', (done) => {
-    const predefine = Predefine.fakeOnly('description');
-    predefine.validate((error) => {
-      expect(error).to.exist;
-      expect(error.name).to.equal('ValidationError');
-      expect(error.errors.value).to.exist;
-      expect(error.errors.value.name)
+      expect(error.errors.name).to.exist;
+      expect(error.errors.name.name)
         .to.be.equal('ValidatorError');
       done();
     });
