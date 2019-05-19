@@ -2,7 +2,8 @@
 
 
 /* dependencies */
-const { expect } = require('chai');
+const _ = require('lodash');
+const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
 const { Predefine } = include(__dirname, '..', '..');
 
@@ -28,14 +29,14 @@ describe('Predefine Static Put', () => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
       expect(updated._id).to.eql(predefine._id);
-      expect(updated.value).to.eql(predefine.value);
+      expect(updated.name).to.eql(predefine.name);
       done(error, updated);
     });
   });
 
   it('should throw if not exists', (done) => {
-    const fake = Predefine.fake();
-    Predefine.put(fake._id, fake, (error, updated) => {
+    const fake = Predefine.fake().toObject();
+    Predefine.put(fake._id, _.omit(fake, '_id'), (error, updated) => {
       expect(error).to.exist;
       // expect(error.status).to.exist;
       expect(error.name).to.be.equal('DocumentNotFoundError');
@@ -72,7 +73,7 @@ describe('Predefine Instance Put', () => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
       expect(updated._id).to.eql(predefine._id);
-      expect(updated.value).to.eql(predefine.value);
+      expect(updated.name).to.eql(predefine.name);
       done(error, updated);
     });
   });

@@ -2,7 +2,7 @@
 
 
 /* dependencies */
-const { expect } = require('chai');
+const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
 const Predefine = include(__dirname, '..', '..', 'lib', 'predefine.model');
 

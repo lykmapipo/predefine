@@ -3,7 +3,7 @@
 
 /* dependencies */
 const _ = require('lodash');
-const { expect } = require('chai');
+const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
 const { Predefine } = include(__dirname, '..', '..');
 
@@ -35,14 +35,14 @@ describe('Predefine getById', () => {
   it('should be able to get with options', (done) => {
     const options = {
       _id: predefine._id,
-      select: 'value'
+      select: 'name'
     };
 
     Predefine.getById(options, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist;
       expect(found._id).to.eql(predefine._id);
-      expect(found.value).to.exist;
+      expect(found.name).to.exist;
 
       //...assert selection
       const fields = _.keys(found.toObject());

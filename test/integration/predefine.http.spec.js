@@ -2,7 +2,7 @@
 
 
 /* dependencies */
-const { expect } = require('chai');
+const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
 const request = require('supertest');
 const { app, mount } = require('@lykmapipo/express-common');
