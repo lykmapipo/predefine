@@ -37,6 +37,7 @@ const predefineRouter = include(__dirname, 'lib', 'predefine.http.router');
  * @version 0.1.0
  */
 exports.info = pkg(
+  `${__dirname}/package.json`,
   'name', 'description', 'version', 'license',
   'homepage', 'repository', 'bugs', 'sandbox', 'contributors'
 );
