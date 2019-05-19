@@ -71,7 +71,7 @@ describe('Predefine Get', () => {
   });
 
   it('should be able to search with options', (done) => {
-    const options = { filter: { q: predefines[0].value } };
+    const options = { filter: { q: predefines[0].name } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
       expect(results).to.exist;
@@ -95,7 +95,7 @@ describe('Predefine Get', () => {
   });
 
   it('should parse filter options', (done) => {
-    const options = { filter: { value: predefines[0].value } };
+    const options = { filter: { name: predefines[0].name } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
       expect(results).to.exist;
