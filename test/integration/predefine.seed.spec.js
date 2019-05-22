@@ -4,7 +4,7 @@
 /* dependencies */
 const path = require('path');
 const _ = require('lodash');
-const { expect } = require('@lykmapipo/mongoose-test-helpers');
+const { clear, expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
 const { Predefine } = include(__dirname, '..', '..');
 
@@ -14,9 +14,7 @@ describe('Predefine Seed', () => {
   const SEEDS_PATH = process.env.SEEDS_PATH;
   let predefines = [];
 
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   before(() => {
     process.env.SEEDS_PATH = path.join(__dirname, '..', 'fixtures');
@@ -112,9 +110,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 
   after(() => {
     process.env.SEEDS_PATH = SEEDS_PATH;

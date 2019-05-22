@@ -15,6 +15,7 @@ const { Predefine, predefineRouter } = include(__dirname, '..', '..');
 describe('Predefine Rest API', () => {
 
   let predefine = Predefine.fake();
+  const bucket = predefine.bucket;
 
   const options = {
     pathSingle: '/predefines/:bucket/:id',
@@ -28,7 +29,7 @@ describe('Predefine Rest API', () => {
 
   it('should handle HTTP POST on /predefines', done => {
     const { testPost } = testRouter(options, predefineRouter);
-    testPost({ bucket: 'predefines', ...predefine.toObject() })
+    testPost({ bucket, ...predefine.toObject() })
       .expect(201)
       .expect('Content-Type', /json/)
       .end((error, { body }) => {
@@ -43,7 +44,7 @@ describe('Predefine Rest API', () => {
 
   it('should handle HTTP GET on /predefines', done => {
     const { testGet } = testRouter(options, predefineRouter);
-    testGet({ bucket: 'predefines' })
+    testGet({ bucket })
       .expect(200)
       .expect('Content-Type', /json/)
       .end((error, { body }) => {
@@ -62,7 +63,7 @@ describe('Predefine Rest API', () => {
 
   it('should handle HTTP GET on /predefines/:id', done => {
     const { testGet } = testRouter(options, predefineRouter);
-    const params = { bucket: 'predefines', id: predefine._id.toString() };
+    const params = { bucket, id: predefine._id.toString() };
     testGet(params)
       .expect(200)
       .expect('Content-Type', /json/)
@@ -79,7 +80,7 @@ describe('Predefine Rest API', () => {
   it('should handle HTTP PATCH on /predefines/id:', done => {
     const { testPatch } = testRouter(options, predefineRouter);
     const { description } = predefine.fakeOnly('description');
-    const params = { bucket: 'predefines', id: predefine._id.toString() };
+    const params = { bucket, id: predefine._id.toString() };
     testPatch(params, { description })
       .expect(200)
       .expect('Content-Type', /json/)
@@ -96,7 +97,7 @@ describe('Predefine Rest API', () => {
   it('should handle HTTP PUT on /predefines/id:', done => {
     const { testPut } = testRouter(options, predefineRouter);
     const { description } = predefine.fakeOnly('description');
-    const params = { bucket: 'predefines', id: predefine._id.toString() };
+    const params = { bucket, id: predefine._id.toString() };
     testPut(params, { description })
       .expect(200)
       .expect('Content-Type', /json/)
@@ -112,7 +113,7 @@ describe('Predefine Rest API', () => {
 
   it('should handle HTTP DELETE on /predefines/id:', done => {
     const { testDelete } = testRouter(options, predefineRouter);
-    const params = { bucket: 'predefines', id: predefine._id.toString() };
+    const params = { bucket, id: predefine._id.toString() };
     testDelete(params)
       .expect(200)
       .expect('Content-Type', /json/)
