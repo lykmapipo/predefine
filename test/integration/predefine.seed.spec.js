@@ -1,17 +1,15 @@
-/* dependencies */
-const path = require('path');
-const _ = require('lodash');
-const { clear, expect } = require('@lykmapipo/mongoose-test-helpers');
-const { include } = require('@lykmapipo/include');
-
-const { Predefine } = include(__dirname, '..', '..');
+import path from 'path';
+import _ from 'lodash';
+import { clear, expect } from '@lykmapipo/mongoose-test-helpers';
+import { Predefine } from '../../src/index';
 
 describe('Predefine Seed', () => {
-  const { SEEDS_PATH } = process.env;
+  const { SEEDS_PATH, PREDEFINE_NAMESPACES } = process.env;
 
   before(done => clear(done));
 
   before(() => {
+    process.env.PREDEFINE_NAMESPACES = 'Setting';
     process.env.SEEDS_PATH = path.join(__dirname, '..', 'fixtures');
   });
 
@@ -35,7 +33,7 @@ describe('Predefine Seed', () => {
 
   it('should seed provided', done => {
     const seed = {
-      namespace: 'Currency',
+      namespace: 'Setting',
       name: 'US Dollar',
       code: 'USD',
       abbreviation: 'USD',
@@ -52,7 +50,7 @@ describe('Predefine Seed', () => {
 
   it('should seed provided', done => {
     const seed = {
-      namespace: 'Currency',
+      namespace: 'Setting',
       name: 'US Dollar',
       code: 'USD',
       abbreviation: 'USD',
@@ -69,7 +67,7 @@ describe('Predefine Seed', () => {
 
   it('should not throw if provided exist', done => {
     const seed = {
-      namespace: 'Currency',
+      namespace: 'Setting',
       name: 'US Dollar',
       code: 'USD',
       abbreviation: 'USD',
@@ -89,7 +87,7 @@ describe('Predefine Seed', () => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
       expect(seeded).to.length.at.least(1);
-      expect(_.find(seeded, { namespace: 'Currency' })).to.exist;
+      expect(_.find(seeded, { namespace: 'Setting' })).to.exist;
       done(error, seeded);
     });
   });
@@ -99,7 +97,7 @@ describe('Predefine Seed', () => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
       expect(seeded).to.length.at.least(1);
-      expect(_.find(seeded, { namespace: 'Currency' })).to.exist;
+      expect(_.find(seeded, { namespace: 'Setting' })).to.exist;
       done(error, seeded);
     });
   });
@@ -107,6 +105,7 @@ describe('Predefine Seed', () => {
   after(done => clear(done));
 
   after(() => {
+    process.env.PREDEFINE_NAMESPACES = PREDEFINE_NAMESPACES;
     process.env.SEEDS_PATH = SEEDS_PATH;
   });
 });

@@ -1,5 +1,4 @@
-/* dependencies */
-const { connect, clear, drop } = require('@lykmapipo/mongoose-test-helpers');
+import { connect, clear, drop } from '@lykmapipo/mongoose-test-helpers';
 
 /* setup database */
 before(done => connect(done));

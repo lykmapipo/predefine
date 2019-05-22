@@ -1,8 +1,9 @@
 [
-{
-  "namespace": "Currency",
-  "name": "US Dollar",
-  "code": "USD",
-  "abbreviation": "USD",
-  "symbol": "$"
-}]
+  {
+    "namespace": "Setting",
+    "name": "US Dollar",
+    "code": "USD",
+    "abbreviation": "USD",
+    "symbol": "$"
+  }
+]

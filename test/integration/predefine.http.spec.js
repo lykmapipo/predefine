@@ -1,13 +1,9 @@
-/* dependencies */
-const { clear } = require('@lykmapipo/mongoose-test-helpers');
-const { include } = require('@lykmapipo/include');
-const {
-  clear: clearHttp,
-  expect,
+import {
+  clear as clearHttp,
   testRouter,
-} = require('@lykmapipo/express-test-helpers');
-
-const { Predefine, predefineRouter } = include(__dirname, '..', '..');
+} from '@lykmapipo/express-test-helpers';
+import { clear, expect } from '@lykmapipo/mongoose-test-helpers';
+import { Predefine, predefineRouter } from '../../src/index';
 
 describe('Predefine Rest API', () => {
   const predefine = Predefine.fake();

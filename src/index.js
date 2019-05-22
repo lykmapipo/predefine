@@ -16,12 +16,10 @@
  */
 
 /* dependencies */
-const { pkg } = require('@lykmapipo/common');
-const { include } = require('@lykmapipo/include');
-const { apiVersion } = require('@lykmapipo/env');
-
-const Predefine = include(__dirname, 'lib', 'predefine.model');
-const predefineRouter = include(__dirname, 'lib', 'predefine.http.router');
+import { pkg } from '@lykmapipo/common';
+import { apiVersion as httpApiVersion } from '@lykmapipo/env';
+import Predefine from './predefine.model';
+import predefineRouter from './predefine.http.router';
 
 /**
  * @name info
@@ -32,7 +30,7 @@ const predefineRouter = include(__dirname, 'lib', 'predefine.http.router');
  * @since 1.0.0
  * @version 0.1.0
  */
-exports.info = pkg(
+export const info = pkg(
   `${__dirname}/package.json`,
   'name',
   'description',
@@ -54,7 +52,7 @@ exports.info = pkg(
  * @since 0.1.0
  * @version 0.1.0
  */
-exports.Predefine = Predefine;
+export { Predefine };
 
 /**
  * @name predefineRouter
@@ -65,7 +63,7 @@ exports.Predefine = Predefine;
  * @since 0.1.0
  * @version 0.1.0
  */
-exports.predefineRouter = predefineRouter;
+export { predefineRouter };
 
 /**
  * @name apiVersion
@@ -76,4 +74,4 @@ exports.predefineRouter = predefineRouter;
  * @since 0.1.0
  * @version 0.1.0
  */
-exports.apiVersion = apiVersion();
+export const apiVersion = httpApiVersion();

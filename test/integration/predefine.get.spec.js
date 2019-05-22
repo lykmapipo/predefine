@@ -1,9 +1,6 @@
-/* dependencies */
-const _ = require('lodash');
-const { expect } = require('@lykmapipo/mongoose-test-helpers');
-const { include } = require('@lykmapipo/include');
-
-const { Predefine } = include(__dirname, '..', '..');
+import _ from 'lodash';
+import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { Predefine } from '../../src/index';
 
 describe('Predefine Get', () => {
   before(done => {

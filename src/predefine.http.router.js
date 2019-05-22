@@ -114,9 +114,8 @@
  */
 
 /* dependencies */
-const { include } = require('@lykmapipo/include');
-const { getString } = require('@lykmapipo/env');
-const {
+import { getString } from '@lykmapipo/env';
+import {
   getFor,
   schemaFor,
   getByIdFor,
@@ -125,7 +124,8 @@ const {
   putFor,
   deleteFor,
   Router,
-} = require('@lykmapipo/express-rest-actions');
+} from '@lykmapipo/express-rest-actions';
+import Predefine from './predefine.model';
 
 /* constants */
 const API_VERSION = getString('API_VERSION', '1.0.0');
@@ -134,7 +134,6 @@ const PATH_LIST = '/predefines/:bucket';
 const PATH_SCHEMA = '/predefines/:bucket/schema/';
 
 /* declarations */
-const Predefine = include(__dirname, 'predefine.model');
 const router = new Router({
   version: API_VERSION,
 });

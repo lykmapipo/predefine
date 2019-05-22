@@ -31,6 +31,7 @@ const COLLECTION_NAME = getString('PREDEFINE_COLLECTION_NAME', 'predefines');
 const SCHEMA_OPTIONS = { collection: COLLECTION_NAME };
 const DEFAULT_NAMESPACE = getString('PREDEFINE_DEFAULT_NAMESPACE', 'Setting');
 const NAMESPACES = sortedUniq([
+  // TODO lazy load
   DEFAULT_NAMESPACE,
   ...getStrings('PREDEFINE_NAMESPACES', DEFAULT_NAMESPACE),
   ...modelNames(),
