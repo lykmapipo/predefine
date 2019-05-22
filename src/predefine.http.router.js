@@ -1,6 +1,3 @@
-'use strict';
-
-
 /**
  * @apiDefine Predefine Predefine
  *
@@ -12,7 +9,6 @@
  * @version 0.1.0
  * @public
  */
-
 
 /**
  * @apiDefine Predefine
@@ -39,7 +35,6 @@
  * @apiSuccess {Date} [updatedAt] Date when predefine was last updated
  *
  */
-
 
 /**
  * @apiDefine Predefines
@@ -77,7 +72,6 @@
  *
  */
 
-
 /**
  * @apiDefine PredefineSuccessResponse
  * @apiSuccessExample {json} Success-Response:
@@ -93,7 +87,6 @@
  * }
  *
  */
-
 
 /**
  * @apiDefine PredefinesSuccessResponse
@@ -120,7 +113,6 @@
  *
  */
 
-
 /* dependencies */
 const { include } = require('@lykmapipo/include');
 const { getString } = require('@lykmapipo/env');
@@ -132,9 +124,8 @@ const {
   patchFor,
   putFor,
   deleteFor,
-  Router
+  Router,
 } = require('@lykmapipo/express-rest-actions');
-
 
 /* constants */
 const API_VERSION = getString('API_VERSION', '1.0.0');
@@ -142,13 +133,11 @@ const PATH_SINGLE = '/predefines/:bucket/:id';
 const PATH_LIST = '/predefines/:bucket';
 const PATH_SCHEMA = '/predefines/:bucket/schema/';
 
-
 /* declarations */
 const Predefine = include(__dirname, 'predefine.model');
 const router = new Router({
-  version: API_VERSION
+  version: API_VERSION,
 });
-
 
 /**
  * @api {get} /predefines List Predefines
@@ -166,10 +155,12 @@ const router = new Router({
  * @apiUse AuthorizationHeaderError
  * @apiUse AuthorizationHeaderErrorExample
  */
-router.get(PATH_LIST, getFor({
-  get: (options, done) => Predefine.get(options, done)
-}));
-
+router.get(
+  PATH_LIST,
+  getFor({
+    get: (options, done) => Predefine.get(options, done),
+  })
+);
 
 /**
  * @api {get} /predefines/schema Get Predefine Schema
@@ -179,13 +170,15 @@ router.get(PATH_LIST, getFor({
  * @apiDescription Returns predefine json schema definition
  * @apiUse RequestHeaders
  */
-router.get(PATH_SCHEMA, schemaFor({
-  getSchema: (query, done) => {
-    const jsonSchema = Predefine.jsonSchema();
-    return done(null, jsonSchema);
-  }
-}));
-
+router.get(
+  PATH_SCHEMA,
+  schemaFor({
+    getSchema: (query, done) => {
+      const jsonSchema = Predefine.jsonSchema();
+      return done(null, jsonSchema);
+    },
+  })
+);
 
 /**
  * @api {post} /predefines Create New Predefine
@@ -203,10 +196,12 @@ router.get(PATH_SCHEMA, schemaFor({
  * @apiUse AuthorizationHeaderError
  * @apiUse AuthorizationHeaderErrorExample
  */
-router.post(PATH_LIST, postFor({
-  post: (body, done) => Predefine.post(body, done)
-}));
-
+router.post(
+  PATH_LIST,
+  postFor({
+    post: (body, done) => Predefine.post(body, done),
+  })
+);
 
 /**
  * @api {get} /predefines/:id Get Existing Predefine
@@ -223,10 +218,12 @@ router.post(PATH_LIST, postFor({
  * @apiUse AuthorizationHeaderError
  * @apiUse AuthorizationHeaderErrorExample
  */
-router.get(PATH_SINGLE, getByIdFor({
-  getById: (options, done) => Predefine.getById(options, done)
-}));
-
+router.get(
+  PATH_SINGLE,
+  getByIdFor({
+    getById: (options, done) => Predefine.getById(options, done),
+  })
+);
 
 /**
  * @api {patch} /predefines/:id Patch Existing Predefine
@@ -244,11 +241,12 @@ router.get(PATH_SINGLE, getByIdFor({
  * @apiUse AuthorizationHeaderError
  * @apiUse AuthorizationHeaderErrorExample
  */
-router.patch(PATH_SINGLE, patchFor({
-  patch: (options, done) => Predefine.patch(options, done)
-}));
-
-
+router.patch(
+  PATH_SINGLE,
+  patchFor({
+    patch: (options, done) => Predefine.patch(options, done),
+  })
+);
 
 /**
  * @api {put} /predefines/:id Put Existing Predefine
@@ -266,10 +264,12 @@ router.patch(PATH_SINGLE, patchFor({
  * @apiUse AuthorizationHeaderError
  * @apiUse AuthorizationHeaderErrorExample
  */
-router.put(PATH_SINGLE, putFor({
-  put: (options, done) => Predefine.put(options, done)
-}));
-
+router.put(
+  PATH_SINGLE,
+  putFor({
+    put: (options, done) => Predefine.put(options, done),
+  })
+);
 
 /**
  * @api {delete} /predefines/:id Delete Existing Predefine
@@ -287,11 +287,13 @@ router.put(PATH_SINGLE, putFor({
  * @apiUse AuthorizationHeaderError
  * @apiUse AuthorizationHeaderErrorExample
  */
-router.delete(PATH_SINGLE, deleteFor({
-  del: (options, done) => Predefine.del(options, done),
-  soft: true
-}));
-
+router.delete(
+  PATH_SINGLE,
+  deleteFor({
+    del: (options, done) => Predefine.del(options, done),
+    soft: true,
+  })
+);
 
 /* expose predefine router */
-module.exports = exports = router;
+export default router;

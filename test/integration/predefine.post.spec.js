@@ -1,19 +1,15 @@
-'use strict';
-
-
 /* dependencies */
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
+
 const { Predefine } = include(__dirname, '..', '..');
 
-
 describe('Predefine Static Post', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
 
-  let predefine = Predefine.fake();
+  const predefine = Predefine.fake();
 
   it('should be able to post', done => {
     Predefine.post(predefine, (error, created) => {
@@ -28,16 +24,14 @@ describe('Predefine Static Post', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });
 
 describe('Predefine Instance Post', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
 
-  let predefine = Predefine.fake();
+  const predefine = Predefine.fake();
 
   it('should be able to post', done => {
     predefine.post((error, created) => {
@@ -52,5 +46,4 @@ describe('Predefine Instance Post', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });

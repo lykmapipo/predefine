@@ -1,15 +1,11 @@
-'use strict';
-
-
 /* dependencies */
 const _ = require('lodash');
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
+
 const { Predefine } = include(__dirname, '..', '..');
 
-
 describe('Predefine Get', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
@@ -40,8 +36,9 @@ describe('Predefine Get', () => {
       expect(results.pages).to.exist;
       expect(results.pages).to.be.equal(4);
       expect(results.lastModified).to.exist;
-      expect(_.maxBy(results.data, 'updatedAt').updatedAt)
-        .to.be.at.most(results.lastModified);
+      expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
+        results.lastModified
+      );
       done(error, results);
     });
   });
@@ -64,8 +61,9 @@ describe('Predefine Get', () => {
       expect(results.pages).to.exist;
       expect(results.pages).to.be.equal(2);
       expect(results.lastModified).to.exist;
-      expect(_.maxBy(results.data, 'updatedAt').updatedAt)
-        .to.be.at.most(results.lastModified);
+      expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
+        results.lastModified
+      );
       done(error, results);
     });
   });
@@ -88,8 +86,9 @@ describe('Predefine Get', () => {
       expect(results.pages).to.exist;
       expect(results.pages).to.be.equal(1);
       expect(results.lastModified).to.exist;
-      expect(_.maxBy(results.data, 'updatedAt').updatedAt)
-        .to.be.at.most(results.lastModified);
+      expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
+        results.lastModified
+      );
       done(error, results);
     });
   });
@@ -112,8 +111,9 @@ describe('Predefine Get', () => {
       expect(results.pages).to.exist;
       expect(results.pages).to.be.equal(1);
       expect(results.lastModified).to.exist;
-      expect(_.maxBy(results.data, 'updatedAt').updatedAt)
-        .to.be.at.most(results.lastModified);
+      expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
+        results.lastModified
+      );
       done(error, results);
     });
   });
@@ -121,5 +121,4 @@ describe('Predefine Get', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });

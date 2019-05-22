@@ -1,15 +1,11 @@
-'use strict';
-
-
 /* dependencies */
 const _ = require('lodash');
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
+
 const { Predefine } = include(__dirname, '..', '..');
 
-
 describe('Predefine Static Patch', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
@@ -48,12 +44,9 @@ describe('Predefine Static Patch', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });
 
-
 describe('Predefine Instance Patch', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
@@ -90,5 +83,4 @@ describe('Predefine Instance Patch', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });

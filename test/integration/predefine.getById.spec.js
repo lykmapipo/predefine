@@ -1,15 +1,11 @@
-'use strict';
-
-
 /* dependencies */
 const _ = require('lodash');
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
+
 const { Predefine } = include(__dirname, '..', '..');
 
-
 describe('Predefine getById', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
@@ -35,7 +31,7 @@ describe('Predefine getById', () => {
   it('should be able to get with options', done => {
     const options = {
       _id: predefine._id,
-      select: 'name'
+      select: 'name',
     };
 
     Predefine.getById(options, (error, found) => {
@@ -44,25 +40,19 @@ describe('Predefine getById', () => {
       expect(found._id).to.eql(predefine._id);
       expect(found.name).to.exist;
 
-      //...assert selection
+      // ...assert selection
       const fields = _.keys(found.toObject());
       expect(fields).to.have.length(2);
-      _.map([
-        'namespace',
-        'description',
-        'createdAt',
-        'updatedAt'
-      ], function (field) {
+      _.map(['namespace', 'description', 'createdAt', 'updatedAt'], field => {
         expect(fields).to.not.include(field);
       });
       done(error, found);
     });
-
   });
 
   it('should throw if not exists', done => {
-    const predefine = Predefine.fake();
-    Predefine.getById(predefine._id, (error, found) => {
+    const fake = Predefine.fake();
+    Predefine.getById(fake._id, (error, found) => {
       expect(error).to.exist;
       // expect(error.status).to.exist;
       expect(error.name).to.be.equal('DocumentNotFoundError');
@@ -74,5 +64,4 @@ describe('Predefine getById', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });

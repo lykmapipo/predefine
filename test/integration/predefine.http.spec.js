@@ -1,6 +1,3 @@
-'use strict';
-
-
 /* dependencies */
 const { clear } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
@@ -9,18 +6,17 @@ const {
   expect,
   testRouter,
 } = require('@lykmapipo/express-test-helpers');
+
 const { Predefine, predefineRouter } = include(__dirname, '..', '..');
 
-
 describe('Predefine Rest API', () => {
-
-  let predefine = Predefine.fake();
-  const bucket = predefine.bucket;
+  const predefine = Predefine.fake();
+  const { bucket } = predefine;
 
   const options = {
     pathSingle: '/predefines/:bucket/:id',
     pathList: '/predefines/:bucket',
-    pathSchema: '/predefines/:bucket/schema/'
+    pathSchema: '/predefines/:bucket/schema/',
   };
 
   before(() => clearHttp());
@@ -130,5 +126,4 @@ describe('Predefine Rest API', () => {
   after(() => clearHttp());
 
   after(done => clear(done));
-
 });

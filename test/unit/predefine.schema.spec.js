@@ -1,12 +1,6 @@
-'use strict';
-
-
-/* dependencies */
-const { SchemaTypes } = require('@lykmapipo/mongoose-common');
-const { expect } = require('@lykmapipo/mongoose-test-helpers');
-const { include } = require('@lykmapipo/include');
-const Predefine = include(__dirname, '..', '..', 'lib', 'predefine.model');
-
+import { SchemaTypes } from '@lykmapipo/mongoose-common';
+import { expect } from '@lykmapipo/mongoose-test-helpers';
+import Predefine from '../../src/predefine.model';
 
 describe('Predefine Schema', () => {
   it('should have namespace field', () => {

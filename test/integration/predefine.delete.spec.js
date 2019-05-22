@@ -1,14 +1,10 @@
-'use strict';
-
-
 /* dependencies */
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const { include } = require('@lykmapipo/include');
+
 const { Predefine } = include(__dirname, '..', '..');
 
-
 describe('Predefine Static Delete', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
@@ -44,11 +40,9 @@ describe('Predefine Static Delete', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });
 
 describe('Predefine Instance Delete', () => {
-
   before(done => {
     Predefine.deleteMany(done);
   });
@@ -83,5 +77,4 @@ describe('Predefine Instance Delete', () => {
   after(done => {
     Predefine.deleteMany(done);
   });
-
 });
