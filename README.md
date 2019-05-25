@@ -36,6 +36,11 @@ mount(predefineRouter);
 start(error => { ... });
 ```
 
+## Environment
+```js
+PREDEFINE_NAMESPACES=Currency,Unit,Setting
+```
+
 ## Testing
 
 - Clone this repository
