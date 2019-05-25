@@ -2,10 +2,16 @@
 
 
 /* dependencies */
+const _ = require('lodash');
 const { connect } = require('@lykmapipo/mongoose-common');
 const { include } = require('@lykmapipo/include');
 const { app, mount, start } = require('@lykmapipo/express-common');
-const { info, predefineRouter } = include(__dirname, '..');
+const {
+  info,
+  predefineRouter,
+  Predefine,
+  apiVersion
+} = include(__dirname, '..');
 
 
 // establish mongodb connection
@@ -28,7 +34,10 @@ connect(error => {
     if (error) { throw error; }
 
     // start http server
-    console.log(`visit http://0.0.0.0:${env.PORT}`);
+    _.forEach(Predefine.BUCKETS, bucket => {
+      const path = `predefines/${bucket}`;
+      console.log(`visit http://0.0.0.0:${env.PORT}/${apiVersion}/${path}`);
+    });
   });
 
 });
