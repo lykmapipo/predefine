@@ -18,6 +18,7 @@
 /* dependencies */
 import { pkg } from '@lykmapipo/common';
 import { apiVersion as httpApiVersion } from '@lykmapipo/env';
+import { start } from '@lykmapipo/express-rest-actions';
 import Predefine from './predefine.model';
 import predefineRouter from './predefine.http.router';
 
@@ -75,3 +76,5 @@ export { predefineRouter };
  * @version 0.1.0
  */
 export const apiVersion = httpApiVersion();
+
+export { start };
