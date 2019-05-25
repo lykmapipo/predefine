@@ -1,4 +1,4 @@
-# predefine(WIP)
+# predefine
 
 [![Build Status](https://travis-ci.org/lykmapipo/predefine.svg?branch=master)](https://travis-ci.org/lykmapipo/predefine)
 [![Dependencies Status](https://david-dm.org/lykmapipo/predefine/status.svg?style=flat-square)](https://david-dm.org/lykmapipo/predefine)
@@ -23,10 +23,17 @@ npm install @lykmapipo/predefine --save
 
 ```js
 const { connect } = require('@lykmapipo/mongoose-common');
-const { app } = require('@lykmapipo/predefine');
+const { start, mount } = require('@lykmapipo/express-common');
+const { Predefine, predefineRouter } = require('@lykmapipo/predefine');
 
-// start api
-connect(error => app.start((error, env) => { ... }));
+// connect to mongodb
+connect(process.env.MONGODB_URI, error => { ... });
+
+// mount predefine http router
+mount(predefineRouter);
+
+// fire the http server
+start(error => { ... });
 ```
 
 ## Testing
@@ -59,7 +66,7 @@ It will be nice, if you open an issue first so that we can know what is going on
 
 The MIT License (MIT)
 
-Copyright (c) 2019 lykmapipo & Contributors
+Copyright (c) lykmapipo & Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
