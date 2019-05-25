@@ -8,6 +8,18 @@
  * @since 0.1.0
  * @version 0.1.0
  * @public
+ * @example
+ *
+ * const { Predefine } = require('@lykmapipo/predefine');
+ *
+ * const unit = {
+ *  namespace: 'Unit',
+ *  name: 'Kilogram',
+ *  code: 'Kg',
+ *  abbreviation: 'Kg'
+ * };
+ * Predefine.create({}, (error, created) => { ... });
+ *
  */
 
 /* dependencies */
@@ -161,7 +173,8 @@ const PredefineSchema = createSchema(
 
     /**
      * @name code
-     * @description Human(and machine) readable, unique identifier of a prefined.
+     * @description Human(and machine) readable, unique identifier of a
+     * prefined.
      *
      * It used in generation of physical tag or barcode when needed.
      *
