@@ -70,7 +70,7 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^4.3.0",
-    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-mocha": "^5.3.0",
     "eslint-plugin-prettier": "^3.1.0",
     "generate-changelog": "^1.7.1",
@@ -85,15 +85,15 @@
     "@codetanzania/majifix-common": "^0.12.4",
     "@lykmapipo/express-test-helpers": "^0.7.2",
     "@lykmapipo/mongoose-test-helpers": "^0.7.3",
-    "mongoose": ">=5.5.10"
+    "mongoose": ">=5.5.11"
   },
   "peerDependencies": {
-    "mongoose": ">=5.5.10"
+    "mongoose": ">=5.5.11"
   },
   "dependencies": {
     "@lykmapipo/common": ">=0.17.5",
     "@lykmapipo/env": ">=0.7.7",
-    "@lykmapipo/express-rest-actions": ">=0.5.0",
+    "@lykmapipo/express-rest-actions": ">=0.6.0",
     "@lykmapipo/include": ">=0.2.4",
     "@lykmapipo/mongoose-common": ">=0.23.1",
     "@lykmapipo/mongoose-exportable": ">=0.3.2",
