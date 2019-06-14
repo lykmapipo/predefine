@@ -25,7 +25,7 @@
 /* dependencies */
 import _ from 'lodash';
 import randomColor from 'randomcolor';
-import { sortedUniq, abbreviate } from '@lykmapipo/common';
+import { sortedUniq, abbreviate, mergeObjects } from '@lykmapipo/common';
 import { getString, getStrings } from '@lykmapipo/env';
 import {
   createSchema,
@@ -94,7 +94,6 @@ const PredefineSchema = createSchema(
       searchable: true,
       taggable: true,
       hide: true,
-      default: DEFAULT_NAMESPACE,
       fake: true,
     },
 
@@ -133,7 +132,6 @@ const PredefineSchema = createSchema(
       searchable: true,
       taggable: true,
       hide: true,
-      default: DEFAULT_BUCKET,
       fake: true,
     },
 
@@ -480,22 +478,13 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
   // ensure correct namespace and bucket
-  if (!_.isEmpty(this.bucket) && _.isEmpty(this.namespace)) {
-    const bucketAndNamespace = _.find(NAMESPACE_MAP, { bucket: this.bucket });
-    if (!_.isEmpty(bucketAndNamespace)) {
-      this.set(bucketAndNamespace);
-    }
-  }
-
-  // ensure correct namespace and bucket
-  if (!_.isEmpty(this.namespace) && _.isEmpty(this.bucket)) {
-    const bucketAndNamespace = _.find(NAMESPACE_MAP, {
-      namespace: this.namespace,
-    });
-    if (!_.isEmpty(bucketAndNamespace)) {
-      this.set(bucketAndNamespace);
-    }
-  }
+  const bucketOrNamespace = this.bucket || this.namespace;
+  const bucketAndNamespace = mergeObjects(
+    { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
+    _.find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
+    _.find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
+  );
+  this.set(bucketAndNamespace);
 
   // ensure abbreviation
   this.abbreviation = _.trim(this.abbreviation) || abbreviate(this.name);

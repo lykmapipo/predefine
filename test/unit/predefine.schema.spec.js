@@ -17,7 +17,7 @@ describe('Predefine Schema', () => {
     expect(namespace.options.searchable).to.be.true;
     expect(namespace.options.taggable).to.be.true;
     expect(namespace.options.hide).to.be.true;
-    expect(namespace.options.default).to.be.exist;
+    // expect(namespace.options.default).to.be.exist;
     expect(namespace.options.fake).to.exist;
   });
 
@@ -35,7 +35,7 @@ describe('Predefine Schema', () => {
     expect(bucket.options.searchable).to.be.true;
     expect(bucket.options.taggable).to.be.true;
     expect(bucket.options.hide).to.be.true;
-    expect(bucket.options.default).to.exist;
+    // expect(bucket.options.default).to.exist;
     expect(bucket.options.fake).to.exist;
   });
 
