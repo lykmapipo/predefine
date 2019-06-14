@@ -1,6 +1,6 @@
 {
   "name": "@lykmapipo/predefine",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "A representation of stored and retrieved information that does not qualify to belongs to their own domain model.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -86,7 +86,7 @@
     "npm-check-updates": "^3.1.10",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
-    "rollup": "^1.15.4"
+    "rollup": "^1.15.5"
   },
   "peerDependencies": {
     "mongoose": ">=5.5.15"

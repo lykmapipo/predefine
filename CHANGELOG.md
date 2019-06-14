@@ -1,3 +1,13 @@
+#### 0.3.0 (2019-06-14)
+
+##### New Features
+
+*  allow bucket data export ([28e33341](https://github.com/lykmapipo/predefine/commit/28e3334164e00dff7b75c2d2b359be0fd7c4ed89))
+
+##### Bug Fixes
+
+*  ensure correct bucket and namespace ([35636407](https://github.com/lykmapipo/predefine/commit/356364072d111d6d205aeacf186843eddc02af7e))
+
 #### 0.2.4 (2019-06-14)
 
 ##### Chores
