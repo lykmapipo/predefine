@@ -13,13 +13,14 @@ describe('Predefine Rest API', () => {
     pathSingle: '/predefines/:bucket/:id',
     pathList: '/predefines/:bucket',
     pathSchema: '/predefines/:bucket/schema/',
+    pathExport: '/predefines/:bucket/export/',
   };
 
   before(() => clearHttp());
 
   before(done => clear(done));
 
-  it('should handle HTTP POST on /predefines', done => {
+  it('should handle HTTP POST on /predefines/:bucket', done => {
     const { testPost } = testRouter(options, predefineRouter);
     testPost({ bucket, ...predefine.toObject() })
       .expect(201)
@@ -34,7 +35,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines', done => {
+  it('should handle HTTP GET on /predefines/:bucket', done => {
     const { testGet } = testRouter(options, predefineRouter);
     testGet({ bucket })
       .expect(200)
@@ -53,7 +54,22 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines/:id', done => {
+  it('should handle GET /predefines/:bucket/schema', done => {
+    const { testGetSchema } = testRouter(options, predefineRouter);
+    testGetSchema({ bucket }).expect(200, done);
+  });
+
+  it('should handle GET /predefines/:bucket/export', done => {
+    const { testGetExport } = testRouter(options, predefineRouter);
+    testGetExport({ bucket })
+      .expect('Content-Type', 'text/csv; charset=utf-8')
+      .expect(({ headers }) => {
+        expect(headers['content-disposition']).to.exist;
+      })
+      .expect(200, done);
+  });
+
+  it('should handle HTTP GET on /predefines/:bucket/:id', done => {
     const { testGet } = testRouter(options, predefineRouter);
     const params = { bucket, id: predefine._id.toString() };
     testGet(params)
@@ -69,7 +85,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PATCH on /predefines/id:', done => {
+  it('should handle HTTP PATCH on /predefines/:bucket/:id', done => {
     const { testPatch } = testRouter(options, predefineRouter);
     const { description } = predefine.fakeOnly('description');
     const params = { bucket, id: predefine._id.toString() };
@@ -86,7 +102,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PUT on /predefines/id:', done => {
+  it('should handle HTTP PUT on /predefines/:bucket/:id', done => {
     const { testPut } = testRouter(options, predefineRouter);
     const { description } = predefine.fakeOnly('description');
     const params = { bucket, id: predefine._id.toString() };
@@ -103,7 +119,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP DELETE on /predefines/id:', done => {
+  it('should handle HTTP DELETE on /predefines/:bucket/:id', done => {
     const { testDelete } = testRouter(options, predefineRouter);
     const params = { bucket, id: predefine._id.toString() };
     testDelete(params)

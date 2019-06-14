@@ -118,6 +118,7 @@ import { getString } from '@lykmapipo/env';
 import {
   getFor,
   schemaFor,
+  downloadFor,
   getByIdFor,
   postFor,
   patchFor,
@@ -131,6 +132,7 @@ import Predefine from './predefine.model';
 const API_VERSION = getString('API_VERSION', '1.0.0');
 const PATH_SINGLE = '/predefines/:bucket/:id';
 const PATH_LIST = '/predefines/:bucket';
+const PATH_EXPORT = '/predefines/:bucket/export';
 const PATH_SCHEMA = '/predefines/:bucket/schema/';
 
 /* declarations */
@@ -175,6 +177,26 @@ router.get(
     getSchema: (query, done) => {
       const jsonSchema = Predefine.jsonSchema();
       return done(null, jsonSchema);
+    },
+  })
+);
+
+/**
+ * @api {get} /predefines/export Export Predefines
+ * @apiVersion 1.0.0
+ * @apiName ExportPredefines
+ * @apiGroup Predefine
+ * @apiDescription Export predefines as csv
+ * @apiUse RequestHeaders
+ */
+router.get(
+  PATH_EXPORT,
+  downloadFor({
+    download: (options, done) => {
+      const { bucket } = options.filter;
+      const fileName = `${bucket}_exports_${Date.now()}.csv`;
+      const readStream = Predefine.exportCsv(options);
+      return done(null, { fileName, readStream });
     },
   })
 );
