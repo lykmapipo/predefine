@@ -1,3 +1,11 @@
+#### 0.3.1 (2019-06-19)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([7b1658c8](https://github.com/lykmapipo/predefine/commit/7b1658c816c0f3f3e8f25740f0bb335d7fadefb5))
+* **ci:**  force latest node version ([bdb1f0d9](https://github.com/lykmapipo/predefine/commit/bdb1f0d9132c4051d64850cae44d0e1ad552aeae))
+*  force latest engines ([93b80a6b](https://github.com/lykmapipo/predefine/commit/93b80a6bca1af15f67ab9bc5991e7fa3edcfc45f))
+
 #### 0.3.0 (2019-06-14)
 
 ##### New Features
