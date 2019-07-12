@@ -332,6 +332,33 @@ const PredefineSchema = createSchema(
     },
 
     /**
+     * @name preset
+     * @description Tells whether a predefine is the part of preset value
+     * of its bucket or namespace.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {boolean} index - ensure database index
+     * @property {boolean} default - default value set when none provided
+     * @property {object|boolean} fake - fake data generator options
+     *
+     * @author lally elias <lallyelias87@gmail.com>
+     * @since 0.1.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * false
+     *
+     */
+    preset: {
+      type: Boolean,
+      index: true,
+      exportable: true,
+      default: false,
+      fake: true,
+    },
+
+    /**
      * @name color
      * @description A color in hexadecimal format used to differentiate
      * predefined value visually from one other.

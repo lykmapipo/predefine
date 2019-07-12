@@ -192,6 +192,20 @@ describe('Predefine Schema', () => {
     expect(isDefault.options.fake).to.exist;
   });
 
+  it('should have preset field', () => {
+    const preset = Predefine.path('preset');
+
+    expect(preset).to.exist;
+    expect(preset).to.be.instanceof(SchemaTypes.Boolean);
+    expect(preset.options).to.exist;
+    expect(preset.options).to.be.an('object');
+    expect(preset.options.type).to.exist;
+    expect(preset.options.index).to.be.true;
+    expect(preset.options.exportable).to.be.true;
+    expect(preset.options.default).to.be.false;
+    expect(preset.options.fake).to.exist;
+  });
+
   it('should have color field', () => {
     const color = Predefine.path('color');
 
