@@ -22,37 +22,28 @@
  *
  */
 
-/* dependencies */
 import _ from 'lodash';
 import randomColor from 'randomcolor';
-import { sortedUniq, abbreviate, mergeObjects } from '@lykmapipo/common';
-import { getString, getStrings } from '@lykmapipo/env';
-import {
-  createSchema,
-  model,
-  collectionNameOf,
-} from '@lykmapipo/mongoose-common';
+import { abbreviate, mergeObjects } from '@lykmapipo/common';
+import { createSchema, model } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
 import localize from 'mongoose-locale-schema';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
 
 /* constants */
-const MODEL_NAME = getString('PREDEFINE_MODEL_NAME', 'Predefine');
-const COLLECTION_NAME = getString('PREDEFINE_COLLECTION_NAME', 'predefines');
-const SCHEMA_OPTIONS = { collection: COLLECTION_NAME };
-const DEFAULT_NAMESPACE = getString('PREDEFINE_DEFAULT_NAMESPACE', 'Setting');
-const NAMESPACES = sortedUniq([
+import {
+  MODEL_NAME,
+  COLLECTION_NAME,
+  SCHEMA_OPTIONS,
   DEFAULT_NAMESPACE,
-  ...getStrings('PREDEFINE_NAMESPACES', DEFAULT_NAMESPACE),
-]);
-const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
-  return { namespace, bucket: collectionNameOf(namespace) };
-});
-const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
-const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
-const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
-const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
+  NAMESPACES,
+  NAMESPACE_MAP,
+  DEFAULT_BUCKET,
+  BUCKETS,
+  DEFAULT_LOCALE,
+  LOCALES,
+} from './utils';
 
 /**
  * @name PredefineSchema
