@@ -177,7 +177,8 @@ const PredefineSchema = createSchema(
      * @description Human(and machine) readable, unique identifier of a
      * prefined.
      *
-     * It used in generation of physical tag or barcode when needed.
+     * It used in generation of physical tag or barcode when needed. It also
+     * used as variable name where applicable.
      *
      * @type {object}
      * @property {object} type - schema(data) type
