@@ -41,19 +41,21 @@ describe('Predefine Schema', () => {
 
   it('should have name field', () => {
     const name = Predefine.path('name');
+    const en = Predefine.path('name.en');
 
     expect(name).to.exist;
-    expect(name).to.be.instanceof(SchemaTypes.String);
-    expect(name.options).to.exist;
-    expect(name.options).to.be.an('object');
-    expect(name.options.type).to.exist;
-    expect(name.options.trim).to.be.true;
-    expect(name.options.required).to.be.true;
-    expect(name.options.index).to.be.true;
-    expect(name.options.searchable).to.be.true;
-    expect(name.options.taggable).to.be.true;
-    expect(name.options.exportable).to.be.true;
-    expect(name.options.fake).to.exist;
+    expect(en).to.exist;
+    expect(en).to.be.instanceof(SchemaTypes.String);
+    expect(en.options).to.exist;
+    expect(en.options).to.be.an('object');
+    expect(en.options.type).to.exist;
+    expect(en.options.trim).to.be.true;
+    expect(en.options.required).to.be.true;
+    expect(en.options.index).to.be.true;
+    expect(en.options.searchable).to.be.true;
+    expect(en.options.taggable).to.be.true;
+    expect(en.options.exportable).to.be.true;
+    expect(en.options.fake).to.exist;
   });
 
   it('should have code field', () => {
@@ -86,32 +88,36 @@ describe('Predefine Schema', () => {
 
   it('should have abbreviation field', () => {
     const abbreviation = Predefine.path('abbreviation');
+    const en = Predefine.path('abbreviation.en');
 
     expect(abbreviation).to.exist;
-    expect(abbreviation).to.be.instanceof(SchemaTypes.String);
-    expect(abbreviation.options).to.exist;
-    expect(abbreviation.options).to.be.an('object');
-    expect(abbreviation.options.type).to.exist;
-    expect(abbreviation.options.trim).to.be.true;
-    expect(abbreviation.options.index).to.be.true;
-    expect(abbreviation.options.searchable).to.be.true;
-    expect(abbreviation.options.exportable).to.be.true;
-    expect(abbreviation.options.fake).to.exist;
+    expect(en).to.exist;
+    expect(en).to.be.instanceof(SchemaTypes.String);
+    expect(en.options).to.exist;
+    expect(en.options).to.be.an('object');
+    expect(en.options.type).to.exist;
+    expect(en.options.trim).to.be.true;
+    expect(en.options.index).to.be.true;
+    expect(en.options.searchable).to.be.true;
+    expect(en.options.exportable).to.be.true;
+    expect(en.options.fake).to.exist;
   });
 
   it('should have description field', () => {
     const description = Predefine.path('description');
+    const en = Predefine.path('description.en');
 
     expect(description).to.exist;
-    expect(description).to.be.instanceof(SchemaTypes.String);
-    expect(description.options).to.exist;
-    expect(description.options).to.be.an('object');
-    expect(description.options.type).to.exist;
-    expect(description.options.trim).to.be.true;
-    expect(description.options.index).to.be.true;
-    expect(description.options.searchable).to.be.true;
-    expect(description.options.exportable).to.be.true;
-    expect(description.options.fake).to.exist;
+    expect(en).to.exist;
+    expect(en).to.be.instanceof(SchemaTypes.String);
+    expect(en.options).to.exist;
+    expect(en.options).to.be.an('object');
+    expect(en.options.type).to.exist;
+    expect(en.options.trim).to.be.true;
+    expect(en.options.index).to.be.true;
+    expect(en.options.searchable).to.be.true;
+    expect(en.options.exportable).to.be.true;
+    expect(en.options.fake).to.exist;
   });
 
   it('should have weight field', () => {

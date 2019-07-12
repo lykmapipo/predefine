@@ -103,6 +103,7 @@
     "async": ">=3.1.0",
     "lodash": ">=4.17.14",
     "mongoose-geojson-schemas": ">=0.10.8",
+    "mongoose-locale-schema": ">=0.3.4",
     "mongoose-rest-actions": ">=0.28.6",
     "randomcolor": ">=0.5.4"
   },

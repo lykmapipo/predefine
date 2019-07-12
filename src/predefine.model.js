@@ -33,6 +33,7 @@ import {
   collectionNameOf,
 } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
+import localize from 'mongoose-locale-schema';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
 
@@ -50,6 +51,8 @@ const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
 });
 const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
+const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
+const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
 
 /**
  * @name PredefineSchema
@@ -158,7 +161,7 @@ const PredefineSchema = createSchema(
      * Kilogram, US Dollar
      *
      */
-    name: {
+    name: localize({
       type: String,
       trim: true,
       required: true,
@@ -167,7 +170,7 @@ const PredefineSchema = createSchema(
       taggable: true,
       exportable: true,
       fake: f => f.commerce.productName(),
-    },
+    }),
 
     /**
      * @name code
@@ -246,7 +249,7 @@ const PredefineSchema = createSchema(
      * kg, usd
      *
      */
-    abbreviation: {
+    abbreviation: localize({
       type: String,
       trim: true,
       index: true,
@@ -254,7 +257,7 @@ const PredefineSchema = createSchema(
       taggable: true,
       exportable: true,
       fake: f => _.toUpper(f.hacker.abbreviation()),
-    },
+    }),
 
     /**
      * @name description
@@ -275,14 +278,14 @@ const PredefineSchema = createSchema(
      * Default date format
      *
      */
-    description: {
+    description: localize({
       type: String,
       trim: true,
       index: true,
       searchable: true,
       exportable: true,
       fake: f => f.lorem.sentence(),
-    },
+    }),
 
     /**
      * @name weight
@@ -487,7 +490,13 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   this.set(bucketAndNamespace);
 
   // ensure abbreviation
-  this.abbreviation = _.trim(this.abbreviation) || abbreviate(this.name);
+  // TODO refactor to util.ensureAbbreviation
+  this.abbreviation = this.abbreviation || {};
+  _.forEach(LOCALES, locale => {
+    let abbreviation = _.get(this.abbreviation, locale);
+    abbreviation = _.trim(abbreviation) || abbreviate(_.get(this.name, locale));
+    _.set(this.abbreviation, locale, abbreviation);
+  });
 
   // ensure code
   this.code = _.trim(this.code) || this.abbreviation;
