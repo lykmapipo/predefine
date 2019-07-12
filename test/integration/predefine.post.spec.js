@@ -1,10 +1,8 @@
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src/index';
 
 describe('Predefine Static Post', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   const predefine = Predefine.fake();
 
@@ -13,20 +11,16 @@ describe('Predefine Static Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.description).to.eql(predefine.description);
+      expect(created.code).to.eql(predefine.code);
       done(error, created);
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });
 
 describe('Predefine Instance Post', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   const predefine = Predefine.fake();
 
@@ -35,12 +29,10 @@ describe('Predefine Instance Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.description).to.eql(predefine.description);
+      expect(created.code).to.eql(predefine.code);
       done(error, created);
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });

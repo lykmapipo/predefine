@@ -1,11 +1,9 @@
 import _ from 'lodash';
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src/index';
 
 describe('Predefine Get', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   let predefines = Predefine.fake(32);
 
@@ -66,7 +64,7 @@ describe('Predefine Get', () => {
   });
 
   it('should be able to search with options', done => {
-    const options = { filter: { q: predefines[0].name } };
+    const options = { filter: { q: predefines[0].code } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
       expect(results).to.exist;
@@ -91,7 +89,7 @@ describe('Predefine Get', () => {
   });
 
   it('should parse filter options', done => {
-    const options = { filter: { name: predefines[0].name } };
+    const options = { filter: { code: predefines[0].code } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
       expect(results).to.exist;
@@ -115,7 +113,5 @@ describe('Predefine Get', () => {
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });

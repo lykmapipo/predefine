@@ -1,11 +1,9 @@
 import _ from 'lodash';
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src/index';
 
 describe('Predefine getById', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   let predefine = Predefine.fake();
 
@@ -58,7 +56,5 @@ describe('Predefine getById', () => {
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });

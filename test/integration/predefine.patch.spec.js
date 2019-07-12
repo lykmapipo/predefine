@@ -1,11 +1,9 @@
 import _ from 'lodash';
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src/index';
 
 describe('Predefine Static Patch', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   let predefine = Predefine.fake();
 
@@ -17,12 +15,12 @@ describe('Predefine Static Patch', () => {
   });
 
   it('should be able to patch', done => {
-    predefine = predefine.fakeOnly('description');
+    predefine = predefine.fakeOnly('description.en');
     Predefine.patch(predefine._id, predefine, (error, updated) => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
       expect(updated._id).to.eql(predefine._id);
-      expect(updated.name).to.eql(predefine.name);
+      expect(updated.description.en).to.eql(predefine.description.en);
       done(error, updated);
     });
   });
@@ -38,15 +36,11 @@ describe('Predefine Static Patch', () => {
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });
 
 describe('Predefine Instance Patch', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   let predefine = Predefine.fake();
 
@@ -58,12 +52,12 @@ describe('Predefine Instance Patch', () => {
   });
 
   it('should be able to patch', done => {
-    predefine = predefine.fakeOnly('description');
+    predefine = predefine.fakeOnly('description.en');
     predefine.patch((error, updated) => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
       expect(updated._id).to.eql(predefine._id);
-      expect(updated.name).to.eql(predefine.name);
+      expect(updated.description.en).to.eql(predefine.description.en);
       done(error, updated);
     });
   });
@@ -77,7 +71,5 @@ describe('Predefine Instance Patch', () => {
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });

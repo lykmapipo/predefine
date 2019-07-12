@@ -34,9 +34,9 @@ describe('Predefine Seed', () => {
   it('should seed provided', done => {
     const seed = {
       namespace: 'Setting',
-      name: 'US Dollar',
+      name: { en: 'US Dollar' },
       code: 'USD',
-      abbreviation: 'USD',
+      abbreviation: { en: 'USD' },
       symbol: '$',
     };
     Predefine.seed(seed, (error, seeded) => {
@@ -51,9 +51,9 @@ describe('Predefine Seed', () => {
   it('should seed provided', done => {
     const seed = {
       namespace: 'Setting',
-      name: 'US Dollar',
+      name: { en: 'US Dollar' },
       code: 'USD',
-      abbreviation: 'USD',
+      abbreviation: { en: 'USD' },
       symbol: '$',
     };
     Predefine.seed([seed], (error, seeded) => {
@@ -68,9 +68,9 @@ describe('Predefine Seed', () => {
   it('should not throw if provided exist', done => {
     const seed = {
       namespace: 'Setting',
-      name: 'US Dollar',
+      name: { en: 'US Dollar' },
       code: 'USD',
-      abbreviation: 'USD',
+      abbreviation: { en: 'USD' },
       symbol: '$',
     };
     Predefine.seed(seed, (error, seeded) => {

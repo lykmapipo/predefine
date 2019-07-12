@@ -500,7 +500,7 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   });
 
   // ensure code
-  this.code = _.trim(this.code) || this.abbreviation;
+  this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
 
   // continue
   done();
@@ -533,9 +533,10 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
+  const names = _.map(LOCALES, locale => `name.${locale}`);
   const criteria = _.get(seed, '_id')
     ? _.pick(seed, '_id')
-    : _.pick(seed, 'namespace', 'bucket', 'name', 'code');
+    : _.pick(seed, 'namespace', 'bucket', 'code', ...names);
   return criteria;
 };
 

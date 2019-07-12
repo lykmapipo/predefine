@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
 import Predefine from '../../src/predefine.model';
 
@@ -94,5 +95,19 @@ describe('Predefine Statics', () => {
   it('should expose collection name', () => {
     expect(Predefine.COLLECTION_NAME).to.exist;
     expect(Predefine.COLLECTION_NAME).to.be.equal('predefines');
+  });
+
+  it('should prepase seed criteria from object id', () => {
+    const predefine = Predefine.fake().toObject();
+    const seed = Predefine.prepareSeedCriteria(predefine);
+    expect(seed).to.exist;
+    expect(seed._id).to.exist;
+  });
+
+  it('should prepase seed criteria from object id', () => {
+    const predefine = _.omit(Predefine.fake().toObject(), '_id');
+    const seed = Predefine.prepareSeedCriteria(predefine);
+    expect(seed).to.exist;
+    expect(seed._id).to.not.exist;
   });
 });

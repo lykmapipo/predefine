@@ -2,7 +2,7 @@ import {
   clear as clearHttp,
   testRouter,
 } from '@lykmapipo/express-test-helpers';
-import { clear, expect } from '@lykmapipo/mongoose-test-helpers';
+import { clear as clearDb, expect } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine, predefineRouter } from '../../src/index';
 
 describe('Predefine Rest API', () => {
@@ -18,7 +18,7 @@ describe('Predefine Rest API', () => {
 
   before(() => clearHttp());
 
-  before(done => clear(done));
+  before(done => clearDb(done));
 
   it('should handle HTTP POST on /predefines/:bucket', done => {
     const { testPost } = testRouter(options, predefineRouter);
@@ -30,7 +30,7 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const created = new Predefine(body);
         expect(created._id).to.exist.and.be.eql(predefine._id);
-        expect(created.name).to.exist.and.be.eql(predefine.name);
+        expect(created.code).to.exist.and.be.eql(predefine.code);
         done(error, body);
       });
   });
@@ -80,7 +80,7 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const found = new Predefine(body);
         expect(found._id).to.exist.and.be.eql(predefine._id);
-        expect(found.name).to.exist.and.be.eql(predefine.name);
+        expect(found.code).to.exist.and.be.eql(predefine.code);
         done(error, body);
       });
   });
@@ -97,7 +97,7 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const patched = new Predefine(body);
         expect(patched._id).to.exist.and.be.eql(predefine._id);
-        expect(patched.name).to.exist.and.be.eql(predefine.name);
+        expect(patched.code).to.exist.and.be.eql(predefine.code);
         done(error, body);
       });
   });
@@ -114,7 +114,7 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const patched = new Predefine(body);
         expect(patched._id).to.exist.and.be.eql(predefine._id);
-        expect(patched.name).to.exist.and.be.eql(predefine.name);
+        expect(patched.code).to.exist.and.be.eql(predefine.code);
         done(error, body);
       });
   });
@@ -130,12 +130,12 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const patched = new Predefine(body);
         expect(patched._id).to.exist.and.be.eql(predefine._id);
-        expect(patched.name).to.exist.and.be.eql(predefine.name);
+        expect(patched.code).to.exist.and.be.eql(predefine.code);
         done(error, body);
       });
   });
 
   after(() => clearHttp());
 
-  after(done => clear(done));
+  after(done => clearDb(done));
 });

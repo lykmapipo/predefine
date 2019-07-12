@@ -1,10 +1,8 @@
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src/index';
 
 describe('Predefine Static Delete', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   let predefine = Predefine.fake();
 
@@ -34,15 +32,11 @@ describe('Predefine Static Delete', () => {
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });
 
 describe('Predefine Instance Delete', () => {
-  before(done => {
-    Predefine.deleteMany(done);
-  });
+  before(done => clear(done));
 
   let predefine = Predefine.fake();
 
@@ -71,7 +65,5 @@ describe('Predefine Instance Delete', () => {
     });
   });
 
-  after(done => {
-    Predefine.deleteMany(done);
-  });
+  after(done => clear(done));
 });
