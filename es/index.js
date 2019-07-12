@@ -6,6 +6,7 @@ import _ from 'lodash';
 import randomColor from 'randomcolor';
 import { model, collectionNameOf, createSchema } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
+import localize from 'mongoose-locale-schema';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
 
@@ -47,6 +48,8 @@ const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
 });
 const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
+const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
+const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
 
 /**
  * @name PredefineSchema
@@ -155,7 +158,7 @@ const PredefineSchema = createSchema(
      * Kilogram, US Dollar
      *
      */
-    name: {
+    name: localize({
       type: String,
       trim: true,
       required: true,
@@ -164,7 +167,7 @@ const PredefineSchema = createSchema(
       taggable: true,
       exportable: true,
       fake: f => f.commerce.productName(),
-    },
+    }),
 
     /**
      * @name code
@@ -243,7 +246,7 @@ const PredefineSchema = createSchema(
      * kg, usd
      *
      */
-    abbreviation: {
+    abbreviation: localize({
       type: String,
       trim: true,
       index: true,
@@ -251,7 +254,7 @@ const PredefineSchema = createSchema(
       taggable: true,
       exportable: true,
       fake: f => _.toUpper(f.hacker.abbreviation()),
-    },
+    }),
 
     /**
      * @name description
@@ -272,14 +275,14 @@ const PredefineSchema = createSchema(
      * Default date format
      *
      */
-    description: {
+    description: localize({
       type: String,
       trim: true,
       index: true,
       searchable: true,
       exportable: true,
       fake: f => f.lorem.sentence(),
-    },
+    }),
 
     /**
      * @name weight
@@ -432,7 +435,11 @@ const PredefineSchema = createSchema(
  * @version 0.1.0
  * @private
  */
-const uniqueIndex = { namespace: 1, bucket: 1, name: 1, code: 1 };
+// TODO refactor to util.uniqueIndex
+const uniqueIndex = { namespace: 1, bucket: 1, code: 1 };
+_.forEach(LOCALES, locale => {
+  uniqueIndex[`name.${locale}`] = 1;
+});
 PredefineSchema.index(uniqueIndex, { unique: true });
 
 /*
@@ -475,6 +482,7 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
   // ensure correct namespace and bucket
+  // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
   const bucketAndNamespace = mergeObjects(
     { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
@@ -484,10 +492,16 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   this.set(bucketAndNamespace);
 
   // ensure abbreviation
-  this.abbreviation = _.trim(this.abbreviation) || abbreviate(this.name);
+  // TODO refactor to util.ensureAbbreviation
+  this.abbreviation = this.abbreviation || {};
+  _.forEach(LOCALES, locale => {
+    let abbreviation = _.get(this.abbreviation, locale);
+    abbreviation = _.trim(abbreviation) || abbreviate(_.get(this.name, locale));
+    _.set(this.abbreviation, locale, abbreviation);
+  });
 
   // ensure code
-  this.code = _.trim(this.code) || this.abbreviation;
+  this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
 
   // continue
   done();
@@ -520,9 +534,10 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
+  const names = _.map(LOCALES, locale => `name.${locale}`);
   const criteria = _.get(seed, '_id')
     ? _.pick(seed, '_id')
-    : _.pick(seed, 'namespace', 'bucket', 'name', 'code');
+    : _.pick(seed, 'namespace', 'bucket', 'code', ...names);
   return criteria;
 };
 

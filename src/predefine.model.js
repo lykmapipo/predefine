@@ -438,7 +438,11 @@ const PredefineSchema = createSchema(
  * @version 0.1.0
  * @private
  */
-const uniqueIndex = { namespace: 1, bucket: 1, name: 1, code: 1 };
+// TODO refactor to util.uniqueIndex
+const uniqueIndex = { namespace: 1, bucket: 1, code: 1 };
+_.forEach(LOCALES, locale => {
+  uniqueIndex[`name.${locale}`] = 1;
+});
 PredefineSchema.index(uniqueIndex, { unique: true });
 
 /*
