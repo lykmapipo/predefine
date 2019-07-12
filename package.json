@@ -80,7 +80,7 @@
     "generate-changelog": "^1.8.0",
     "handlebars": "^4.1.2",
     "husky": "^3.0.0",
-    "lint-staged": "^9.1.0",
+    "lint-staged": "^9.2.0",
     "mocha": "^6.1.4",
     "mongoose": ">=5.6.4",
     "npm-check-updates": "^3.1.18",
@@ -100,7 +100,7 @@
     "@lykmapipo/mongoose-common": ">=0.25.8",
     "@lykmapipo/mongoose-exportable": ">=0.3.6",
     "async": ">=3.1.0",
-    "lodash": ">=4.17.11",
+    "lodash": ">=4.17.14",
     "mongoose-geojson-schemas": ">=0.10.8",
     "mongoose-rest-actions": ">=0.28.6",
     "randomcolor": ">=0.5.4"
