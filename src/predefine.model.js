@@ -481,6 +481,7 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
   // ensure correct namespace and bucket
+  // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
   const bucketAndNamespace = mergeObjects(
     { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },

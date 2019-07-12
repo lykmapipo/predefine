@@ -11,7 +11,10 @@ describe('Predefine Instance', () => {
   });
 
   it('should set abbreviation on pre validate', done => {
-    const predefine = Predefine.fakeExcept('abbreviation.en');
+    const predefine = Predefine.fakeExcept(
+      'abbreviation.en',
+      'abbreviation.sw'
+    );
 
     expect(predefine.abbreviation).to.not.exist;
     predefine.preValidate(error => {
@@ -40,6 +43,30 @@ describe('Predefine Instance', () => {
     predefine.preValidate(error => {
       expect(predefine.bucket).to.exist;
       expect(predefine.bucket).to.be.equal('settings');
+      done(error);
+    });
+  });
+
+  it('should set correct namespace on pre validate', done => {
+    const predefine = Predefine.fake();
+    predefine.set({ bucket: 'units', namespace: null });
+
+    expect(predefine.namespace).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.namespace).to.exist;
+      expect(predefine.namespace).to.be.equal('Unit');
+      done(error);
+    });
+  });
+
+  it('should set correct bucket on pre validate', done => {
+    const predefine = Predefine.fake();
+    predefine.set({ namespace: 'Unit', bucket: null });
+
+    expect(predefine.bucket).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.bucket).to.exist;
+      expect(predefine.bucket).to.be.equal('units');
       done(error);
     });
   });
