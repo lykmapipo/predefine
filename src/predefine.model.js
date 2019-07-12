@@ -315,6 +315,33 @@ const PredefineSchema = createSchema(
     },
 
     /**
+     * @name default
+     * @description Tells whether a predefine is the default value of its
+     * bucket or namespace.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {boolean} index - ensure database index
+     * @property {boolean} default - default value set when none provided
+     * @property {object|boolean} fake - fake data generator options
+     *
+     * @author lally elias <lallyelias87@gmail.com>
+     * @since 0.1.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * false
+     *
+     */
+    default: {
+      type: Boolean,
+      index: true,
+      exportable: true,
+      default: false,
+      fake: true,
+    },
+
+    /**
      * @name color
      * @description A color in hexadecimal format used to differentiate
      * predefined value visually from one other.
@@ -505,6 +532,15 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
 
   // ensure code
   this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
+
+  // ensure description
+  // TODO refactor to util.ensureDescription
+  this.description = this.description || {};
+  _.forEach(LOCALES, locale => {
+    let description = _.get(this.description, locale);
+    description = _.trim(description) || _.get(this.name, locale);
+    _.set(this.description, locale, description);
+  });
 
   // continue
   done();
