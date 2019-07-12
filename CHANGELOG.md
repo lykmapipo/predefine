@@ -1,3 +1,9 @@
+#### 0.3.3 (2019-07-12)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([41da2562](https://github.com/lykmapipo/predefine/commit/41da25627fdc96ebf127e770f1b0287f3399abc2))
+
 #### 0.3.2 (2019-07-09)
 
 ##### Chores
