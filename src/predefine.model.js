@@ -164,7 +164,6 @@ const PredefineSchema = createSchema(
     name: localize({
       type: String,
       trim: true,
-      required: true,
       index: true,
       searchable: true,
       taggable: true,
