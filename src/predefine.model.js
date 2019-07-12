@@ -23,8 +23,7 @@
  */
 
 import _ from 'lodash';
-import randomColor from 'randomcolor';
-import { abbreviate, mergeObjects } from '@lykmapipo/common';
+import { abbreviate, mergeObjects, randomColor } from '@lykmapipo/common';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
 import localize from 'mongoose-locale-schema';
@@ -357,7 +356,7 @@ const PredefineSchema = createSchema(
       trim: true,
       uppercase: true,
       exportable: true,
-      default: () => _.toUpper(randomColor({ luminosity: 'light' })),
+      default: () => randomColor(),
       fake: true,
     },
 
