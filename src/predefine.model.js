@@ -528,6 +528,10 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @instance
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
+  // TODO ensure name  for all locales
+  // TODO ensure description for all locales
+  // TODO ensure abbreviation for all locales
+
   // ensure correct namespace and bucket
   // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
@@ -590,6 +594,7 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
+  // TODO refactor to util.localizedNameFields
   const names = _.map(LOCALES, locale => `name.${locale}`);
   const criteria = _.get(seed, '_id')
     ? _.pick(seed, '_id')

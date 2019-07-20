@@ -33,3 +33,5 @@ export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
 export const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
+
+export const createRelationSchema = () => {};
