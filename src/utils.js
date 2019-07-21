@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { getObject, getString, getStringSet } from '@lykmapipo/env';
 import {
   abbreviate,
+  compact,
   isNotValue,
   mergeObjects,
   singularize,
@@ -135,7 +136,7 @@ export const localizedAbbreviationsFor = (val = {}) => {
     );
     value[locale] = abbreviation;
   });
-  return value;
+  return compact(value);
 };
 
 /**

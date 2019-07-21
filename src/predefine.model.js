@@ -23,7 +23,7 @@
  */
 
 import _ from 'lodash';
-import { abbreviate, mergeObjects, randomColor } from '@lykmapipo/common';
+import { mergeObjects, randomColor } from '@lykmapipo/common';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
 import localize from 'mongoose-locale-schema';
@@ -41,9 +41,9 @@ import {
   DEFAULT_BUCKET,
   BUCKETS,
   DEFAULT_LOCALE,
-  LOCALES,
   localizedNamesFor,
   localizedValuesFor,
+  localizedAbbreviationsFor,
   uniqueIndexes,
   createRelationsSchema,
 } from './utils';
@@ -559,7 +559,11 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
     localizedValuesFor(this.description)
   );
 
-  // TODO ensure abbreviation for all locales
+  // ensure abbreviation for all locales
+  this.abbreviation = mergeObjects(
+    localizedAbbreviationsFor(this.name),
+    localizedValuesFor(this.abbreviation)
+  );
 
   // ensure correct namespace and bucket
   // TODO refactor to util.ensureBucketAndNamaspace
@@ -570,15 +574,6 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
     _.find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
   );
   this.set(bucketAndNamespace);
-
-  // ensure abbreviation
-  // TODO refactor to util.ensureAbbreviation
-  this.abbreviation = this.abbreviation || {};
-  _.forEach(LOCALES, locale => {
-    let abbreviation = _.get(this.abbreviation, locale);
-    abbreviation = _.trim(abbreviation) || abbreviate(_.get(this.name, locale));
-    _.set(this.abbreviation, locale, abbreviation);
-  });
 
   // ensure code
   this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];

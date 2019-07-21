@@ -128,6 +128,43 @@ describe('Predefine Instance', () => {
       done(error);
     });
   });
+
+  it('should set localized abbreviation values', done => {
+    const predefine = Predefine.fakeExcept('abbreviation.sw');
+
+    expect(predefine.abbreviation.sw).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.abbreviation.sw).to.exist;
+      expect(predefine.abbreviation.sw).to.be.equal(predefine.abbreviation.en);
+      done(error);
+    });
+  });
+
+  it('should set localized abbreviation values', done => {
+    const predefine = Predefine.fakeExcept('abbreviation.en');
+
+    expect(predefine.abbreviation.en).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.abbreviation.en).to.exist;
+      expect(predefine.abbreviation.en).to.be.equal(predefine.abbreviation.sw);
+      done(error);
+    });
+  });
+
+  it('should set localized abbreviation values from name', done => {
+    const predefine = Predefine.fakeExcept(
+      'abbreviation.en',
+      'abbreviation.sw'
+    );
+
+    expect(predefine.abbreviation).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.abbreviation).to.exist;
+      expect(predefine.abbreviation.en).to.exist;
+      expect(predefine.abbreviation.sw).to.exist;
+      done(error);
+    });
+  });
 });
 
 describe.skip('Predefine Validations', () => {

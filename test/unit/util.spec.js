@@ -42,6 +42,11 @@ describe('utils', () => {
     expect(value).to.exist.and.be.an('object');
     expect(value.en).to.be.eql(val.en);
     expect(value.sw).to.be.eql(val.sw);
+
+    value = localizedValuesFor(undefined);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.not.exist;
+    expect(value.sw).to.not.exist;
   });
 
   it('should abbreveate a localized value', () => {
@@ -54,11 +59,22 @@ describe('utils', () => {
     expect(value.en).to.be.eql('T');
     expect(value.sw).to.be.eql('T');
 
+    val = { sw: 'Nyanya' };
+    value = localizedAbbreviationsFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql('N');
+    expect(value.sw).to.be.eql('N');
+
     val = { en: 'Tomato', sw: 'Nyanya' };
     value = localizedAbbreviationsFor(val);
     expect(value).to.exist.and.be.an('object');
     expect(value.en).to.be.eql('T');
     expect(value.sw).to.be.eql('N');
+
+    value = localizedAbbreviationsFor(undefined);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.not.exist;
+    expect(value.sw).to.not.exist;
   });
 
   it('should derive unique indexes', () => {
