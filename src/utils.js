@@ -35,8 +35,8 @@ export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 export const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
 
 /**
- * @function mapNamespaceToRelation
- * @name mapNamespaceToRelation
+ * @function parseNamespaceRelations
+ * @name parseNamespaceRelations
  * @description Convert all specified namespace to relations
  * @return {Object} valid normalized relations
  * @author lally elias <lallyelias87@gmail.com>
@@ -47,33 +47,29 @@ export const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
  * @public
  * @example
  *
- * mapNamespaceToRelation();
+ * parseNamespaceRelations();
  * // => { setting: { type: ObjectId, ref: 'Predefine' } }
  *
  */
-export const mapNamespaceToRelation = () => {
-  const relations = _.reduce(
-    [...NAMESPACES],
-    (result, namespace) => {
-      const path = _.toLower(singularize(namespace));
-      const schema = {
-        type: ObjectId,
-        ref: MODEL_NAME,
-        index: true,
-        aggregatable: true,
-        taggable: true,
-        autopopulate: { maxDepth: 1 },
-      };
-      return mergeObjects(result, { [path]: schema });
-    },
-    {}
-  );
+export const parseNamespaceRelations = () => {
+  const paths = _.map(NAMESPACES, path => _.toLower(singularize(path)));
+  let relations = _.zipObject(paths, paths);
+  relations = _.mapValues(relations, () => {
+    return mergeObjects({
+      type: ObjectId,
+      ref: MODEL_NAME,
+      index: true,
+      aggregatable: true,
+      taggable: true,
+      autopopulate: { maxDepth: 1 },
+    });
+  });
   return relations;
 };
 
 /**
- * @function parseRelations
- * @name parseRelations
+ * @function parseGivenRelations
+ * @name parseGivenRelations
  * @description Safely parse and normalize predefine relation config
  * @param {Mixed} relations relation to parse
  * @return {Object} valid normalized relations
@@ -85,25 +81,27 @@ export const mapNamespaceToRelation = () => {
  * @public
  * @example
  *
- * parseRelations('{"owner":{"ref":"Party"}}');
- * // => { owner: { ref: 'Party' } }
- *
- * parseRelations('{"owner":{"ref":"Party","autopopulate":true}}');
+ * process.env.PREDEFINE_RELATIONS='{"owner":{"ref":"Party"}}'
+ * parseGivenRelations();
  * // => { owner: { ref: 'Party', autopopulate:true } }
  *
- * parseRelations('{"owner":{"ref":"Party","autopopulate":"name"}}');
- * // => { owner: { ref: 'Party', autopopulate: {select: { name: 1 }} } }
- *
- * parseRelations('{"owner":{"ref":"Party"},"image":{"ref":"File"}}');
- * // => { owner: { ref: 'Party' }, image: { ref: 'File' } }
- *
  */
-export const parseRelations = relations => {
-  const copyOfRelations = _.clone(relations);
-  return copyOfRelations;
+export const parseGivenRelations = () => {
+  let relations = getObject('PREDEFINE_RELATIONS', {});
+  relations = _.mapValues(relations, relation => {
+    return mergeObjects(relation, {
+      type: ObjectId,
+      ref: relation.ref || MODEL_NAME,
+      index: true,
+      aggregatable: true,
+      taggable: true,
+      autopopulate: { maxDepth: 1 },
+    });
+  });
+  return relations;
 };
 
-export const createRelationSchema = () => {
+export const createRelationsSchema = () => {
   const relations = getObject('PREDEFINE_RELATIONS', {});
   return relations;
   // TODO merge predefines relations
