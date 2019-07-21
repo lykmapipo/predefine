@@ -436,7 +436,7 @@ const PredefineSchema = createSchema(
     /**
      * @name relations
      * @description Map of logical associated values of a predefined. They
-     * reprents 1-to-1 relationshipo of other domain models with a predefine.
+     * reprents 1-to-1 relationship of other domain models with a predefine.
      *
      * @type {object}
      * @property {object} type - schema(data) type
