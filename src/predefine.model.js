@@ -42,6 +42,7 @@ import {
   BUCKETS,
   DEFAULT_LOCALE,
   LOCALES,
+  createRelationsSchema,
 } from './utils';
 
 /**
@@ -431,6 +432,29 @@ const PredefineSchema = createSchema(
      *
      */
     geometry: Geometry,
+
+    /**
+     * @name relations
+     * @description Map of logical associated values of a predefined. They
+     * reprents 1-to-1 relationshipo of other domain models with a predefine.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {boolean} index - ensure database index
+     * @property {boolean} aggregatable - allow field use for aggregation
+     * @property {boolean} taggable - allow field use for tagging
+     *
+     * @since 0.4.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "category": "5ce1a93ba7e7a56060e43997"
+     *   "unit": "5ce1a93ba7e7a56060e42981"
+     * }
+     *
+     */
+    relations: createRelationsSchema(),
 
     /**
      * @name properties
