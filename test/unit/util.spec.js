@@ -2,12 +2,25 @@ import _ from 'lodash';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
 import { Schema } from '@lykmapipo/mongoose-common';
 import {
+  uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
   createRelationsSchema,
 } from '../../src/utils';
 
 describe('utils', () => {
+  it('should derive unique indexes', () => {
+    expect(uniqueIndexes).to.exist;
+    expect(uniqueIndexes).to.be.a('function');
+
+    const indexes = uniqueIndexes();
+    expect(indexes).to.exist.and.be.an('object');
+    expect(indexes.namespace).to.exist.and.be.equal(1);
+    expect(indexes.bucket).to.exist.and.be.equal(1);
+    expect(indexes.code).to.exist.and.be.equal(1);
+    expect(indexes['name.en']).to.exist.and.be.equal(1);
+  });
+
   it('should map namespace to relations', () => {
     expect(parseNamespaceRelations).to.exist;
     expect(parseNamespaceRelations).to.be.a('function');

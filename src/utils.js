@@ -44,6 +44,31 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 
 /**
+ * @function uniqueIndexes
+ * @name uniqueIndexes
+ * @description Generate unique index definition of predefine
+ * @return {Object} unique index definition
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * uniqueIndexes();
+ * // => { 'name.en': 1, code: 1, bucket:1 }
+ *
+ */
+export const uniqueIndexes = () => {
+  const indexes = mergeObjects({ namespace: 1, bucket: 1, code: 1 });
+  _.forEach(LOCALES, locale => {
+    indexes[`name.${locale}`] = 1;
+  });
+  return indexes;
+};
+
+/**
  * @function parseNamespaceRelations
  * @name parseNamespaceRelations
  * @description Convert all specified namespace to relations
