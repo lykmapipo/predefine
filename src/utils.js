@@ -44,6 +44,29 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 
 /**
+ * @function localizedFieldNamesFor
+ * @name localizedFieldNamesFor
+ * @description Generate locale fields name of a given path
+ * @param {String} path valid schema path
+ * @return {Array} sorted set of localized fields
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedFieldNamesFor('name');
+ * // => ['name.en', 'name.sw']
+ *
+ */
+export const localizedFieldNamesFor = path => {
+  const fields = _.map(LOCALES, locale => `${path}.${locale}`);
+  return sortedUniq(fields);
+};
+
+/**
  * @function uniqueIndexes
  * @name uniqueIndexes
  * @description Generate unique index definition of predefine

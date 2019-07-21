@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
 import { Schema } from '@lykmapipo/mongoose-common';
 import {
+  localizedFieldNamesFor,
   uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
@@ -9,6 +10,15 @@ import {
 } from '../../src/utils';
 
 describe('utils', () => {
+  it('should generate path localized field names', () => {
+    expect(localizedFieldNamesFor).to.exist;
+    expect(localizedFieldNamesFor).to.be.a('function');
+
+    const names = localizedFieldNamesFor('name');
+    expect(names).to.exist.and.be.an('array');
+    expect(names).to.contain('name.en');
+  });
+
   it('should derive unique indexes', () => {
     expect(uniqueIndexes).to.exist;
     expect(uniqueIndexes).to.be.a('function');

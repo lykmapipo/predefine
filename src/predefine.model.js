@@ -42,6 +42,7 @@ import {
   BUCKETS,
   DEFAULT_LOCALE,
   LOCALES,
+  localizedFieldNamesFor,
   uniqueIndexes,
   createRelationsSchema,
 } from './utils';
@@ -614,8 +615,7 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
-  // TODO refactor to util.localizedNameFields
-  const names = _.map(LOCALES, locale => `name.${locale}`);
+  const names = localizedFieldNamesFor('name');
   const criteria = _.get(seed, '_id')
     ? _.pick(seed, '_id')
     : _.pick(seed, 'namespace', 'bucket', 'code', ...names);
