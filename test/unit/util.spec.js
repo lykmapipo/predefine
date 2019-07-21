@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, faker } from '@lykmapipo/mongoose-test-helpers';
 import { Schema } from '@lykmapipo/mongoose-common';
 import {
-  localizedFieldNamesFor,
+  localizedNamesFor,
+  localizedValuesFor,
   uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
@@ -11,12 +12,29 @@ import {
 
 describe('utils', () => {
   it('should generate path localized field names', () => {
-    expect(localizedFieldNamesFor).to.exist;
-    expect(localizedFieldNamesFor).to.be.a('function');
+    expect(localizedNamesFor).to.exist;
+    expect(localizedNamesFor).to.be.a('function');
 
-    const names = localizedFieldNamesFor('name');
+    const names = localizedNamesFor('name');
     expect(names).to.exist.and.be.an('array');
     expect(names).to.contain('name.en');
+  });
+
+  it('should normalize value for all locales', () => {
+    expect(localizedValuesFor).to.exist;
+    expect(localizedValuesFor).to.be.a('function');
+
+    let val = { en: faker.name.findName() };
+    let value = localizedValuesFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql(val.en);
+    expect(value.sw).to.be.eql(val.en);
+
+    val = { en: faker.name.findName(), sw: faker.name.findName() };
+    value = localizedValuesFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql(val.en);
+    expect(value.sw).to.be.eql(val.sw);
   });
 
   it('should derive unique indexes', () => {

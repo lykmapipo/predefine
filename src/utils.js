@@ -1,6 +1,11 @@
 import _ from 'lodash';
-import { sortedUniq, mergeObjects, singularize } from '@lykmapipo/common';
 import { getString, getStringSet, getObject } from '@lykmapipo/env';
+import {
+  isNotValue,
+  sortedUniq,
+  mergeObjects,
+  singularize,
+} from '@lykmapipo/common';
 import {
   collectionNameOf,
   ObjectId,
@@ -44,8 +49,8 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 
 /**
- * @function localizedFieldNamesFor
- * @name localizedFieldNamesFor
+ * @function localizedNamesFor
+ * @name localizedNamesFor
  * @description Generate locale fields name of a given path
  * @param {String} path valid schema path
  * @return {Array} sorted set of localized fields
@@ -57,13 +62,43 @@ export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
  * @public
  * @example
  *
- * localizedFieldNamesFor('name');
+ * localizedNamesFor('name');
  * // => ['name.en', 'name.sw']
  *
  */
-export const localizedFieldNamesFor = path => {
+export const localizedNamesFor = path => {
   const fields = _.map(LOCALES, locale => `${path}.${locale}`);
   return sortedUniq(fields);
+};
+
+/**
+ * @function localizedValuesFor
+ * @name localizedValuesFor
+ * @description Normalize given value to ensure all locales has value
+ * @param {Object} value valid localized values
+ * @return {Object} normalize localized values
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedValuesFor({ en: 'Tomato' });
+ * // => {en: 'Tomato', sw: 'Tomato'}
+ *
+ * localizedValuesFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'Tomato', sw: 'Nyanya'}
+ *
+ */
+export const localizedValuesFor = val => {
+  const value = {};
+  const defaultValue = val[DEFAULT_LOCALE];
+  _.forEach(LOCALES, locale => {
+    value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
+  });
+  return value;
 };
 
 /**
