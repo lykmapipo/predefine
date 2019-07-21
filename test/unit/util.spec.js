@@ -1,6 +1,11 @@
 import _ from 'lodash';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
-import { parseNamespaceRelations, parseGivenRelations } from '../../src/utils';
+import { Schema } from '@lykmapipo/mongoose-common';
+import {
+  parseNamespaceRelations,
+  parseGivenRelations,
+  createRelationsSchema,
+} from '../../src/utils';
 
 describe('utils', () => {
   it('should map namespace to relations', () => {
@@ -37,5 +42,18 @@ describe('utils', () => {
       expect(relation.autopopulate).to.exist.and.be.eql({ maxDepth: 1 });
       expect(relation.taggable).to.exist.and.be.true;
     });
+  });
+
+  it('should relations schema', () => {
+    expect(createRelationsSchema).to.exist;
+    expect(createRelationsSchema).to.be.a('function');
+
+    const relations = createRelationsSchema();
+    expect(relations).to.exist;
+    expect(relations).to.be.an.instanceof(Schema);
+    expect(relations.options._id).to.be.false;
+    expect(relations.options.id).to.be.false;
+    expect(relations.options.timestamps).to.be.false;
+    expect(relations.options.emitIndexErrors).to.be.true;
   });
 });

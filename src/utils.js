@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import { sortedUniq, mergeObjects, singularize } from '@lykmapipo/common';
 import { getString, getStringSet, getObject } from '@lykmapipo/env';
-import { collectionNameOf, ObjectId } from '@lykmapipo/mongoose-common';
+import {
+  collectionNameOf,
+  ObjectId,
+  createSubSchema,
+} from '@lykmapipo/mongoose-common';
 
 export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
@@ -30,6 +34,11 @@ export const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
   return { namespace, bucket: collectionNameOf(namespace) };
 });
 
+export const NAMESPACE_DICTIONARY = _.zipObject(
+  NAMESPACES,
+  _.map(NAMESPACES, namespace => collectionNameOf(namespace))
+);
+
 export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
@@ -41,7 +50,7 @@ export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
  * @return {Object} valid normalized relations
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
- * @since 0.24.0
+ * @since 0.4.0
  * @version 0.1.0
  * @static
  * @public
@@ -75,7 +84,7 @@ export const parseNamespaceRelations = () => {
  * @return {Object} valid normalized relations
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
- * @since 0.24.0
+ * @since 0.4.0
  * @version 0.1.0
  * @static
  * @public
@@ -101,10 +110,26 @@ export const parseGivenRelations = () => {
   return relations;
 };
 
+/**
+ * @function createRelationsSchema
+ * @name createRelationsSchema
+ * @description Create predefine relations schema
+ * @return {Schema} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * createRelationsSchema();
+ *
+ */
 export const createRelationsSchema = () => {
-  const relations = getObject('PREDEFINE_RELATIONS', {});
-  return relations;
-  // TODO merge predefines relations
-  // TODO normalize relations(population + aggregation)
-  // TODO create relation schema
+  const relations = mergeObjects(
+    parseGivenRelations(),
+    parseNamespaceRelations()
+  );
+  return createSubSchema(relations);
 };
