@@ -165,6 +165,17 @@ describe('Predefine Instance', () => {
       done(error);
     });
   });
+
+  it('should set code from default abbreviation value', done => {
+    const predefine = Predefine.fakeExcept('code');
+
+    expect(predefine.code).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.code).to.exist;
+      expect(predefine.code).to.be.equal(predefine.abbreviation.en);
+      done(error);
+    });
+  });
 });
 
 describe.skip('Predefine Validations', () => {
