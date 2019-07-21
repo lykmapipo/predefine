@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import { sortedUniq, mergeObjects, singularize } from '@lykmapipo/common';
-import { getString, getStrings, getObject } from '@lykmapipo/env';
+import { getString, getStringSet, getObject } from '@lykmapipo/env';
 import { collectionNameOf, ObjectId } from '@lykmapipo/mongoose-common';
+
+export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
+
+export const LOCALES = getStringSet('LOCALES', DEFAULT_LOCALE);
 
 export const MODEL_NAME = getString('PREDEFINE_MODEL_NAME', 'Predefine');
 
@@ -17,10 +21,10 @@ export const DEFAULT_NAMESPACE = getString(
   'Setting'
 );
 
-export const NAMESPACES = sortedUniq([
-  DEFAULT_NAMESPACE,
-  ...getStrings('PREDEFINE_NAMESPACES', DEFAULT_NAMESPACE),
-]);
+export const NAMESPACES = getStringSet(
+  'PREDEFINE_NAMESPACES',
+  DEFAULT_NAMESPACE
+);
 
 export const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
   return { namespace, bucket: collectionNameOf(namespace) };
@@ -29,10 +33,6 @@ export const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
 export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
-
-export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
-
-export const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
 
 /**
  * @function parseNamespaceRelations
