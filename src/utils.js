@@ -93,7 +93,7 @@ export const localizedNamesFor = path => {
  * // => {en: 'Tomato', sw: 'Nyanya'}
  *
  */
-export const localizedValuesFor = val => {
+export const localizedValuesFor = (val = {}) => {
   const value = {};
   const defaultValue =
     val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));

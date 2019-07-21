@@ -24,7 +24,6 @@ describe('Predefine Seed', () => {
 
   it('should not throw if seed exist', done => {
     Predefine.seed((error, seeded) => {
-      console.log(error);
       expect(error).to.not.exist;
       expect(seeded).to.exist;
       expect(seeded).to.length.at.least(1);

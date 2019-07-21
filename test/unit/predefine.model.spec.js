@@ -93,6 +93,41 @@ describe('Predefine Instance', () => {
       done(error);
     });
   });
+
+  it('should set localized description values', done => {
+    const predefine = Predefine.fakeExcept('description.sw');
+
+    expect(predefine.description.sw).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.description.sw).to.exist;
+      expect(predefine.description.sw).to.be.equal(predefine.description.en);
+      done(error);
+    });
+  });
+
+  it('should set localized description values', done => {
+    const predefine = Predefine.fakeExcept('description.en');
+
+    expect(predefine.description.en).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.description.en).to.exist;
+      expect(predefine.description.en).to.be.equal(predefine.description.sw);
+      done(error);
+    });
+  });
+
+  it('should set localized description values from name', done => {
+    const predefine = Predefine.fakeExcept('description.en', 'description.sw');
+
+    expect(predefine.description).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.description.sw).to.exist;
+      expect(predefine.description.en).to.exist;
+      expect(predefine.description.en).to.be.equal(predefine.name.en);
+      expect(predefine.description.sw).to.be.equal(predefine.name.sw);
+      done(error);
+    });
+  });
 });
 
 describe.skip('Predefine Validations', () => {

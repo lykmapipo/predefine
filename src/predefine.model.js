@@ -553,7 +553,12 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   // ensure name  for all locales
   this.name = localizedValuesFor(this.name);
 
-  // TODO ensure description for all locales
+  // ensure description for all locales
+  this.description = mergeObjects(
+    localizedValuesFor(this.name),
+    localizedValuesFor(this.description)
+  );
+
   // TODO ensure abbreviation for all locales
 
   // ensure correct namespace and bucket
@@ -577,15 +582,6 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
 
   // ensure code
   this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
-
-  // ensure description
-  // TODO refactor to util.ensureDescription
-  this.description = this.description || {};
-  _.forEach(LOCALES, locale => {
-    let description = _.get(this.description, locale);
-    description = _.trim(description) || _.get(this.name, locale);
-    _.set(this.description, locale, description);
-  });
 
   // continue
   done();
