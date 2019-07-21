@@ -18,7 +18,7 @@
  *  code: 'Kg',
  *  abbreviation: 'Kg'
  * };
- * Predefine.create({}, (error, created) => { ... });
+ * Predefine.create(unit, (error, created) => { ... });
  *
  */
 
