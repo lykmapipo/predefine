@@ -1,4 +1,4 @@
-import { SchemaTypes } from '@lykmapipo/mongoose-common';
+import { Schema, SchemaTypes } from '@lykmapipo/mongoose-common';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
 import Predefine from '../../src/predefine.model';
 
@@ -240,6 +240,13 @@ describe('Predefine Schema', () => {
     expect(geometry).to.exist;
     expect(type).to.be.instanceof(SchemaTypes.String);
     expect(coordinates).to.be.instanceof(SchemaTypes.Array);
+  });
+
+  it('should have relations field', () => {
+    const relations = Predefine.path('relations');
+
+    expect(relations).to.exist;
+    expect(relations.options.type).to.be.an.instanceof(Schema);
   });
 
   it('should have properties field', () => {
