@@ -1,16 +1,17 @@
 import _ from 'lodash';
-import { getString, getStringSet, getObject } from '@lykmapipo/env';
+import { getObject, getString, getStringSet } from '@lykmapipo/env';
 import {
+  abbreviate,
   isNotValue,
-  sortedUniq,
   mergeObjects,
   singularize,
+  sortedUniq,
 } from '@lykmapipo/common';
 import {
-  copyInstance,
   collectionNameOf,
-  ObjectId,
+  copyInstance,
   createSubSchema,
+  ObjectId,
 } from '@lykmapipo/mongoose-common';
 
 export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
@@ -99,6 +100,40 @@ export const localizedValuesFor = (val = {}) => {
     val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
   _.forEach(LOCALES, locale => {
     value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
+  });
+  return value;
+};
+
+/**
+ * @function localizedAbbreviationsFor
+ * @name localizedAbbreviationsFor
+ * @description Generate localized abbreviation of a given value
+ * @param {Object|Schema} value valid localized values
+ * @return {Object} normalize localized abbreviation
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato' });
+ * // => {en: 'T', sw: 'T'}
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'T', sw: 'N'}
+ *
+ */
+export const localizedAbbreviationsFor = (val = {}) => {
+  const value = {};
+  const defaultValue =
+    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
+  _.forEach(LOCALES, locale => {
+    const abbreviation = abbreviate(
+      isNotValue(val[locale]) ? defaultValue : val[locale]
+    );
+    value[locale] = abbreviation;
   });
   return value;
 };

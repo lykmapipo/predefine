@@ -4,6 +4,7 @@ import { Schema } from '@lykmapipo/mongoose-common';
 import {
   localizedNamesFor,
   localizedValuesFor,
+  localizedAbbreviationsFor,
   uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
@@ -41,6 +42,23 @@ describe('utils', () => {
     expect(value).to.exist.and.be.an('object');
     expect(value.en).to.be.eql(val.en);
     expect(value.sw).to.be.eql(val.sw);
+  });
+
+  it('should abbreveate a localized value', () => {
+    expect(localizedAbbreviationsFor).to.exist;
+    expect(localizedAbbreviationsFor).to.be.a('function');
+
+    let val = { en: 'Tomato' };
+    let value = localizedAbbreviationsFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql('T');
+    expect(value.sw).to.be.eql('T');
+
+    val = { en: 'Tomato', sw: 'Nyanya' };
+    value = localizedAbbreviationsFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql('T');
+    expect(value.sw).to.be.eql('N');
   });
 
   it('should derive unique indexes', () => {
