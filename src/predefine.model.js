@@ -43,6 +43,7 @@ import {
   DEFAULT_LOCALE,
   LOCALES,
   localizedNamesFor,
+  localizedValuesFor,
   uniqueIndexes,
   createRelationsSchema,
 } from './utils';
@@ -549,7 +550,9 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @instance
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
-  // TODO ensure name  for all locales
+  // ensure name  for all locales
+  this.name = localizedValuesFor(this.name);
+
   // TODO ensure description for all locales
   // TODO ensure abbreviation for all locales
 
@@ -616,9 +619,13 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
   const names = localizedNamesFor('name');
-  const criteria = _.get(seed, '_id')
-    ? _.pick(seed, '_id')
-    : _.pick(seed, 'namespace', 'bucket', 'code', ...names);
+  const copyOfSeed = seed;
+  if (seed.name) {
+    copyOfSeed.name = localizedValuesFor(seed.name);
+  }
+  const criteria = _.get(copyOfSeed, '_id')
+    ? _.pick(copyOfSeed, '_id')
+    : _.pick(copyOfSeed, 'namespace', 'bucket', 'code', ...names);
   return criteria;
 };
 

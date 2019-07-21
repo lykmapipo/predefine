@@ -71,6 +71,28 @@ describe('Predefine Instance', () => {
       done(error);
     });
   });
+
+  it('should set localized name values', done => {
+    const predefine = Predefine.fakeExcept('name.sw');
+
+    expect(predefine.name.sw).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.name.sw).to.exist;
+      expect(predefine.name.sw).to.be.equal(predefine.name.en);
+      done(error);
+    });
+  });
+
+  it('should set localized name values', done => {
+    const predefine = Predefine.fakeExcept('name.en');
+
+    expect(predefine.name.en).to.not.exist;
+    predefine.preValidate(error => {
+      expect(predefine.name.en).to.exist;
+      expect(predefine.name.en).to.be.equal(predefine.name.sw);
+      done(error);
+    });
+  });
 });
 
 describe.skip('Predefine Validations', () => {

@@ -30,6 +30,12 @@ describe('utils', () => {
     expect(value.en).to.be.eql(val.en);
     expect(value.sw).to.be.eql(val.en);
 
+    val = { sw: faker.name.findName() };
+    value = localizedValuesFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql(val.sw);
+    expect(value.sw).to.be.eql(val.sw);
+
     val = { en: faker.name.findName(), sw: faker.name.findName() };
     value = localizedValuesFor(val);
     expect(value).to.exist.and.be.an('object');

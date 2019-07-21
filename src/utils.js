@@ -7,6 +7,7 @@ import {
   singularize,
 } from '@lykmapipo/common';
 import {
+  copyInstance,
   collectionNameOf,
   ObjectId,
   createSubSchema,
@@ -75,7 +76,7 @@ export const localizedNamesFor = path => {
  * @function localizedValuesFor
  * @name localizedValuesFor
  * @description Normalize given value to ensure all locales has value
- * @param {Object} value valid localized values
+ * @param {Object|Schema} value valid localized values
  * @return {Object} normalize localized values
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
@@ -94,7 +95,8 @@ export const localizedNamesFor = path => {
  */
 export const localizedValuesFor = val => {
   const value = {};
-  const defaultValue = val[DEFAULT_LOCALE];
+  const defaultValue =
+    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
   _.forEach(LOCALES, locale => {
     value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
   });
