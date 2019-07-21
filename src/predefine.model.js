@@ -610,10 +610,10 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
   const names = localizedNamesFor('name');
+
   const copyOfSeed = seed;
-  if (seed.name) {
-    copyOfSeed.name = localizedValuesFor(seed.name);
-  }
+  copyOfSeed.name = localizedValuesFor(seed.name);
+
   const criteria = _.get(copyOfSeed, '_id')
     ? _.pick(copyOfSeed, '_id')
     : _.pick(copyOfSeed, 'namespace', 'bucket', 'code', ...names);
