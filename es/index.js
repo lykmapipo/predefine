@@ -1,14 +1,253 @@
-import { sortedUniq, mergeObjects, abbreviate, pkg } from '@lykmapipo/common';
-import { getString, getStrings, apiVersion as apiVersion$1 } from '@lykmapipo/env';
+import { sortedUniq, compact, isNotValue, abbreviate, mergeObjects, singularize, randomColor, pkg } from '@lykmapipo/common';
+import { getString, getStringSet, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor } from '@lykmapipo/express-rest-actions';
 export { start } from '@lykmapipo/express-rest-actions';
 import _ from 'lodash';
-import randomColor from 'randomcolor';
-import { model, collectionNameOf, createSchema } from '@lykmapipo/mongoose-common';
+import { collectionNameOf, createSubSchema, copyInstance, ObjectId, model, createSchema } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
 import localize from 'mongoose-locale-schema';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
+
+const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
+
+const LOCALES = getStringSet('LOCALES', DEFAULT_LOCALE);
+
+const MODEL_NAME = getString('PREDEFINE_MODEL_NAME', 'Predefine');
+
+const COLLECTION_NAME = getString(
+  'PREDEFINE_COLLECTION_NAME',
+  'predefines'
+);
+
+const SCHEMA_OPTIONS = { collection: COLLECTION_NAME };
+
+const DEFAULT_NAMESPACE = getString(
+  'PREDEFINE_DEFAULT_NAMESPACE',
+  'Setting'
+);
+
+const NAMESPACES = getStringSet(
+  'PREDEFINE_NAMESPACES',
+  DEFAULT_NAMESPACE
+);
+
+const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
+  return { namespace, bucket: collectionNameOf(namespace) };
+});
+
+const NAMESPACE_DICTIONARY = _.zipObject(
+  NAMESPACES,
+  _.map(NAMESPACES, namespace => collectionNameOf(namespace))
+);
+
+const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
+
+const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
+
+/**
+ * @function localizedNamesFor
+ * @name localizedNamesFor
+ * @description Generate locale fields name of a given path
+ * @param {String} path valid schema path
+ * @return {Array} sorted set of localized fields
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedNamesFor('name');
+ * // => ['name.en', 'name.sw']
+ *
+ */
+const localizedNamesFor = path => {
+  const fields = _.map(LOCALES, locale => `${path}.${locale}`);
+  return sortedUniq(fields);
+};
+
+/**
+ * @function localizedValuesFor
+ * @name localizedValuesFor
+ * @description Normalize given value to ensure all locales has value
+ * @param {Object|Schema} value valid localized values
+ * @return {Object} normalize localized values
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedValuesFor({ en: 'Tomato' });
+ * // => {en: 'Tomato', sw: 'Tomato'}
+ *
+ * localizedValuesFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'Tomato', sw: 'Nyanya'}
+ *
+ */
+const localizedValuesFor = (val = {}) => {
+  const value = {};
+  const defaultValue =
+    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
+  _.forEach(LOCALES, locale => {
+    value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
+  });
+  return value;
+};
+
+/**
+ * @function localizedAbbreviationsFor
+ * @name localizedAbbreviationsFor
+ * @description Generate localized abbreviation of a given value
+ * @param {Object|Schema} value valid localized values
+ * @return {Object} normalize localized abbreviation
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato' });
+ * // => {en: 'T', sw: 'T'}
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'T', sw: 'N'}
+ *
+ */
+const localizedAbbreviationsFor = (val = {}) => {
+  const value = {};
+  const defaultValue =
+    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
+  _.forEach(LOCALES, locale => {
+    const abbreviation = abbreviate(
+      isNotValue(val[locale]) ? defaultValue : val[locale]
+    );
+    value[locale] = abbreviation;
+  });
+  return compact(value);
+};
+
+/**
+ * @function uniqueIndexes
+ * @name uniqueIndexes
+ * @description Generate unique index definition of predefine
+ * @return {Object} unique index definition
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * uniqueIndexes();
+ * // => { 'name.en': 1, code: 1, bucket:1 }
+ *
+ */
+const uniqueIndexes = () => {
+  const indexes = mergeObjects({ namespace: 1, bucket: 1, code: 1 });
+  _.forEach(LOCALES, locale => {
+    indexes[`name.${locale}`] = 1;
+  });
+  return indexes;
+};
+
+/**
+ * @function parseNamespaceRelations
+ * @name parseNamespaceRelations
+ * @description Convert all specified namespace to relations
+ * @return {Object} valid normalized relations
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * parseNamespaceRelations();
+ * // => { setting: { type: ObjectId, ref: 'Predefine' } }
+ *
+ */
+const parseNamespaceRelations = () => {
+  const paths = _.map(NAMESPACES, path => _.toLower(singularize(path)));
+  let relations = _.zipObject(paths, paths);
+  relations = _.mapValues(relations, () => {
+    return mergeObjects({
+      type: ObjectId,
+      ref: MODEL_NAME,
+      index: true,
+      aggregatable: true,
+      taggable: true,
+      autopopulate: { maxDepth: 1 },
+    });
+  });
+  return relations;
+};
+
+/**
+ * @function parseGivenRelations
+ * @name parseGivenRelations
+ * @description Safely parse and normalize predefine relation config
+ * @param {Mixed} relations relation to parse
+ * @return {Object} valid normalized relations
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * process.env.PREDEFINE_RELATIONS='{"owner":{"ref":"Party"}}'
+ * parseGivenRelations();
+ * // => { owner: { ref: 'Party', autopopulate:true } }
+ *
+ */
+const parseGivenRelations = () => {
+  let relations = getObject('PREDEFINE_RELATIONS', {});
+  relations = _.mapValues(relations, relation => {
+    return mergeObjects(relation, {
+      type: ObjectId,
+      ref: relation.ref || MODEL_NAME,
+      index: true,
+      aggregatable: true,
+      taggable: true,
+      autopopulate: { maxDepth: 1 },
+    });
+  });
+  return relations;
+};
+
+/**
+ * @function createRelationsSchema
+ * @name createRelationsSchema
+ * @description Create predefine relations schema
+ * @return {Schema} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * createRelationsSchema();
+ *
+ */
+const createRelationsSchema = () => {
+  const relations = mergeObjects(
+    parseGivenRelations(),
+    parseNamespaceRelations()
+  );
+  return createSubSchema(relations);
+};
 
 /**
  * @module Predefine
@@ -30,26 +269,9 @@ import exportable from '@lykmapipo/mongoose-exportable';
  *  code: 'Kg',
  *  abbreviation: 'Kg'
  * };
- * Predefine.create({}, (error, created) => { ... });
+ * Predefine.create(unit, (error, created) => { ... });
  *
  */
-
-/* constants */
-const MODEL_NAME = getString('PREDEFINE_MODEL_NAME', 'Predefine');
-const COLLECTION_NAME = getString('PREDEFINE_COLLECTION_NAME', 'predefines');
-const SCHEMA_OPTIONS = { collection: COLLECTION_NAME };
-const DEFAULT_NAMESPACE = getString('PREDEFINE_DEFAULT_NAMESPACE', 'Setting');
-const NAMESPACES = sortedUniq([
-  DEFAULT_NAMESPACE,
-  ...getStrings('PREDEFINE_NAMESPACES', DEFAULT_NAMESPACE),
-]);
-const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
-  return { namespace, bucket: collectionNameOf(namespace) };
-});
-const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
-const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
-const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
-const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
 
 /**
  * @name PredefineSchema
@@ -161,7 +383,6 @@ const PredefineSchema = createSchema(
     name: localize({
       type: String,
       trim: true,
-      required: true,
       index: true,
       searchable: true,
       taggable: true,
@@ -174,7 +395,8 @@ const PredefineSchema = createSchema(
      * @description Human(and machine) readable, unique identifier of a
      * prefined.
      *
-     * It used in generation of physical tag or barcode when needed.
+     * It used in generation of physical tag or barcode when needed. It also
+     * used as variable name where applicable.
      *
      * @type {object}
      * @property {object} type - schema(data) type
@@ -312,6 +534,60 @@ const PredefineSchema = createSchema(
     },
 
     /**
+     * @name default
+     * @description Tells whether a predefine is the default value of its
+     * bucket or namespace.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {boolean} index - ensure database index
+     * @property {boolean} default - default value set when none provided
+     * @property {object|boolean} fake - fake data generator options
+     *
+     * @author lally elias <lallyelias87@gmail.com>
+     * @since 0.1.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * false
+     *
+     */
+    default: {
+      type: Boolean,
+      index: true,
+      exportable: true,
+      default: false,
+      fake: true,
+    },
+
+    /**
+     * @name preset
+     * @description Tells whether a predefine is the part of preset value
+     * of its bucket or namespace.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {boolean} index - ensure database index
+     * @property {boolean} default - default value set when none provided
+     * @property {object|boolean} fake - fake data generator options
+     *
+     * @author lally elias <lallyelias87@gmail.com>
+     * @since 0.1.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * false
+     *
+     */
+    preset: {
+      type: Boolean,
+      index: true,
+      exportable: true,
+      default: false,
+      fake: true,
+    },
+
+    /**
      * @name color
      * @description A color in hexadecimal format used to differentiate
      * predefined value visually from one other.
@@ -336,7 +612,7 @@ const PredefineSchema = createSchema(
       trim: true,
       uppercase: true,
       exportable: true,
-      default: () => _.toUpper(randomColor({ luminosity: 'light' })),
+      default: () => randomColor(),
       fake: true,
     },
 
@@ -384,6 +660,29 @@ const PredefineSchema = createSchema(
      *
      */
     geometry: Geometry,
+
+    /**
+     * @name relations
+     * @description Map of logical associated values of a predefined. They
+     * reprents 1-to-1 relationship of other domain models with a predefine.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {boolean} index - ensure database index
+     * @property {boolean} aggregatable - allow field use for aggregation
+     * @property {boolean} taggable - allow field use for tagging
+     *
+     * @since 0.4.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "category": "5ce1a93ba7e7a56060e43997"
+     *   "unit": "5ce1a93ba7e7a56060e42981"
+     * }
+     *
+     */
+    relations: createRelationsSchema(),
 
     /**
      * @name properties
@@ -435,12 +734,7 @@ const PredefineSchema = createSchema(
  * @version 0.1.0
  * @private
  */
-// TODO refactor to util.uniqueIndex
-const uniqueIndex = { namespace: 1, bucket: 1, code: 1 };
-_.forEach(LOCALES, locale => {
-  uniqueIndex[`name.${locale}`] = 1;
-});
-PredefineSchema.index(uniqueIndex, { unique: true });
+PredefineSchema.index(uniqueIndexes(), { unique: true });
 
 /*
  *------------------------------------------------------------------------------
@@ -481,6 +775,21 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @instance
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
+  // ensure name  for all locales
+  this.name = localizedValuesFor(this.name);
+
+  // ensure description for all locales
+  this.description = mergeObjects(
+    localizedValuesFor(this.name),
+    localizedValuesFor(this.description)
+  );
+
+  // ensure abbreviation for all locales
+  this.abbreviation = mergeObjects(
+    localizedAbbreviationsFor(this.name),
+    localizedValuesFor(this.abbreviation)
+  );
+
   // ensure correct namespace and bucket
   // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
@@ -490,15 +799,6 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
     _.find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
   );
   this.set(bucketAndNamespace);
-
-  // ensure abbreviation
-  // TODO refactor to util.ensureAbbreviation
-  this.abbreviation = this.abbreviation || {};
-  _.forEach(LOCALES, locale => {
-    let abbreviation = _.get(this.abbreviation, locale);
-    abbreviation = _.trim(abbreviation) || abbreviate(_.get(this.name, locale));
-    _.set(this.abbreviation, locale, abbreviation);
-  });
 
   // ensure code
   this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
@@ -534,10 +834,14 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
-  const names = _.map(LOCALES, locale => `name.${locale}`);
-  const criteria = _.get(seed, '_id')
-    ? _.pick(seed, '_id')
-    : _.pick(seed, 'namespace', 'bucket', 'code', ...names);
+  const names = localizedNamesFor('name');
+
+  const copyOfSeed = seed;
+  copyOfSeed.name = localizedValuesFor(seed.name);
+
+  const criteria = _.get(copyOfSeed, '_id')
+    ? _.pick(copyOfSeed, '_id')
+    : _.pick(copyOfSeed, 'namespace', 'bucket', 'code', ...names);
   return criteria;
 };
 

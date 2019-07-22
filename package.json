@@ -1,6 +1,6 @@
 {
   "name": "@lykmapipo/predefine",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "A representation of stored and retrieved information that does not qualify to belongs to their own domain model.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -71,7 +71,7 @@
     "chai": "^4.2.0",
     "commitizen": "^4.0.3",
     "coveralls": "^3.0.5",
-    "cz-conventional-changelog": "^3.0.1",
+    "cz-conventional-changelog": "^3.0.2",
     "doxdox": "^3.0.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^13.2.0",

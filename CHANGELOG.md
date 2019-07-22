@@ -1,3 +1,60 @@
+#### 0.4.0 (2019-07-22)
+
+##### Chores
+
+* **ci:**  re-restore mongodb service ([9e1224c2](https://github.com/lykmapipo/predefine/commit/9e1224c25b869656f35fab59577f8c1d55d21609))
+* **deps:**
+  *  force latest version & audit fix ([f8e9d8b0](https://github.com/lykmapipo/predefine/commit/f8e9d8b08bf0f58cc31294bf909a0d9485c18004))
+  *  add test coverage deps ([4ad76c2b](https://github.com/lykmapipo/predefine/commit/4ad76c2b970cb0e3e99d43b16ffe07e15c0f7258))
+* **scripts:**  update package scripts ([a63aa288](https://github.com/lykmapipo/predefine/commit/a63aa288078a8311ac65f3e62f3b93681bcb38a7))
+*  ensure locales on example seeds ([d6dd61c2](https://github.com/lykmapipo/predefine/commit/d6dd61c260793cad8f1f0011907ee9cc153eaf5c))
+* **security:**  use latest lodash.template version ([eb8fbac7](https://github.com/lykmapipo/predefine/commit/eb8fbac7e4cfd8eeff473185b90e4f3263048960))
+
+##### Documentation Changes
+
+*  add test coverage status badge ([763acae6](https://github.com/lykmapipo/predefine/commit/763acae617d2db391ce112b05055051cd4204a88))
+
+##### New Features
+
+*  add localized abbreviation creator ([a7ad0ba5](https://github.com/lykmapipo/predefine/commit/a7ad0ba5219a2c3b1e895afdea0cdf0d245fffe3))
+*  implement createRelationsSchema ([097537e1](https://github.com/lykmapipo/predefine/commit/097537e19e3af972a8652107bb448bc0f8eec870))
+*  add parseGivenRelations ([685b81e2](https://github.com/lykmapipo/predefine/commit/685b81e2bfe2bfe862657ed3ee64751c5cd89ea9))
+*  map namespace to relation definition ([87b37b88](https://github.com/lykmapipo/predefine/commit/87b37b88779caa6a3089ae32fbca9a91a2a4f2b7))
+*  add relations schema creator ([f2578793](https://github.com/lykmapipo/predefine/commit/f257879355f39a58ddee00c8afc3f71414dc3257))
+*  add preset flag ([a6e37613](https://github.com/lykmapipo/predefine/commit/a6e3761343999d38ea8b80eafe01dc58de1ffa18))
+*  add default flag ([a2ce0bb6](https://github.com/lykmapipo/predefine/commit/a2ce0bb6486edfe7d44d41f78547c336988e7d31))
+* **model:**  add relations into predefine model fields ([2554a759](https://github.com/lykmapipo/predefine/commit/2554a75925350f94cbb0b26bac2d17a99dde5822))
+
+##### Refactors
+
+*  ensure localized name before seed ([4019c289](https://github.com/lykmapipo/predefine/commit/4019c289a80ddea2edd0d56cf6b8c9eb15a709eb))
+*  ensure localized abbreviation on pre validate ([73893b7d](https://github.com/lykmapipo/predefine/commit/73893b7d2c2b6cc469d33ff57857f4129a6a0fbd))
+*  ensure localized description on pre validate ([a68b5e06](https://github.com/lykmapipo/predefine/commit/a68b5e0672c6b477da58a234c5cd33215981ff5f))
+*  ensure prepare seed normalize name fields ([1f0b68ed](https://github.com/lykmapipo/predefine/commit/1f0b68ed1fa853d3f186ba76fb90b338fcac0be5))
+*  add localizeValuesFor helper ([92a4cc79](https://github.com/lykmapipo/predefine/commit/92a4cc79073a373dc2f8e87b76dae59fa6b95789))
+*  add localized fields name helper ([c84be5b8](https://github.com/lykmapipo/predefine/commit/c84be5b8ded9fd1f69992e07a014b74d8d01f286))
+*  add unique indexes create helper ([7c7ec3d6](https://github.com/lykmapipo/predefine/commit/7c7ec3d67f8e0bbb4f4d961924998b535327a7ff))
+*  ensure unique namespace from env ([709e2938](https://github.com/lykmapipo/predefine/commit/709e29385b621c6bf742a6ff5facd492eb0b06d2))
+*  use common helper for random color ([e4a9e135](https://github.com/lykmapipo/predefine/commit/e4a9e13574e94b9d3fb26017a6e716fcee351fc6))
+*  extract constants to utils ([dc02a50f](https://github.com/lykmapipo/predefine/commit/dc02a50f1a4c4af60b8b6721336f4a25eabb3bdb))
+*  ensure name locale pair in unique indexes ([d9d1ecdf](https://github.com/lykmapipo/predefine/commit/d9d1ecdf5a54b576d068c3c33036016795c1eee4))
+*  migrate name, description, abbreviation to locale schema ([9a5c82f5](https://github.com/lykmapipo/predefine/commit/9a5c82f5c32efbe66446c1c283a8980705362a63))
+
+##### Code Style Changes
+
+*  improve model jsdocs ([5eb089fc](https://github.com/lykmapipo/predefine/commit/5eb089fc444f2d47ad390dba1e78d2c13b75ec72))
+*  fix typo ([77ca10d9](https://github.com/lykmapipo/predefine/commit/77ca10d96fc59c02164943cfb6d2a94559a310c5))
+*  improve code jsdocs ([c81a59de](https://github.com/lykmapipo/predefine/commit/c81a59de1a039cc925afca9721d0eb88fb6d8d89))
+
+##### Tests
+
+*  improve code generation specs ([8d774e7f](https://github.com/lykmapipo/predefine/commit/8d774e7f6d17440f10fc375755997f527d81a806))
+*  add relation create specs ([4d88f992](https://github.com/lykmapipo/predefine/commit/4d88f9927b9a26d0bc0d3e90b5fb2c022c9c7c19))
+*  add releations schema spec ([51a7c16e](https://github.com/lykmapipo/predefine/commit/51a7c16e49cf075af7b33b2a6122e01f5f72b46e))
+*  improve name, abbreviation, description locale specs ([7116cb24](https://github.com/lykmapipo/predefine/commit/7116cb24f71fdc194d5ec52d684751048bd4d6d0))
+*  fix integration assertions & improve seed prepare ([81585a2f](https://github.com/lykmapipo/predefine/commit/81585a2f1e42049fe05bc398768c4aeaa9befeef))
+*  ensure correct namespace and bucket on preValidate ([86251897](https://github.com/lykmapipo/predefine/commit/86251897458472b3d0a67bbdcd20e2e53fdf5a36))
+
 #### 0.3.3 (2019-07-12)
 
 ##### Chores
