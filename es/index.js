@@ -45,6 +45,11 @@ const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 
+const OPTION_AUTOPOPULATE = {
+  select: { name: 1, code: 1, abbreviation: 1, symbol: 1, weight: 1, color: 1 },
+  maxDepth: 1,
+};
+
 /**
  * @function localizedNamesFor
  * @name localizedNamesFor
@@ -817,6 +822,7 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
 PredefineSchema.statics.MODEL_NAME = MODEL_NAME;
 PredefineSchema.statics.COLLECTION_NAME = COLLECTION_NAME;
 PredefineSchema.statics.DEFAULT_NAMESPACE = DEFAULT_NAMESPACE;
+PredefineSchema.statics.OPTION_AUTOPOPULATE = OPTION_AUTOPOPULATE;
 PredefineSchema.statics.NAMESPACES = NAMESPACES;
 PredefineSchema.statics.DEFAULT_BUCKET = DEFAULT_BUCKET;
 PredefineSchema.statics.BUCKETS = BUCKETS;

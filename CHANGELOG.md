@@ -1,3 +1,13 @@
+#### 0.5.0 (2019-07-27)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([02999413](https://github.com/lykmapipo/predefine/commit/029994131d5937613e7299ff22874afe0bd4a7b0))
+
+##### New Features
+
+*  expose autopopulate options ([be2b190c](https://github.com/lykmapipo/predefine/commit/be2b190cfcd169f2a380ce6c63c192c46de60969))
+
 #### 0.4.0 (2019-07-22)
 
 ##### Chores
