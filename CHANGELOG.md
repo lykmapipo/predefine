@@ -1,3 +1,17 @@
+#### 0.6.0 (2019-07-27)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([9d9eb804](https://github.com/lykmapipo/predefine/commit/9d9eb804f15d98b11fe60c677af2e580ad73125e))
+
+##### New Features
+
+*  implement getOneOrDefault ([93d0838d](https://github.com/lykmapipo/predefine/commit/93d0838d59f14989a25919b90391ec9f40edb4ea))
+
+##### Code Style Changes
+
+*  improve model jsdocs ([0b6ed5fa](https://github.com/lykmapipo/predefine/commit/0b6ed5fa48fc118df765dce943438a5f24dfd7d5))
+
 #### 0.5.0 (2019-07-27)
 
 ##### Chores
