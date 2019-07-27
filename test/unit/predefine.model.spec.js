@@ -202,6 +202,21 @@ describe('Predefine Statics', () => {
     expect(Predefine.COLLECTION_NAME).to.be.equal('predefines');
   });
 
+  it('should expose autopopulate options', () => {
+    expect(Predefine.OPTION_AUTOPOPULATE).to.exist;
+    expect(Predefine.OPTION_AUTOPOPULATE).to.be.eql({
+      select: {
+        name: 1,
+        code: 1,
+        abbreviation: 1,
+        symbol: 1,
+        weight: 1,
+        color: 1,
+      },
+      maxDepth: 1,
+    });
+  });
+
   it('should prepase seed criteria from object id', () => {
     const predefine = Predefine.fake().toObject();
     const seed = Predefine.prepareSeedCriteria(predefine);

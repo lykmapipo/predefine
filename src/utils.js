@@ -51,6 +51,11 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 
+export const OPTION_AUTOPOPULATE = {
+  select: { name: 1, code: 1, abbreviation: 1, symbol: 1, weight: 1, color: 1 },
+  maxDepth: 1,
+};
+
 /**
  * @function localizedNamesFor
  * @name localizedNamesFor

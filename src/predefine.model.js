@@ -35,6 +35,7 @@ import {
   MODEL_NAME,
   COLLECTION_NAME,
   SCHEMA_OPTIONS,
+  OPTION_AUTOPOPULATE,
   DEFAULT_NAMESPACE,
   NAMESPACES,
   NAMESPACE_MAP,
@@ -592,6 +593,7 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
 PredefineSchema.statics.MODEL_NAME = MODEL_NAME;
 PredefineSchema.statics.COLLECTION_NAME = COLLECTION_NAME;
 PredefineSchema.statics.DEFAULT_NAMESPACE = DEFAULT_NAMESPACE;
+PredefineSchema.statics.OPTION_AUTOPOPULATE = OPTION_AUTOPOPULATE;
 PredefineSchema.statics.NAMESPACES = NAMESPACES;
 PredefineSchema.statics.DEFAULT_BUCKET = DEFAULT_BUCKET;
 PredefineSchema.statics.BUCKETS = BUCKETS;
