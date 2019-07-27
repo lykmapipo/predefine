@@ -14,9 +14,10 @@
  *
  * const unit = {
  *  namespace: 'Unit',
- *  name: 'Kilogram',
+ *  bucket: 'units',
+ *  name: { en: 'Kilogram' },
  *  code: 'Kg',
- *  abbreviation: 'Kg'
+ *  abbreviation: { en: 'Kg' }
  * };
  * Predefine.create(unit, (error, created) => { ... });
  *
