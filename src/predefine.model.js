@@ -23,7 +23,7 @@
  */
 
 import _ from 'lodash';
-import { mergeObjects, randomColor } from '@lykmapipo/common';
+import { compact, mergeObjects, randomColor } from '@lykmapipo/common';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
 import localize from 'mongoose-locale-schema';
@@ -620,6 +620,52 @@ PredefineSchema.statics.prepareSeedCriteria = seed => {
     ? _.pick(copyOfSeed, '_id')
     : _.pick(copyOfSeed, 'namespace', 'bucket', 'code', ...names);
   return criteria;
+};
+
+/**
+ * @name getOneOrDefault
+ * @function getOneOrDefault
+ * @description Find existing predefine or default based on given criteria
+ * @param {Object} criteria valid query criteria
+ * @param {Function} done callback to invoke on success or error
+ * @returns {Object|Error} found model or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.6.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const criteria = { bucket: 'settings', _id: '...'};
+ * Predefine.getOneOrDefault(criteria, (error, found) => { ... });
+ *
+ */
+PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
+  // normalize criteria
+  const { _id, namespace, bucket, ...filters } = mergeObjects(criteria);
+
+  const allowDefault = !_.isEmpty(namespace || bucket);
+  const allowId = !_.isEmpty(_id);
+  const allowFilters = !_.isEmpty(filters);
+
+  const byDefault = mergeObjects({ namespace, bucket, default: true });
+  const byId = mergeObjects({ _id });
+  const byFilters = mergeObjects({ namespace, bucket }, filters);
+
+  const or = compact([
+    allowId ? byId : undefined,
+    allowFilters ? byFilters : undefined,
+    allowDefault ? byDefault : undefined,
+  ]);
+  const filter = { $or: or };
+
+  // refs
+  const Predefine = model(MODEL_NAME);
+
+  // query
+  return Predefine.findOne(filter)
+    .orFail()
+    .exec(done);
 };
 
 /* export predefine model */
