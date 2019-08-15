@@ -1,3 +1,14 @@
+#### 0.7.0 (2019-08-15)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([c6cb9e7e](https://github.com/lykmapipo/predefine/commit/c6cb9e7efb9ca15e5065cfd9fb7c45025d2d925b))
+*  remove .jshintrc in test directory ([eb33c4fd](https://github.com/lykmapipo/predefine/commit/eb33c4fdd13e7aae85f9f81ba789bd725924e919))
+
+##### Tests
+
+*  add model validation test ([1e506202](https://github.com/lykmapipo/predefine/commit/1e5062020b314397ad9df1fae9522c1d1198b230))
+
 #### 0.6.1 (2019-08-14)
 
 ##### Chores

@@ -1,10 +1,7 @@
 import _ from 'lodash';
-import { expect, faker } from '@lykmapipo/mongoose-test-helpers';
+import { expect } from '@lykmapipo/mongoose-test-helpers';
 import { Schema } from '@lykmapipo/mongoose-common';
 import {
-  localizedNamesFor,
-  localizedValuesFor,
-  localizedAbbreviationsFor,
   uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
@@ -12,71 +9,6 @@ import {
 } from '../../src/utils';
 
 describe('utils', () => {
-  it('should generate path localized field names', () => {
-    expect(localizedNamesFor).to.exist;
-    expect(localizedNamesFor).to.be.a('function');
-
-    const names = localizedNamesFor('name');
-    expect(names).to.exist.and.be.an('array');
-    expect(names).to.contain('name.en');
-  });
-
-  it('should normalize value for all locales', () => {
-    expect(localizedValuesFor).to.exist;
-    expect(localizedValuesFor).to.be.a('function');
-
-    let val = { en: faker.name.findName() };
-    let value = localizedValuesFor(val);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.be.eql(val.en);
-    expect(value.sw).to.be.eql(val.en);
-
-    val = { sw: faker.name.findName() };
-    value = localizedValuesFor(val);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.be.eql(val.sw);
-    expect(value.sw).to.be.eql(val.sw);
-
-    val = { en: faker.name.findName(), sw: faker.name.findName() };
-    value = localizedValuesFor(val);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.be.eql(val.en);
-    expect(value.sw).to.be.eql(val.sw);
-
-    value = localizedValuesFor(undefined);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.not.exist;
-    expect(value.sw).to.not.exist;
-  });
-
-  it('should abbreveate a localized value', () => {
-    expect(localizedAbbreviationsFor).to.exist;
-    expect(localizedAbbreviationsFor).to.be.a('function');
-
-    let val = { en: 'Tomato' };
-    let value = localizedAbbreviationsFor(val);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.be.eql('T');
-    expect(value.sw).to.be.eql('T');
-
-    val = { sw: 'Nyanya' };
-    value = localizedAbbreviationsFor(val);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.be.eql('N');
-    expect(value.sw).to.be.eql('N');
-
-    val = { en: 'Tomato', sw: 'Nyanya' };
-    value = localizedAbbreviationsFor(val);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.be.eql('T');
-    expect(value.sw).to.be.eql('N');
-
-    value = localizedAbbreviationsFor(undefined);
-    expect(value).to.exist.and.be.an('object');
-    expect(value.en).to.not.exist;
-    expect(value.sw).to.not.exist;
-  });
-
   it('should derive unique indexes', () => {
     expect(uniqueIndexes).to.exist;
     expect(uniqueIndexes).to.be.a('function');

@@ -28,7 +28,12 @@ import { compact, mergeObjects, randomColor } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
-import localize from 'mongoose-locale-schema';
+import {
+  localize,
+  localizedKeysFor,
+  localizedValuesFor,
+  localizedAbbreviationsFor,
+} from 'mongoose-locale-schema';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
 
@@ -44,9 +49,6 @@ import {
   DEFAULT_BUCKET,
   BUCKETS,
   DEFAULT_LOCALE,
-  localizedNamesFor,
-  localizedValuesFor,
-  localizedAbbreviationsFor,
   uniqueIndexes,
   createRelationsSchema,
 } from './utils';
@@ -613,7 +615,7 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
-  const names = localizedNamesFor('name');
+  const names = localizedKeysFor('name');
 
   const copyOfSeed = seed;
   copyOfSeed.name = localizedValuesFor(seed.name);

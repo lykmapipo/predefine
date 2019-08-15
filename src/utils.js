@@ -1,19 +1,12 @@
 import _ from 'lodash';
 import { getObject, getString, getStringSet } from '@lykmapipo/env';
-import {
-  abbreviate,
-  compact,
-  isNotValue,
-  mergeObjects,
-  singularize,
-  sortedUniq,
-} from '@lykmapipo/common';
+import { mergeObjects, singularize, sortedUniq } from '@lykmapipo/common';
 import {
   collectionNameOf,
-  copyInstance,
   createSubSchema,
   ObjectId,
 } from '@lykmapipo/mongoose-common';
+import { localizedIndexesFor } from 'mongoose-locale-schema';
 
 export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
@@ -57,94 +50,6 @@ export const OPTION_AUTOPOPULATE = {
 };
 
 /**
- * @function localizedNamesFor
- * @name localizedNamesFor
- * @description Generate locale fields name of a given path
- * @param {String} path valid schema path
- * @return {Array} sorted set of localized fields
- * @author lally elias <lallyelias87@gmail.com>
- * @license MIT
- * @since 0.4.0
- * @version 0.1.0
- * @static
- * @public
- * @example
- *
- * localizedNamesFor('name');
- * // => ['name.en', 'name.sw']
- *
- */
-export const localizedNamesFor = path => {
-  const fields = _.map(LOCALES, locale => `${path}.${locale}`);
-  return sortedUniq(fields);
-};
-
-/**
- * @function localizedValuesFor
- * @name localizedValuesFor
- * @description Normalize given value to ensure all locales has value
- * @param {Object|Schema} value valid localized values
- * @return {Object} normalize localized values
- * @author lally elias <lallyelias87@gmail.com>
- * @license MIT
- * @since 0.4.0
- * @version 0.1.0
- * @static
- * @public
- * @example
- *
- * localizedValuesFor({ en: 'Tomato' });
- * // => {en: 'Tomato', sw: 'Tomato'}
- *
- * localizedValuesFor({ en: 'Tomato', sw: 'Nyanya' });
- * // => {en: 'Tomato', sw: 'Nyanya'}
- *
- */
-export const localizedValuesFor = (val = {}) => {
-  const value = {};
-  const defaultValue =
-    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
-  _.forEach(LOCALES, locale => {
-    value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
-  });
-  return value;
-};
-
-/**
- * @function localizedAbbreviationsFor
- * @name localizedAbbreviationsFor
- * @description Generate localized abbreviation of a given value
- * @param {Object|Schema} value valid localized values
- * @return {Object} normalize localized abbreviation
- * @author lally elias <lallyelias87@gmail.com>
- * @license MIT
- * @since 0.4.0
- * @version 0.1.0
- * @static
- * @public
- * @example
- *
- * localizedAbbreviationsFor({ en: 'Tomato' });
- * // => {en: 'T', sw: 'T'}
- *
- * localizedAbbreviationsFor({ en: 'Tomato', sw: 'Nyanya' });
- * // => {en: 'T', sw: 'N'}
- *
- */
-export const localizedAbbreviationsFor = (val = {}) => {
-  const value = {};
-  const defaultValue =
-    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
-  _.forEach(LOCALES, locale => {
-    const abbreviation = abbreviate(
-      isNotValue(val[locale]) ? defaultValue : val[locale]
-    );
-    value[locale] = abbreviation;
-  });
-  return compact(value);
-};
-
-/**
  * @function uniqueIndexes
  * @name uniqueIndexes
  * @description Generate unique index definition of predefine
@@ -162,10 +67,10 @@ export const localizedAbbreviationsFor = (val = {}) => {
  *
  */
 export const uniqueIndexes = () => {
-  const indexes = mergeObjects({ namespace: 1, bucket: 1, code: 1 });
-  _.forEach(LOCALES, locale => {
-    indexes[`name.${locale}`] = 1;
-  });
+  const indexes = mergeObjects(
+    { namespace: 1, bucket: 1, code: 1 },
+    localizedIndexesFor('name')
+  );
   return indexes;
 };
 

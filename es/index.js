@@ -1,11 +1,11 @@
-import { sortedUniq, compact, isNotValue, abbreviate, mergeObjects, singularize, randomColor, pkg } from '@lykmapipo/common';
-import { getString, getStringSet, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
+import { sortedUniq, mergeObjects, singularize, randomColor, compact, pkg } from '@lykmapipo/common';
+import { getString, getStringSet, getObject, isTest, apiVersion as apiVersion$1 } from '@lykmapipo/env';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor } from '@lykmapipo/express-rest-actions';
 export { start } from '@lykmapipo/express-rest-actions';
 import _ from 'lodash';
-import { collectionNameOf, createSubSchema, copyInstance, ObjectId, model, createSchema } from '@lykmapipo/mongoose-common';
+import { collectionNameOf, createSubSchema, ObjectId, model, createSchema } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
-import localize from 'mongoose-locale-schema';
+import { localizedIndexesFor, localize, localizedValuesFor, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
 
@@ -51,94 +51,6 @@ const OPTION_AUTOPOPULATE = {
 };
 
 /**
- * @function localizedNamesFor
- * @name localizedNamesFor
- * @description Generate locale fields name of a given path
- * @param {String} path valid schema path
- * @return {Array} sorted set of localized fields
- * @author lally elias <lallyelias87@gmail.com>
- * @license MIT
- * @since 0.4.0
- * @version 0.1.0
- * @static
- * @public
- * @example
- *
- * localizedNamesFor('name');
- * // => ['name.en', 'name.sw']
- *
- */
-const localizedNamesFor = path => {
-  const fields = _.map(LOCALES, locale => `${path}.${locale}`);
-  return sortedUniq(fields);
-};
-
-/**
- * @function localizedValuesFor
- * @name localizedValuesFor
- * @description Normalize given value to ensure all locales has value
- * @param {Object|Schema} value valid localized values
- * @return {Object} normalize localized values
- * @author lally elias <lallyelias87@gmail.com>
- * @license MIT
- * @since 0.4.0
- * @version 0.1.0
- * @static
- * @public
- * @example
- *
- * localizedValuesFor({ en: 'Tomato' });
- * // => {en: 'Tomato', sw: 'Tomato'}
- *
- * localizedValuesFor({ en: 'Tomato', sw: 'Nyanya' });
- * // => {en: 'Tomato', sw: 'Nyanya'}
- *
- */
-const localizedValuesFor = (val = {}) => {
-  const value = {};
-  const defaultValue =
-    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
-  _.forEach(LOCALES, locale => {
-    value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
-  });
-  return value;
-};
-
-/**
- * @function localizedAbbreviationsFor
- * @name localizedAbbreviationsFor
- * @description Generate localized abbreviation of a given value
- * @param {Object|Schema} value valid localized values
- * @return {Object} normalize localized abbreviation
- * @author lally elias <lallyelias87@gmail.com>
- * @license MIT
- * @since 0.4.0
- * @version 0.1.0
- * @static
- * @public
- * @example
- *
- * localizedAbbreviationsFor({ en: 'Tomato' });
- * // => {en: 'T', sw: 'T'}
- *
- * localizedAbbreviationsFor({ en: 'Tomato', sw: 'Nyanya' });
- * // => {en: 'T', sw: 'N'}
- *
- */
-const localizedAbbreviationsFor = (val = {}) => {
-  const value = {};
-  const defaultValue =
-    val[DEFAULT_LOCALE] || _.first(_.values(copyInstance(val)));
-  _.forEach(LOCALES, locale => {
-    const abbreviation = abbreviate(
-      isNotValue(val[locale]) ? defaultValue : val[locale]
-    );
-    value[locale] = abbreviation;
-  });
-  return compact(value);
-};
-
-/**
  * @function uniqueIndexes
  * @name uniqueIndexes
  * @description Generate unique index definition of predefine
@@ -156,10 +68,10 @@ const localizedAbbreviationsFor = (val = {}) => {
  *
  */
 const uniqueIndexes = () => {
-  const indexes = mergeObjects({ namespace: 1, bucket: 1, code: 1 });
-  _.forEach(LOCALES, locale => {
-    indexes[`name.${locale}`] = 1;
-  });
+  const indexes = mergeObjects(
+    { namespace: 1, bucket: 1, code: 1 },
+    localizedIndexesFor('name')
+  );
   return indexes;
 };
 
@@ -321,7 +233,7 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: true,
+      hide: !isTest,
       fake: true,
     },
 
@@ -359,7 +271,7 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: true,
+      hide: !isTest,
       fake: true,
     },
 
@@ -800,7 +712,7 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
   const bucketAndNamespace = mergeObjects(
-    { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
+    isTest ? {} : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
     _.find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
     _.find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
   );
@@ -841,7 +753,7 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
-  const names = localizedNamesFor('name');
+  const names = localizedKeysFor('name');
 
   const copyOfSeed = seed;
   copyOfSeed.name = localizedValuesFor(seed.name);
