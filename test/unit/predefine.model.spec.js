@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, faker } from '@lykmapipo/mongoose-test-helpers';
 import Predefine from '../../src/predefine.model';
 
 describe('Predefine Instance', () => {
@@ -178,14 +178,64 @@ describe('Predefine Instance', () => {
   });
 });
 
-describe.skip('Predefine Validations', () => {
+describe('Predefine Validations', () => {
+  it('should throw if no namespace', done => {
+    const predefine = Predefine.fakeExcept('namespace', 'bucket');
+    predefine.validate(error => {
+      expect(error).to.exist;
+      expect(error.name).to.equal('ValidationError');
+      expect(error.errors.namespace).to.exist;
+      expect(error.errors.namespace.kind).to.be.equal('required');
+      expect(error.errors.namespace.name).to.be.equal('ValidatorError');
+      done();
+    });
+  });
+
+  it('should throw if not in enum namespace', done => {
+    const predefine = Predefine.fakeExcept('namespace', 'bucket');
+    predefine.set({ namespace: faker.lorem.word() });
+    predefine.validate(error => {
+      expect(error).to.exist;
+      expect(error.name).to.equal('ValidationError');
+      expect(error.errors.namespace).to.exist;
+      expect(error.errors.namespace.kind).to.be.equal('enum');
+      expect(error.errors.namespace.name).to.be.equal('ValidatorError');
+      done();
+    });
+  });
+
+  it('should throw if no bucket', done => {
+    const predefine = Predefine.fakeExcept('namespace', 'bucket');
+    predefine.validate(error => {
+      expect(error).to.exist;
+      expect(error.name).to.equal('ValidationError');
+      expect(error.errors.bucket).to.exist;
+      expect(error.errors.bucket.kind).to.be.equal('required');
+      expect(error.errors.bucket.name).to.be.equal('ValidatorError');
+      done();
+    });
+  });
+
+  it('should throw if not in enum namespace', done => {
+    const predefine = Predefine.fakeExcept('namespace', 'bucket');
+    predefine.set({ bucket: faker.lorem.word() });
+    predefine.validate(error => {
+      expect(error).to.exist;
+      expect(error.name).to.equal('ValidationError');
+      expect(error.errors.bucket).to.exist;
+      expect(error.errors.bucket.kind).to.be.equal('enum');
+      expect(error.errors.bucket.name).to.be.equal('ValidatorError');
+      done();
+    });
+  });
+
   it('should throw if no name', done => {
     const predefine = Predefine.fakeOnly('description');
     predefine.validate(error => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
       expect(error.errors.name).to.exist;
-      expect(error.errors.name.name).to.be.equal('ValidatorError');
+      expect(error.errors.name.name).to.be.equal('ValidationError');
       done();
     });
   });
