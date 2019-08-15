@@ -25,6 +25,7 @@
 
 import _ from 'lodash';
 import { compact, mergeObjects, randomColor } from '@lykmapipo/common';
+import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
 import localize from 'mongoose-locale-schema';
@@ -92,7 +93,7 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: true,
+      hide: !isTest,
       fake: true,
     },
 
@@ -130,7 +131,7 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: true,
+      hide: !isTest,
       fake: true,
     },
 
@@ -571,7 +572,7 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
   const bucketAndNamespace = mergeObjects(
-    { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
+    isTest ? {} : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
     _.find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
     _.find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
   );
