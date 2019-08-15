@@ -1,3 +1,9 @@
+#### 0.6.1 (2019-08-14)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([fda26a0d](https://github.com/lykmapipo/predefine/commit/fda26a0dcb3e4c3d4d478e7ce5c9b88aa0a0432f))
+
 #### 0.6.0 (2019-07-27)
 
 ##### Chores
