@@ -66,7 +66,7 @@
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
     "@commitlint/travis-cli": "^8.1.0",
-    "@lykmapipo/express-test-helpers": "^0.8.5",
+    "@lykmapipo/express-test-helpers": "^0.8.6",
     "@lykmapipo/mongoose-test-helpers": "^0.7.17",
     "chai": "^4.2.0",
     "commitizen": "^4.0.3",
@@ -89,7 +89,7 @@
     "npm-check-updates": "^3.1.21",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
-    "rimraf": "^2.7.0",
+    "rimraf": "^3.0.0",
     "rollup": "^1.19.4",
     "shelljs": "^0.8.3"
   },
@@ -99,14 +99,14 @@
   "dependencies": {
     "@lykmapipo/common": ">=0.25.1",
     "@lykmapipo/env": ">=0.12.1",
-    "@lykmapipo/express-rest-actions": ">=0.6.6",
+    "@lykmapipo/express-rest-actions": ">=0.6.7",
     "@lykmapipo/include": ">=0.2.6",
     "@lykmapipo/mongoose-common": ">=0.25.10",
     "@lykmapipo/mongoose-exportable": ">=0.3.7",
     "async": ">=3.1.0",
     "lodash": ">=4.17.15",
     "mongoose-geojson-schemas": ">=0.10.9",
-    "mongoose-locale-schema": ">=0.3.5",
+    "mongoose-locale-schema": ">=0.4.0",
     "mongoose-rest-actions": ">=0.28.7"
   },
   "engines": {
