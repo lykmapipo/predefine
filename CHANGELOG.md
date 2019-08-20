@@ -1,3 +1,13 @@
+#### 0.8.0 (2019-08-20)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([fd8a360a](https://github.com/lykmapipo/predefine/commit/fd8a360a290a0e0994d7d30a13a87b0b94c7363f))
+
+##### New Features
+
+*  expose select options ([210a99bf](https://github.com/lykmapipo/predefine/commit/210a99bff61dfa6d24c80b20b3570e3a5f3520cf))
+
 #### 0.7.1 (2019-08-20)
 
 ##### Chores
