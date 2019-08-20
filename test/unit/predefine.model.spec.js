@@ -252,6 +252,18 @@ describe('Predefine Statics', () => {
     expect(Predefine.COLLECTION_NAME).to.be.equal('predefines');
   });
 
+  it('should expose select options', () => {
+    expect(Predefine.OPTION_SELECT).to.exist;
+    expect(Predefine.OPTION_SELECT).to.be.eql({
+      name: 1,
+      code: 1,
+      abbreviation: 1,
+      symbol: 1,
+      weight: 1,
+      color: 1,
+    });
+  });
+
   it('should expose autopopulate options', () => {
     expect(Predefine.OPTION_AUTOPOPULATE).to.exist;
     expect(Predefine.OPTION_AUTOPOPULATE).to.be.eql({
