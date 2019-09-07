@@ -35,6 +35,17 @@ describe('utils', () => {
       expect(relation.ref).to.exist;
       expect(relation.index).to.exist.and.be.true;
       expect(relation.aggregatable).to.exist.and.be.true;
+      expect(relation.exists).to.exist.and.be.eql({
+        refresh: true,
+        select: {
+          name: 1,
+          code: 1,
+          abbreviation: 1,
+          symbol: 1,
+          weight: 1,
+          color: 1,
+        },
+      });
       expect(relation.autopopulate).to.exist.and.be.eql({ maxDepth: 1 });
       expect(relation.taggable).to.exist.and.be.true;
     });

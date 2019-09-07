@@ -114,6 +114,7 @@ export const parseNamespaceRelations = () => {
       index: true,
       aggregatable: true,
       taggable: true,
+      exists: { refresh: true, select: OPTION_SELECT },
       autopopulate: { maxDepth: 1 },
     });
   });
