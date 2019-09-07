@@ -101,7 +101,11 @@ export const uniqueIndexes = () => {
  *
  */
 export const parseNamespaceRelations = () => {
-  const paths = _.map(NAMESPACES, path => variableNameFor(path));
+  // use namespace and parent
+  let paths = _.map(NAMESPACES, path => variableNameFor(path));
+  paths = ['parent', ...paths];
+
+  // map relations to valid schema definitions
   let relations = _.zipObject(paths, paths);
   relations = _.mapValues(relations, () => {
     return mergeObjects({
@@ -113,6 +117,8 @@ export const parseNamespaceRelations = () => {
       autopopulate: { maxDepth: 1 },
     });
   });
+
+  // return namespaces relations
   return relations;
 };
 

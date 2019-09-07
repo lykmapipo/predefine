@@ -27,6 +27,8 @@ describe('utils', () => {
 
     const relations = parseNamespaceRelations();
     expect(relations).to.exist;
+    expect(relations.parent).to.exist;
+    expect(relations.setting).to.exist;
     _.forEach(relations, relation => {
       expect(relation).to.exist;
       expect(relation.type).to.exist;
@@ -57,7 +59,7 @@ describe('utils', () => {
     });
   });
 
-  it('should relations schema', () => {
+  it('should create relations schema', () => {
     expect(createRelationsSchema).to.exist;
     expect(createRelationsSchema).to.be.a('function');
 
