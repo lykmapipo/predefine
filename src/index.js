@@ -77,4 +77,13 @@ export { predefineRouter };
  */
 export const apiVersion = httpApiVersion();
 
+/**
+ * @function start
+ * @name start
+ * @description start http server
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.1.0
+ * @version 0.1.0
+ */
 export { start };
