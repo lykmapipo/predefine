@@ -23,9 +23,9 @@ npm install @lykmapipo/predefine --save
 ## Usage
 
 ```js
-const { connect } = require('@lykmapipo/mongoose-common');
-const { start, mount } = require('@lykmapipo/express-common');
-const { Predefine, predefineRouter } = require('@lykmapipo/predefine');
+import { connect } form '@lykmapipo/mongoose-common';
+import { start, mount } form '@lykmapipo/express-common';
+import { Predefine, predefineRouter } form '@lykmapipo/predefine';
 
 // connect to mongodb
 connect(process.env.MONGODB_URI, error => { ... });
