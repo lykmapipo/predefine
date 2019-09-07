@@ -1,24 +1,24 @@
 import _ from 'lodash';
-import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src/index';
 
 describe('Predefine getById', () => {
+  const parent = Predefine.fake();
+  const predefine = Predefine.fake();
+  predefine.set({ relations: { parent } });
+
   before(done => clear(done));
 
-  let predefine = Predefine.fake();
+  before(done => create(parent, done));
 
-  before(done => {
-    predefine.post((error, created) => {
-      predefine = created;
-      done(error, created);
-    });
-  });
+  before(done => create(predefine, done));
 
   it('should be able to get an instance', done => {
     Predefine.getById(predefine._id, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist;
       expect(found._id).to.eql(predefine._id);
+      expect(found.relations.parent._id).to.eql(parent._id);
       done(error, found);
     });
   });
@@ -37,7 +37,7 @@ describe('Predefine getById', () => {
 
       // ...assert selection
       const fields = _.keys(found.toObject());
-      expect(fields).to.have.length(2);
+      expect(fields).to.have.length(3);
       _.map(['namespace', 'description', 'createdAt', 'updatedAt'], field => {
         expect(fields).to.not.include(field);
       });

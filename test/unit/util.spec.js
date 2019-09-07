@@ -8,7 +8,7 @@ import {
   createRelationsSchema,
 } from '../../src/utils';
 
-describe('utils', () => {
+describe('Predefine Utils', () => {
   it('should derive unique indexes', () => {
     expect(uniqueIndexes).to.exist;
     expect(uniqueIndexes).to.be.a('function');
@@ -46,7 +46,17 @@ describe('utils', () => {
           color: 1,
         },
       });
-      expect(relation.autopopulate).to.exist.and.be.eql({ maxDepth: 1 });
+      expect(relation.autopopulate).to.exist.and.be.eql({
+        maxDepth: 1,
+        select: {
+          name: 1,
+          code: 1,
+          abbreviation: 1,
+          symbol: 1,
+          weight: 1,
+          color: 1,
+        },
+      });
       expect(relation.taggable).to.exist.and.be.true;
     });
   });

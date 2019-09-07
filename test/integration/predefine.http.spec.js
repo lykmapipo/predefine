@@ -2,11 +2,17 @@ import {
   clear as clearHttp,
   testRouter,
 } from '@lykmapipo/express-test-helpers';
-import { clear as clearDb, expect } from '@lykmapipo/mongoose-test-helpers';
+import {
+  clear as clearDb,
+  create,
+  expect,
+} from '@lykmapipo/mongoose-test-helpers';
 import { Predefine, predefineRouter } from '../../src/index';
 
 describe('Predefine Rest API', () => {
+  const parent = Predefine.fake();
   const predefine = Predefine.fake();
+  predefine.set({ relations: { parent } });
   const { bucket } = predefine;
 
   const options = {
@@ -19,6 +25,8 @@ describe('Predefine Rest API', () => {
   before(() => clearHttp());
 
   before(done => clearDb(done));
+
+  before(done => create(parent, done));
 
   it('should handle HTTP POST on /predefines/:bucket', done => {
     const { testPost } = testRouter(options, predefineRouter);
@@ -81,6 +89,7 @@ describe('Predefine Rest API', () => {
         const found = new Predefine(body);
         expect(found._id).to.exist.and.be.eql(predefine._id);
         expect(found.code).to.exist.and.be.eql(predefine.code);
+        expect(found.relations.parent._id).to.eql(parent._id);
         done(error, body);
       });
   });
