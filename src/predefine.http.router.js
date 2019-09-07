@@ -127,13 +127,14 @@ import {
   Router,
 } from '@lykmapipo/express-rest-actions';
 import Predefine from './predefine.model';
+import { COLLECTION_NAME } from './utils';
 
 /* constants */
 const API_VERSION = getString('API_VERSION', '1.0.0');
-const PATH_SINGLE = '/predefines/:bucket/:id';
-const PATH_LIST = '/predefines/:bucket';
-const PATH_EXPORT = '/predefines/:bucket/export';
-const PATH_SCHEMA = '/predefines/:bucket/schema/';
+const PATH_SINGLE = `/${COLLECTION_NAME}/:bucket/:id`;
+const PATH_LIST = `/${COLLECTION_NAME}/:bucket`;
+const PATH_EXPORT = `/${COLLECTION_NAME}/:bucket/export`;
+const PATH_SCHEMA = `/${COLLECTION_NAME}/:bucket/schema/`;
 
 /* declarations */
 const router = new Router({
