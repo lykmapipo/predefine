@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { getObject, getString, getStringSet } from '@lykmapipo/env';
-import { mergeObjects, singularize, sortedUniq } from '@lykmapipo/common';
+import { mergeObjects, sortedUniq, variableNameFor } from '@lykmapipo/common';
 import {
   collectionNameOf,
   createSubSchema,
@@ -101,7 +101,7 @@ export const uniqueIndexes = () => {
  *
  */
 export const parseNamespaceRelations = () => {
-  const paths = _.map(NAMESPACES, path => _.toLower(singularize(path)));
+  const paths = _.map(NAMESPACES, path => variableNameFor(path));
   let relations = _.zipObject(paths, paths);
   relations = _.mapValues(relations, () => {
     return mergeObjects({

@@ -50,24 +50,24 @@ describe('Predefine Instance', () => {
 
   it('should set correct namespace on pre validate', done => {
     const predefine = Predefine.fake();
-    predefine.set({ bucket: 'units', namespace: null });
+    predefine.set({ bucket: 'items', namespace: null });
 
     expect(predefine.namespace).to.not.exist;
     predefine.preValidate(error => {
       expect(predefine.namespace).to.exist;
-      expect(predefine.namespace).to.be.equal('Unit');
+      expect(predefine.namespace).to.be.equal('Item');
       done(error);
     });
   });
 
   it('should set correct bucket on pre validate', done => {
     const predefine = Predefine.fake();
-    predefine.set({ namespace: 'Unit', bucket: null });
+    predefine.set({ namespace: 'Item', bucket: null });
 
     expect(predefine.bucket).to.not.exist;
     predefine.preValidate(error => {
       expect(predefine.bucket).to.exist;
-      expect(predefine.bucket).to.be.equal('units');
+      expect(predefine.bucket).to.be.equal('items');
       done(error);
     });
   });
