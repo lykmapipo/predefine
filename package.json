@@ -1,6 +1,6 @@
 {
   "name": "@lykmapipo/predefine",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A representation of stored and retrieved information that does not qualify to belongs to their own domain model.",
   "main": "lib/index.js",
   "module": "es/index.js",

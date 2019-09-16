@@ -1,3 +1,26 @@
+#### 0.8.1 (2019-09-16)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([4e433556](https://github.com/lykmapipo/predefine/commit/4e433556508c72a80ebbf3ce3b35e07fe826f0a5))
+  *  force latest version & audit fix ([8f863e7e](https://github.com/lykmapipo/predefine/commit/8f863e7e72765ceb1bc23f69503ae51e4eb726d1))
+
+##### Documentation Changes
+
+*  update usage docs ([0b8f3018](https://github.com/lykmapipo/predefine/commit/0b8f30184e262befca17cfea258438aaf13824e5))
+
+##### New Features
+
+*  add support for custom mount path ([09dc2c59](https://github.com/lykmapipo/predefine/commit/09dc2c59cf5bbfa85182b2536fe55b463bfacb3e))
+*  improve relations with parent support ([0e3cb76d](https://github.com/lykmapipo/predefine/commit/0e3cb76d5cc5aff8cacf3270a3530594865d4d71))
+*  add exists option to namespaced relations ([b4481711](https://github.com/lykmapipo/predefine/commit/b4481711366a149d1cf36a5699b6173571d971ac))
+*  add parent to relations schema ([aa744a5a](https://github.com/lykmapipo/predefine/commit/aa744a5a1cfa77a68d2615bb8a1a12c892d2b27e))
+
+##### Bug Fixes
+
+* **model:**  use camel case fields on namespace realtions ([3a9530c4](https://github.com/lykmapipo/predefine/commit/3a9530c440bf6f884d24663af91601377d6fba95))
+
 #### 0.8.0 (2019-08-20)
 
 ##### Chores
