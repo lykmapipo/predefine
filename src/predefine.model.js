@@ -488,9 +488,11 @@ const PredefineSchema = createSchema(
      */
     properties: {
       type: Map,
-      of: String,
+      of: String, // Mixed?
       index: true,
       taggable: true,
+      // exportable: true, ?
+      // index: true, ? wildcard index?
       fake: f => f.helpers.createTransaction(),
     },
   },
