@@ -15,10 +15,10 @@ A representation of stored and retrieved information that does not qualify to be
 
 ## Requirements
 
-- [nodejs v8.11.1+](https://nodejs.org)
-- [npm v5.6.0+](https://www.npmjs.com/)
-- [MongoDB v3.4.10+](https://www.mongodb.com/)
-- [mongoose v5.2.5+](https://github.com/Automattic/mongoose)
+- [NodeJS v12+](https://nodejs.org)
+- [Npm v6+](https://www.npmjs.com/)
+- [MongoDB v4+](https://www.mongodb.com/)
+- [Mongoose v5.6+](https://github.com/Automattic/mongoose)
 
 ## Installation
 
