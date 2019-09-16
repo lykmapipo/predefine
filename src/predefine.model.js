@@ -1,28 +1,3 @@
-/**
- * @module Predefine
- * @name Predefine
- * @description A representation of stored and retrieved information
- * that does not qualify to belongs to their own domain model.
- * @author lally elias <lallyelias87@gmail.com>
- * @license MIT
- * @since 0.1.0
- * @version 0.1.0
- * @public
- * @example
- *
- * const { Predefine } = require('@lykmapipo/predefine');
- *
- * const unit = {
- *  namespace: 'Unit',
- *  bucket: 'units',
- *  name: { en: 'Kilogram' },
- *  code: 'Kg',
- *  abbreviation: { en: 'Kg' }
- * };
- * Predefine.create(unit, (error, created) => { ... });
- *
- */
-
 import _ from 'lodash';
 import { compact, mergeObjects, randomColor } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
@@ -55,12 +30,28 @@ import {
 } from './utils';
 
 /**
- * @name PredefineSchema
- * @type {Schema}
+ * @module Predefine
+ * @name Predefine
+ * @description A representation of stored and retrieved information
+ * that does not qualify to belongs to their own domain model.
  * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
  * @since 0.1.0
  * @version 0.1.0
- * @private
+ * @public
+ * @example
+ *
+ * const { Predefine } = require('@lykmapipo/predefine');
+ *
+ * const unit = {
+ *  namespace: 'Unit',
+ *  bucket: 'units',
+ *  name: { en: 'Kilogram' },
+ *  code: 'Kg',
+ *  abbreviation: { en: 'Kg' }
+ * };
+ * Predefine.create(unit, (error, created) => { ... });
+ *
  */
 const PredefineSchema = createSchema(
   {
@@ -529,7 +520,7 @@ PredefineSchema.index(uniqueIndexes(), { unique: true });
  * @name validate
  * @function validate
  * @description predefine schema pre validation hook
- * @param {function} done callback to invoke on success or error
+ * @param {Function} done callback to invoke on success or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -550,7 +541,7 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @name preValidate
  * @function preValidate
  * @description predefine schema pre validation hook logic
- * @param {function} done callback to invoke on success or error
+ * @param {Function} done callback to invoke on success or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -610,8 +601,8 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @name prepareSeedCriteria
  * @function prepareSeedCriteria
  * @description define seed data criteria
- * @param {Object} seed predefined to be seeded
- * @returns {Object} packed criteria for seeding
+ * @param {object} seed predefined to be seeded
+ * @returns {object} packed criteria for seeding
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.2.0
@@ -634,9 +625,9 @@ PredefineSchema.statics.prepareSeedCriteria = seed => {
  * @name getOneOrDefault
  * @function getOneOrDefault
  * @description Find existing predefine or default based on given criteria
- * @param {Object} criteria valid query criteria
+ * @param {object} criteria valid query criteria
  * @param {Function} done callback to invoke on success or error
- * @returns {Object|Error} found model or error
+ * @returns {object|Error} found model or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.6.0

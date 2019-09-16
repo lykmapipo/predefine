@@ -1,43 +1,45 @@
-'use strict';
-
-
-/* dependencies */
 const _ = require('lodash');
-const { connect } = require('@lykmapipo/mongoose-common');
-const { include } = require('@lykmapipo/include');
-const { app, mount, start } = require('@lykmapipo/express-common');
+const { get, mount, start } = require('@lykmapipo/express-common');
+const { connect, jsonSchema } = require('@lykmapipo/mongoose-common');
 const {
-  info,
-  predefineRouter,
   Predefine,
-  apiVersion
-} = include(__dirname, '..');
+  predefineRouter,
+  info,
+  apiVersion,
+} = require('../lib/index');
 
-
-// establish mongodb connection
-connect(error => {
-  // re-throw if error
-  if (error) { throw error; }
-
-  // expose module info
-  app.get('/', (request, response) => {
+const startHttpServer = () => {
+  get('/', (request, response) => {
     response.status(200);
     response.json(info);
   });
 
-  // mount router
+  get(`/${apiVersion}/schemas`, (request, response) => {
+    const schema = jsonSchema();
+    response.status(200);
+    response.json(schema);
+  });
+
+  // mount routers
   mount(predefineRouter);
 
-  // fire the app
+  // fire http serve
   start((error, env) => {
-    // re-throw if error
-    if (error) { throw error; }
-
+    if (error) {
+      throw error;
+    }
     // start http server
     _.forEach(Predefine.BUCKETS, bucket => {
       const path = `predefines/${bucket}`;
       console.log(`visit http://0.0.0.0:${env.PORT}/${apiVersion}/${path}`);
     });
   });
+};
 
+// connect and start http server
+connect(error => {
+  if (error) {
+    throw error;
+  }
+  startHttpServer();
 });

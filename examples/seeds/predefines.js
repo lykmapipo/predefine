@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = exports = [
+module.exports = [
   {
     namespace: 'Currency',
     name: { en: 'US Dollar' },

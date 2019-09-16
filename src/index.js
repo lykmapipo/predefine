@@ -5,17 +5,15 @@
  * that does not qualify to belongs to their own domain model.
  *
  * @author lally elias <lallyelias87@gmail.com>
- * @licence MIT
  * @since  0.1.0
- * @version 0.2.0
+ * @version 0.1.0
+ * @license MIT
  * @example
  *
- * const { app } = require('@lykmapipo/predefine');
- * app.start();
+ * const { Predefine, start } = require('@lykmapipo/predefine');
+ * start(error => { ... });
  *
  */
-
-/* dependencies */
 import { pkg } from '@lykmapipo/common';
 import { apiVersion as httpApiVersion } from '@lykmapipo/env';
 import { start } from '@lykmapipo/express-rest-actions';
@@ -25,7 +23,7 @@ import predefineRouter from './predefine.http.router';
 /**
  * @name info
  * @description package information
- * @type {Object}
+ * @type {object}
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 1.0.0
@@ -47,7 +45,6 @@ export const info = pkg(
 /**
  * @name Predefine
  * @description Predefine model
- * @type {mongoose.Model}
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -58,7 +55,6 @@ export { Predefine };
 /**
  * @name predefineRouter
  * @description predefine http router
- * @type {express.Router}
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -69,7 +65,7 @@ export { predefineRouter };
 /**
  * @name apiVersion
  * @description http router api version
- * @type {String}
+ * @type {string}
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0

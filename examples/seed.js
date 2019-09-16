@@ -1,11 +1,9 @@
-'use strict';
-
-
 /* dependencies */
 const _ = require('lodash');
 const { waterfall } = require('async');
 const { include } = require('@lykmapipo/include');
 const { connect } = require('@lykmapipo/mongoose-common');
+
 const { Predefine } = include(__dirname, '..');
 
 // naive logger
@@ -18,7 +16,6 @@ const log = (stage, error, result) => {
     console.info(`${stage} seed result`, val);
   }
 };
-
 
 // refs
 let seedStart;
@@ -36,8 +33,10 @@ const seedPredefine = done => {
 const seed = done => {
   seedStart = Date.now();
   connect(error => {
-    if (error) { return done(error); }
-    waterfall([seedPredefine], done);
+    if (error) {
+      return done(error);
+    }
+    return waterfall([seedPredefine], done);
   });
 };
 

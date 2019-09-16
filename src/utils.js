@@ -62,7 +62,7 @@ export const OPTION_AUTOPOPULATE = {
  * @function uniqueIndexes
  * @name uniqueIndexes
  * @description Generate unique index definition of predefine
- * @return {Object} unique index definition
+ * @returns {object} unique index definition
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -87,7 +87,7 @@ export const uniqueIndexes = () => {
  * @function parseNamespaceRelations
  * @name parseNamespaceRelations
  * @description Convert all specified namespace to relations
- * @return {Object} valid normalized relations
+ * @returns {object} valid normalized relations
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -127,8 +127,7 @@ export const parseNamespaceRelations = () => {
  * @function parseGivenRelations
  * @name parseGivenRelations
  * @description Safely parse and normalize predefine relation config
- * @param {Mixed} relations relation to parse
- * @return {Object} valid normalized relations
+ * @returns {object} valid normalized relations
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -161,7 +160,7 @@ export const parseGivenRelations = () => {
  * @function createRelationsSchema
  * @name createRelationsSchema
  * @description Create predefine relations schema
- * @return {Schema} valid mongoose schema
+ * @returns {object} valid mongoose schema
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
