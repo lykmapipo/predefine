@@ -1,10 +1,7 @@
-/* dependencies */
 const _ = require('lodash');
 const { waterfall } = require('async');
-const { include } = require('@lykmapipo/include');
 const { connect } = require('@lykmapipo/mongoose-common');
-
-const { Predefine } = include(__dirname, '..');
+const { Predefine } = require('../lib/index');
 
 // naive logger
 const log = (stage, error, result) => {
