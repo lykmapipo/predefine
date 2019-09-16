@@ -7,7 +7,7 @@ import {
   create,
   expect,
 } from '@lykmapipo/mongoose-test-helpers';
-import { Predefine, predefineRouter } from '../../src/index';
+import { Predefine, predefineRouter } from '../../src';
 
 describe('Predefine Rest API', () => {
   const parent = Predefine.fake();

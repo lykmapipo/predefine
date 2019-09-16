@@ -1,7 +1,7 @@
 import path from 'path';
 import _ from 'lodash';
 import { clear, expect } from '@lykmapipo/mongoose-test-helpers';
-import { Predefine } from '../../src/index';
+import { Predefine } from '../../src';
 
 describe('Predefine Seed', () => {
   const { SEEDS_PATH, PREDEFINE_NAMESPACES } = process.env;

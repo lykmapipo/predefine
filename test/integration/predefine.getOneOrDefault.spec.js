@@ -1,5 +1,5 @@
 import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
-import { Predefine } from '../../src/index';
+import { Predefine } from '../../src';
 
 describe('Predefine getOneOrDefault', () => {
   before(done => clear(done));

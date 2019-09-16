@@ -1,5 +1,5 @@
 import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
-import { Predefine } from '../../src/index';
+import { Predefine } from '../../src';
 
 describe('Predefine Static Post', () => {
   before(done => clear(done));

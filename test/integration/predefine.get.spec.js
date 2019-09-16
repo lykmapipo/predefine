@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
-import { Predefine } from '../../src/index';
+import { Predefine } from '../../src';
 
 describe('Predefine Get', () => {
   before(done => clear(done));
