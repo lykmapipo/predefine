@@ -1,9 +1,15 @@
 # predefine
 
 [![Build Status](https://travis-ci.org/lykmapipo/predefine.svg?branch=master)](https://travis-ci.org/lykmapipo/predefine)
-[![Dependencies Status](https://david-dm.org/lykmapipo/predefine/status.svg?style=flat-square)](https://david-dm.org/lykmapipo/predefine)
+[![Dependencies Status](https://david-dm.org/lykmapipo/predefine.svg)](https://david-dm.org/lykmapipo/predefine)
 [![Coverage Status](https://coveralls.io/repos/github/lykmapipo/predefine/badge.svg?branch=master)](https://coveralls.io/github/lykmapipo/predefine?branch=master)
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/lykmapipo/predefine/tree/master)
+[![GitHub License](https://img.shields.io/github/license/lykmapipo/predefine)](https://github.com/lykmapipo/predefine/blob/master/LICENSE)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/lykmapipo/predefine/tree/master) 
+
+[![Commitizen Friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)](https://github.com/airbnb/javascript)
+[![npm version](https://img.shields.io/npm/v/@lykmapipo/predefine)](https://www.npmjs.com/package/@lykmapipo/predefine)
 
 A representation of stored and retrieved information that does not qualify to belongs to their own domain model.
 
