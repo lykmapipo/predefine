@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { compact, mergeObjects, randomColor } from '@lykmapipo/common';
+import { idOf, compact, mergeObjects, randomColor } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import { Geometry } from 'mongoose-geojson-schemas';
@@ -34,6 +34,7 @@ import {
  * @name Predefine
  * @description A representation of stored and retrieved information
  * that does not qualify to belongs to their own domain model.
+ *
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.1.0
@@ -521,6 +522,7 @@ PredefineSchema.index(uniqueIndexes(), { unique: true });
  * @function validate
  * @description predefine schema pre validation hook
  * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} valid instance or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -528,7 +530,7 @@ PredefineSchema.index(uniqueIndexes(), { unique: true });
  * @private
  */
 PredefineSchema.pre('validate', function onPreValidate(done) {
-  this.preValidate(done);
+  return this.preValidate(done);
 });
 
 /*
@@ -542,6 +544,7 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @function preValidate
  * @description predefine schema pre validation hook logic
  * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} valid instance or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -578,7 +581,7 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
 
   // continue
-  done();
+  return done(null, this);
 };
 
 /*
@@ -615,7 +618,7 @@ PredefineSchema.statics.prepareSeedCriteria = seed => {
   const copyOfSeed = seed;
   copyOfSeed.name = localizedValuesFor(seed.name);
 
-  const criteria = _.get(copyOfSeed, '_id')
+  const criteria = idOf(copyOfSeed)
     ? _.pick(copyOfSeed, '_id')
     : _.pick(copyOfSeed, 'namespace', 'bucket', 'code', ...names);
   return criteria;
