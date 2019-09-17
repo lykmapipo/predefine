@@ -7,6 +7,7 @@ import {
   parseGivenRelations,
   createRelationsSchema,
   createNumbersSchema,
+  createBooleansSchema,
   createDatesSchema,
   createGeosSchema,
 } from '../../src/utils';
@@ -179,5 +180,25 @@ describe('Predefine Utils', () => {
     expect(steps.options.index).to.be.true;
     expect(steps.options.exportable).to.be.true;
     expect(steps.options.fake).to.exist.and.be.a('function');
+  });
+
+  it.only('should create booleans schema', () => {
+    expect(createBooleansSchema).to.exist;
+    expect(createBooleansSchema).to.be.a('function');
+
+    const booleans = createBooleansSchema();
+    expect(booleans).to.exist;
+    expect(booleans).to.be.an.instanceof(Schema);
+    expect(booleans.options._id).to.be.false;
+    expect(booleans.options.id).to.be.false;
+    expect(booleans.options.timestamps).to.be.false;
+    expect(booleans.options.emitIndexErrors).to.be.true;
+
+    const preset = booleans.path('preset');
+    expect(preset).to.exist;
+    expect(preset).to.be.an.instanceof(SchemaTypes.Boolean);
+    expect(preset.options.index).to.be.true;
+    expect(preset.options.exportable).to.be.true;
+    expect(preset.options.fake).to.exist.and.be.true;
   });
 });

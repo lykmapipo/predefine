@@ -204,7 +204,7 @@ export const createRelationsSchema = () => {
  * @public
  * @example
  *
- * const dates = createNumbersSchema();
+ * const numbers = createNumbersSchema();
  * // => { weight: { type: Number, ..}, ... }
  *
  */
@@ -225,6 +225,47 @@ export const createNumbersSchema = () => {
   const schema = createVarySubSchema(options, ...numbers);
 
   // return numbers sub schema
+  return schema;
+};
+
+/**
+ * @function createBooleansSchema
+ * @name createBooleansSchema
+ * @description Create predefine booleans schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const booleans = createBooleansSchema();
+ * // => { default: { type: Boolean, ..}, ... }
+ *
+ */
+export const createBooleansSchema = () => {
+  // obtain booleans schema paths
+  const booleans = [
+    'default',
+    'preset',
+    ...getStringSet('PREDEFINE_BOOLEANS', []),
+  ];
+
+  // prepare booleans schema path options
+  const options = {
+    type: Boolean,
+    index: true,
+    exportable: true,
+    default: false,
+    fake: true,
+  };
+
+  // create booleans sub schema
+  const schema = createVarySubSchema(options, ...booleans);
+
+  // return booleans sub schema
   return schema;
 };
 
