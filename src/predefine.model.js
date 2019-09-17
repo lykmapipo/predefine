@@ -26,6 +26,7 @@ import {
   BUCKETS,
   DEFAULT_LOCALE,
   uniqueIndexes,
+  createDatesSchema,
   createRelationsSchema,
 } from './utils';
 
@@ -433,6 +434,25 @@ const PredefineSchema = createSchema(
      *
      */
     geometry: Geometry,
+
+    /**
+     * @name dates
+     * @description A map of dates to allow storing vary date fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "startedAt": "2018-09-17T00:23:38.000Z"
+     *   "endedAt": "2019-09-17T09:23:38.046Z"
+     * }
+     *
+     */
+    dates: createDatesSchema(),
 
     /**
      * @name relations

@@ -293,3 +293,11 @@ describe('Predefine Statics', () => {
     expect(seed._id).to.not.exist;
   });
 });
+
+describe('Predefine Faker', () => {
+  it('should fake dates', () => {
+    const predefine = Predefine.fake();
+    expect(predefine.dates.startedAt).to.exist.and.be.an.instanceof(Date);
+    expect(predefine.dates.endedAt).to.exist.and.be.an.instanceof(Date);
+  });
+});
