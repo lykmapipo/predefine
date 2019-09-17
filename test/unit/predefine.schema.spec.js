@@ -243,27 +243,6 @@ describe('Predefine Schema', () => {
     expect(coordinates).to.be.instanceof(SchemaTypes.Array);
   });
 
-  it('should have dates field', () => {
-    const dates = Predefine.path('dates');
-
-    expect(dates).to.exist;
-    expect(dates.options.type).to.be.an.instanceof(Schema);
-
-    const startedAt = Predefine.path('dates.startedAt');
-    expect(startedAt).to.exist;
-    expect(startedAt).to.be.an.instanceof(SchemaTypes.Date);
-    expect(startedAt.options.index).to.be.true;
-    expect(startedAt.options.exportable).to.be.true;
-    expect(startedAt.options.fake).to.exist.and.be.a('function');
-
-    const endedAt = Predefine.path('dates.endedAt');
-    expect(endedAt).to.exist;
-    expect(endedAt).to.be.an.instanceof(SchemaTypes.Date);
-    expect(endedAt.options.index).to.be.true;
-    expect(endedAt.options.exportable).to.be.true;
-    expect(endedAt.options.fake).to.exist.and.be.a('function');
-  });
-
   it('should have numbers field', () => {
     const numbers = Predefine.path('numbers');
 
@@ -283,6 +262,41 @@ describe('Predefine Schema', () => {
     expect(steps.options.index).to.be.true;
     expect(steps.options.exportable).to.be.true;
     expect(steps.options.fake).to.exist.and.be.a('function');
+  });
+
+  it('should have booleans field', () => {
+    const booleans = Predefine.path('booleans');
+
+    expect(booleans).to.exist;
+    expect(booleans.options.type).to.be.an.instanceof(Schema);
+
+    const preset = Predefine.path('booleans.preset');
+    expect(preset).to.exist;
+    expect(preset).to.be.an.instanceof(SchemaTypes.Boolean);
+    expect(preset.options.index).to.be.true;
+    expect(preset.options.exportable).to.be.true;
+    expect(preset.options.fake).to.exist.and.be.true;
+  });
+
+  it('should have dates field', () => {
+    const dates = Predefine.path('dates');
+
+    expect(dates).to.exist;
+    expect(dates.options.type).to.be.an.instanceof(Schema);
+
+    const startedAt = Predefine.path('dates.startedAt');
+    expect(startedAt).to.exist;
+    expect(startedAt).to.be.an.instanceof(SchemaTypes.Date);
+    expect(startedAt.options.index).to.be.true;
+    expect(startedAt.options.exportable).to.be.true;
+    expect(startedAt.options.fake).to.exist.and.be.a('function');
+
+    const endedAt = Predefine.path('dates.endedAt');
+    expect(endedAt).to.exist;
+    expect(endedAt).to.be.an.instanceof(SchemaTypes.Date);
+    expect(endedAt.options.index).to.be.true;
+    expect(endedAt.options.exportable).to.be.true;
+    expect(endedAt.options.fake).to.exist.and.be.a('function');
   });
 
   it('should have geos field', () => {

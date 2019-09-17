@@ -182,7 +182,7 @@ describe('Predefine Utils', () => {
     expect(steps.options.fake).to.exist.and.be.a('function');
   });
 
-  it.only('should create booleans schema', () => {
+  it('should create booleans schema', () => {
     expect(createBooleansSchema).to.exist;
     expect(createBooleansSchema).to.be.a('function');
 

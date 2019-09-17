@@ -27,6 +27,7 @@ import {
   DEFAULT_LOCALE,
   uniqueIndexes,
   createNumbersSchema,
+  createBooleansSchema,
   createDatesSchema,
   createGeosSchema,
   createRelationsSchema,
@@ -455,6 +456,25 @@ const PredefineSchema = createSchema(
      *
      */
     numbers: createNumbersSchema(),
+
+    /**
+     * @name booleans
+     * @description A map of booleans to allow storing vary boolean fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "default": true
+     *   "preset": true
+     * }
+     *
+     */
+    booleans: createBooleansSchema(),
 
     /**
      * @name dates
