@@ -8,6 +8,16 @@ import {
   ObjectId,
 } from '@lykmapipo/mongoose-common';
 import { localizedIndexesFor } from 'mongoose-locale-schema';
+import {
+  Point,
+  LineString,
+  Polygon,
+  MultiPoint,
+  MultiLineString,
+  MultiPolygon,
+  Geometry,
+  GeometryCollection,
+} from 'mongoose-geojson-schemas';
 
 export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
@@ -195,6 +205,7 @@ export const createRelationsSchema = () => {
  * @example
  *
  * const dates = createDatesSchema();
+ * // => { startedAt: { type: Date, ..}, ... }
  *
  */
 export const createDatesSchema = () => {
@@ -213,5 +224,42 @@ export const createDatesSchema = () => {
   const schema = createVarySubSchema(options, ...dates);
 
   // return dates sub schema
+  return schema;
+};
+
+/**
+ * @function createGeosSchema
+ * @name createGeosSchema
+ * @description Create predefine geos schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const dates = createGeosSchema();
+ * // => { point: { type: Date, ..}, ... }
+ *
+ */
+export const createGeosSchema = () => {
+  // prepare geos schema path options
+  const geos = {
+    point: Point,
+    line: LineString,
+    polygon: Polygon,
+    geometry: Geometry,
+    points: MultiPoint,
+    lines: MultiLineString,
+    polygons: MultiPolygon,
+    geometries: GeometryCollection,
+  };
+
+  // create geos sub schema
+  const schema = createSubSchema(geos);
+
+  // return geos sub schema
   return schema;
 };

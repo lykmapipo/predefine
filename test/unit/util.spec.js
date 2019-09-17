@@ -5,8 +5,9 @@ import {
   uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
-  createDatesSchema,
   createRelationsSchema,
+  createDatesSchema,
+  createGeosSchema,
 } from '../../src/utils';
 
 describe('Predefine Utils', () => {
@@ -119,5 +120,36 @@ describe('Predefine Utils', () => {
     expect(endedAt.options.index).to.be.true;
     expect(endedAt.options.exportable).to.be.true;
     expect(endedAt.options.fake).to.exist.and.be.a('function');
+  });
+
+  it('should create geos schema', () => {
+    expect(createGeosSchema).to.exist;
+    expect(createGeosSchema).to.be.a('function');
+
+    const geos = createGeosSchema();
+    expect(geos).to.exist;
+    expect(geos).to.be.an.instanceof(Schema);
+    expect(geos.options._id).to.be.false;
+    expect(geos.options.id).to.be.false;
+    expect(geos.options.timestamps).to.be.false;
+    expect(geos.options.emitIndexErrors).to.be.true;
+
+    const paths = [
+      'point',
+      'line',
+      'polygon',
+      'geometry',
+      'points',
+      'lines',
+      'polygons',
+      'geometries',
+    ];
+    _.forEach(paths, path => {
+      const geo = geos.path(path);
+      expect(geo).to.exist;
+      expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);
+      expect(geo.options.index).to.exist.and.be.equal('2dsphere');
+      expect(geo.options.fake).to.exist.and.be.an('object');
+    });
   });
 });
