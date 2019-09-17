@@ -6,6 +6,7 @@ import {
   parseNamespaceRelations,
   parseGivenRelations,
   createRelationsSchema,
+  createNumbersSchema,
   createDatesSchema,
   createGeosSchema,
 } from '../../src/utils';
@@ -151,5 +152,32 @@ describe('Predefine Utils', () => {
       expect(geo.options.index).to.exist.and.be.equal('2dsphere');
       expect(geo.options.fake).to.exist.and.be.an('object');
     });
+  });
+
+  it.only('should create numbers schema', () => {
+    expect(createNumbersSchema).to.exist;
+    expect(createNumbersSchema).to.be.a('function');
+
+    const numbers = createNumbersSchema();
+    expect(numbers).to.exist;
+    expect(numbers).to.be.an.instanceof(Schema);
+    expect(numbers.options._id).to.be.false;
+    expect(numbers.options.id).to.be.false;
+    expect(numbers.options.timestamps).to.be.false;
+    expect(numbers.options.emitIndexErrors).to.be.true;
+
+    const weight = numbers.path('weight');
+    expect(weight).to.exist;
+    expect(weight).to.be.an.instanceof(SchemaTypes.Number);
+    expect(weight.options.index).to.be.true;
+    expect(weight.options.exportable).to.be.true;
+    expect(weight.options.fake).to.exist.and.be.a('function');
+
+    const steps = numbers.path('steps');
+    expect(steps).to.exist;
+    expect(steps).to.be.an.instanceof(SchemaTypes.Number);
+    expect(steps.options.index).to.be.true;
+    expect(steps.options.exportable).to.be.true;
+    expect(steps.options.fake).to.exist.and.be.a('function');
   });
 });

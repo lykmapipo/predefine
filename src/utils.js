@@ -192,6 +192,43 @@ export const createRelationsSchema = () => {
 };
 
 /**
+ * @function createNumbersSchema
+ * @name createNumbersSchema
+ * @description Create predefine numbers schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const dates = createNumbersSchema();
+ * // => { weight: { type: Number, ..}, ... }
+ *
+ */
+export const createNumbersSchema = () => {
+  // obtain numbers schema paths
+  const numbers = ['weight', ...getStringSet('PREDEFINE_NUMBERS', [])];
+
+  // prepare numbers schema path options
+  const options = {
+    type: Number,
+    index: true,
+    default: 0,
+    exportable: true,
+    fake: f => f.random.number(),
+  };
+
+  // create numbers sub schema
+  const schema = createVarySubSchema(options, ...numbers);
+
+  // return numbers sub schema
+  return schema;
+};
+
+/**
  * @function createDatesSchema
  * @name createDatesSchema
  * @description Create predefine dates schema
