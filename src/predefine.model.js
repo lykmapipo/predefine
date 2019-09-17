@@ -26,6 +26,7 @@ import {
   BUCKETS,
   DEFAULT_LOCALE,
   uniqueIndexes,
+  createNumbersSchema,
   createDatesSchema,
   createGeosSchema,
   createRelationsSchema,
@@ -435,6 +436,25 @@ const PredefineSchema = createSchema(
      *
      */
     geometry: Geometry,
+
+    /**
+     * @name numbers
+     * @description A map of numbers to allow storing vary number fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "weight": 1
+     *   "steps": 1
+     * }
+     *
+     */
+    numbers: createNumbersSchema(),
 
     /**
      * @name dates

@@ -154,7 +154,7 @@ describe('Predefine Utils', () => {
     });
   });
 
-  it.only('should create numbers schema', () => {
+  it('should create numbers schema', () => {
     expect(createNumbersSchema).to.exist;
     expect(createNumbersSchema).to.be.a('function');
 

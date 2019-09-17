@@ -301,6 +301,12 @@ describe('Predefine Faker', () => {
     expect(predefine.dates.endedAt).to.exist.and.be.an.instanceof(Date);
   });
 
+  it('should fake numbers', () => {
+    const predefine = Predefine.fake();
+    expect(predefine.numbers.weight).to.exist.and.be.a('number');
+    expect(predefine.numbers.steps).to.exist.and.be.a('number');
+  });
+
   it('should fake geos', () => {
     const predefine = Predefine.fake();
 

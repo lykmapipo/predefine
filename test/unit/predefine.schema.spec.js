@@ -264,6 +264,27 @@ describe('Predefine Schema', () => {
     expect(endedAt.options.fake).to.exist.and.be.a('function');
   });
 
+  it('should have numbers field', () => {
+    const numbers = Predefine.path('numbers');
+
+    expect(numbers).to.exist;
+    expect(numbers.options.type).to.be.an.instanceof(Schema);
+
+    const weight = Predefine.path('numbers.weight');
+    expect(weight).to.exist;
+    expect(weight).to.be.an.instanceof(SchemaTypes.Number);
+    expect(weight.options.index).to.be.true;
+    expect(weight.options.exportable).to.be.true;
+    expect(weight.options.fake).to.exist.and.be.a('function');
+
+    const steps = Predefine.path('numbers.steps');
+    expect(steps).to.exist;
+    expect(steps).to.be.an.instanceof(SchemaTypes.Number);
+    expect(steps.options.index).to.be.true;
+    expect(steps.options.exportable).to.be.true;
+    expect(steps.options.fake).to.exist.and.be.a('function');
+  });
+
   it('should have geos field', () => {
     const geos = Predefine.path('geos');
 
