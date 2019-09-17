@@ -4,6 +4,7 @@ import { mergeObjects, sortedUniq, variableNameFor } from '@lykmapipo/common';
 import {
   collectionNameOf,
   createSubSchema,
+  createVarySubSchema,
   ObjectId,
 } from '@lykmapipo/mongoose-common';
 import { localizedIndexesFor } from 'mongoose-locale-schema';
@@ -178,4 +179,39 @@ export const createRelationsSchema = () => {
     parseNamespaceRelations()
   );
   return createSubSchema(relations);
+};
+
+/**
+ * @function createDatesSchema
+ * @name createDatesSchema
+ * @description Create predefine dates schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const dates = createDatesSchema();
+ *
+ */
+export const createDatesSchema = () => {
+  // obtain dates schema paths
+  const dates = getStringSet('PREDEFINE_DATES', []);
+
+  // prepare dates schema path options
+  const options = {
+    type: Date,
+    index: true,
+    exportable: true,
+    fake: f => f.date.recent(),
+  };
+
+  // create dates sub schema
+  const schema = createVarySubSchema(options, ...dates);
+
+  // return dates sub schema
+  return schema;
 };

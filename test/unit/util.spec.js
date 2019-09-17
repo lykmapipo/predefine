@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
-import { Schema } from '@lykmapipo/mongoose-common';
+import { Schema, SchemaTypes } from '@lykmapipo/mongoose-common';
 import {
   uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
+  createDatesSchema,
   createRelationsSchema,
 } from '../../src/utils';
 
@@ -91,5 +92,32 @@ describe('Predefine Utils', () => {
     expect(relations.options.id).to.be.false;
     expect(relations.options.timestamps).to.be.false;
     expect(relations.options.emitIndexErrors).to.be.true;
+  });
+
+  it('should create dates schema', () => {
+    expect(createDatesSchema).to.exist;
+    expect(createDatesSchema).to.be.a('function');
+
+    const dates = createDatesSchema();
+    expect(dates).to.exist;
+    expect(dates).to.be.an.instanceof(Schema);
+    expect(dates.options._id).to.be.false;
+    expect(dates.options.id).to.be.false;
+    expect(dates.options.timestamps).to.be.false;
+    expect(dates.options.emitIndexErrors).to.be.true;
+
+    const startedAt = dates.path('startedAt');
+    expect(startedAt).to.exist;
+    expect(startedAt).to.be.an.instanceof(SchemaTypes.Date);
+    expect(startedAt.options.index).to.be.true;
+    expect(startedAt.options.exportable).to.be.true;
+    expect(startedAt.options.fake).to.exist.and.be.a('function');
+
+    const endedAt = dates.path('endedAt');
+    expect(endedAt).to.exist;
+    expect(endedAt).to.be.an.instanceof(SchemaTypes.Date);
+    expect(endedAt.options.index).to.be.true;
+    expect(endedAt.options.exportable).to.be.true;
+    expect(endedAt.options.fake).to.exist.and.be.a('function');
   });
 });
