@@ -27,6 +27,7 @@ import {
   DEFAULT_LOCALE,
   uniqueIndexes,
   createDatesSchema,
+  createGeosSchema,
   createRelationsSchema,
 } from './utils';
 
@@ -455,15 +456,32 @@ const PredefineSchema = createSchema(
     dates: createDatesSchema(),
 
     /**
+     * @name geos
+     * @description A map of geometries to allow storing vary geo fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *  point: {
+     *   type: 'Point',
+     *   coordinates: [-76.80207859497996, 55.69469494228919]
+     *  }
+     * }
+     *
+     */
+    geos: createGeosSchema(),
+
+    /**
      * @name relations
      * @description Map of logical associated values of a predefined. They
      * reprents 1-to-1 relationship of other domain models with a predefine.
      *
      * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} index - ensure database index
-     * @property {boolean} aggregatable - allow field use for aggregation
-     * @property {boolean} taggable - allow field use for tagging
      *
      * @since 0.4.0
      * @version 0.1.0

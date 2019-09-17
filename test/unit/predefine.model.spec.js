@@ -300,4 +300,22 @@ describe('Predefine Faker', () => {
     expect(predefine.dates.startedAt).to.exist.and.be.an.instanceof(Date);
     expect(predefine.dates.endedAt).to.exist.and.be.an.instanceof(Date);
   });
+
+  it('should fake geos', () => {
+    const predefine = Predefine.fake();
+
+    const paths = [
+      'point',
+      'line',
+      'polygon',
+      'geometry',
+      'points',
+      'lines',
+      'polygons',
+      'geometries',
+    ];
+    _.forEach(paths, path => {
+      expect(predefine.geos[path]).to.exist.and.be.an.instanceof(Object);
+    });
+  });
 });

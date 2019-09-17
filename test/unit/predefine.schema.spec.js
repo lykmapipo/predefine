@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Schema, SchemaTypes } from '@lykmapipo/mongoose-common';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
 import Predefine from '../../src/predefine.model';
@@ -261,6 +262,31 @@ describe('Predefine Schema', () => {
     expect(endedAt.options.index).to.be.true;
     expect(endedAt.options.exportable).to.be.true;
     expect(endedAt.options.fake).to.exist.and.be.a('function');
+  });
+
+  it('should have geos field', () => {
+    const geos = Predefine.path('geos');
+
+    expect(geos).to.exist;
+    expect(geos.options.type).to.be.an.instanceof(Schema);
+
+    const paths = [
+      'point',
+      'line',
+      'polygon',
+      'geometry',
+      'points',
+      'lines',
+      'polygons',
+      'geometries',
+    ];
+    _.forEach(paths, path => {
+      const geo = Predefine.path(`geos.${path}`);
+      expect(geo).to.exist;
+      expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);
+      expect(geo.options.index).to.exist.and.be.equal('2dsphere');
+      expect(geo.options.fake).to.exist.and.be.an('object');
+    });
   });
 
   it('should have relations field', () => {
