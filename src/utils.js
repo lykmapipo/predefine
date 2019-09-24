@@ -19,6 +19,12 @@ import {
   GeometryCollection,
 } from 'mongoose-geojson-schemas';
 
+export const CONTENT_TYPE_JSON = 'json';
+
+export const CONTENT_TYPE_GEOJSON = 'geojson';
+
+export const CONTENT_TYPE_TOPOJSON = 'topojson';
+
 export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
 export const LOCALES = getStringSet('LOCALES', DEFAULT_LOCALE);
