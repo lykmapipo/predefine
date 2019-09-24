@@ -269,7 +269,6 @@ export const createNumbersSchema = () => {
   const options = {
     type: Number,
     index: true,
-    default: 0,
     exportable: true,
     fake: f => f.random.number(),
   };
@@ -311,7 +310,6 @@ export const createBooleansSchema = () => {
     type: Boolean,
     index: true,
     exportable: true,
-    default: false,
     fake: true,
   };
 
