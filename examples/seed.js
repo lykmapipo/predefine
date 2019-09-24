@@ -1,6 +1,6 @@
 import { isArray } from 'lodash';
 import { waterfall } from 'async';
-import { connect } from '@lykmapipo/mongoose-common';
+import { connect, syncIndexes } from '@lykmapipo/mongoose-common';
 import { Predefine } from '../src';
 
 // naive logger
@@ -26,15 +26,16 @@ const seedPredefine = done => {
   });
 };
 
+// ensure indexes
+const ensureIndexes = done => syncIndexes(error => done(error));
+
+// ensure connections
+const ensureConnection = done => connect(error => done(error));
+
 // do seed
 const seed = done => {
   seedStart = Date.now();
-  connect(error => {
-    if (error) {
-      return done(error);
-    }
-    return waterfall([seedPredefine], done);
-  });
+  return waterfall([ensureConnection, ensureIndexes, seedPredefine], done);
 };
 
 // do seeding
