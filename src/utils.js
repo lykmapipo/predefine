@@ -76,6 +76,17 @@ export const OPTION_AUTOPOPULATE = {
   maxDepth: 1,
 };
 
+export const DEFAULT_NUMBER_PATHS = [
+  {
+    name: 'weight',
+    type: Number,
+    index: true,
+    default: () => 0,
+    exportable: true,
+    fake: f => f.random.number(),
+  },
+];
+
 export const DEFAULT_BOOLEAN_PATHS = [
   {
     name: 'default',
