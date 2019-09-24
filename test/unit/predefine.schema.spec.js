@@ -188,7 +188,7 @@ describe('Predefine Schema', () => {
     expect(isDefault.options.type).to.exist;
     expect(isDefault.options.index).to.be.true;
     expect(isDefault.options.exportable).to.be.true;
-    expect(isDefault.options.default).to.be.false;
+    expect(isDefault.options.default).to.exist.and.be.a('function');
     expect(isDefault.options.fake).to.exist;
   });
 
@@ -202,7 +202,7 @@ describe('Predefine Schema', () => {
     expect(preset.options.type).to.exist;
     expect(preset.options.index).to.be.true;
     expect(preset.options.exportable).to.be.true;
-    expect(preset.options.default).to.be.false;
+    expect(preset.options.default).to.exist.and.be.a('function');
     expect(preset.options.fake).to.exist;
   });
 

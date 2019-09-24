@@ -81,7 +81,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
     type: Boolean,
     index: true,
     exportable: true,
-    default: false,
+    default: () => false,
     fake: true,
   },
   {
@@ -89,7 +89,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
     type: Boolean,
     index: true,
     exportable: true,
-    default: false,
+    default: () => false,
     fake: true,
   },
 ];
@@ -300,6 +300,29 @@ export const createNumbersSchema = () => {
 };
 
 /**
+ * @function booleanSchemaPaths
+ * @name booleanSchemaPaths
+ * @description Expose schema boolean paths
+ * @returns {Array} set of boolean paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = booleanSchemaPaths();
+ * // => ['default', 'preset', ... ];
+ *
+ */
+export const booleanSchemaPaths = () =>
+  sortedUniq([
+    ..._.map(DEFAULT_BOOLEAN_PATHS, 'name'),
+    ...getStringSet('PREDEFINE_BOOLEANS', []),
+  ]);
+
+/**
  * @function createBooleansSchema
  * @name createBooleansSchema
  * @description Create predefine booleans schema
@@ -318,16 +341,13 @@ export const createNumbersSchema = () => {
  */
 export const createBooleansSchema = () => {
   // obtain given booleans schema paths
-  const givenPaths = getStringSet('PREDEFINE_BOOLEANS', []);
-
-  // omit default booleans paths
-  const actualPaths = _.without(
-    givenPaths,
+  const givenPaths = _.without(
+    booleanSchemaPaths(),
     ..._.map(DEFAULT_BOOLEAN_PATHS, 'name')
   );
 
-  // merge default with given boolean paths
-  const paths = [...DEFAULT_BOOLEAN_PATHS, ...actualPaths];
+  // merge defaults with given boolean paths
+  const paths = [...DEFAULT_BOOLEAN_PATHS, ...givenPaths];
 
   // prepare booleans schema path options
   const options = {
@@ -381,8 +401,8 @@ export const createDatesSchema = () => {
 };
 
 /**
- * @function geoPaths
- * @name geoPaths
+ * @function geoSchemaPaths
+ * @name geoSchemaPaths
  * @description Expose schema geo paths
  * @returns {Array} set of geo paths
  * @author lally elias <lallyelias87@gmail.com>
@@ -393,11 +413,11 @@ export const createDatesSchema = () => {
  * @public
  * @example
  *
- * const paths = geoPaths();
+ * const paths = geoSchemaPaths();
  * // => ['point', ... ];
  *
  */
-export const geoPaths = () =>
+export const geoSchemaPaths = () =>
   sortedUniq([
     'point',
     'line',

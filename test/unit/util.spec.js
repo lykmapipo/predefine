@@ -8,9 +8,10 @@ import {
   createRelationsSchema,
   createStringsSchema,
   createNumbersSchema,
+  booleanSchemaPaths,
   createBooleansSchema,
   createDatesSchema,
-  geoPaths,
+  geoSchemaPaths,
   createGeosSchema,
 } from '../../src/utils';
 
@@ -179,6 +180,12 @@ describe('Predefine Utils', () => {
     expect(steps.options.fake).to.exist.and.be.a('function');
   });
 
+  it('should provide schema boolean paths', () => {
+    const paths = booleanSchemaPaths();
+    expect(paths).to.exist.and.be.an('array');
+    expect(paths).to.include.members(['default', 'preset']);
+  });
+
   it('should create booleans schema', () => {
     expect(createBooleansSchema).to.exist;
     expect(createBooleansSchema).to.be.a('function');
@@ -227,7 +234,7 @@ describe('Predefine Utils', () => {
   });
 
   it('should provide schema geo paths', () => {
-    const paths = geoPaths();
+    const paths = geoSchemaPaths();
     expect(paths).to.exist.and.be.an('array');
     expect(paths).to.include.members([
       'point',
