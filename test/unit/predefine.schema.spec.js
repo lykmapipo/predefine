@@ -242,12 +242,61 @@ describe('Predefine Schema', () => {
     expect(coordinates).to.be.instanceof(SchemaTypes.Array);
   });
 
+  it('should have strings field', () => {
+    const strings = Predefine.path('strings');
+    const code = Predefine.path('strings.code');
+    const symbol = Predefine.path('strings.symbol');
+    const color = Predefine.path('strings.color');
+    const account = Predefine.path('strings.account');
+
+    expect(strings).to.exist;
+    expect(strings).to.be.an.instanceof(SchemaTypes.Embedded);
+    expect(strings.options.type).to.be.an.instanceof(Schema);
+
+    expect(code).to.exist;
+    expect(code).to.be.an.instanceof(SchemaTypes.String);
+    expect(code.options.trim).to.be.true;
+    expect(code.options.index).to.be.true;
+    expect(code.options.searchable).to.be.true;
+    expect(code.options.taggable).to.be.true;
+    expect(code.options.exportable).to.be.true;
+    expect(code.options.fake).to.exist.and.be.a('function');
+
+    expect(symbol).to.exist;
+    expect(symbol).to.be.an.instanceof(SchemaTypes.String);
+    expect(symbol.options.trim).to.be.true;
+    expect(symbol.options.index).to.be.true;
+    expect(symbol.options.searchable).to.be.true;
+    expect(symbol.options.taggable).to.be.true;
+    expect(symbol.options.exportable).to.be.true;
+    expect(symbol.options.fake).to.exist.and.be.a('function');
+
+    expect(color).to.exist;
+    expect(color).to.be.an.instanceof(SchemaTypes.String);
+    expect(color.options.trim).to.be.true;
+    expect(color.options.index).to.be.true;
+    expect(color.options.searchable).to.be.true;
+    expect(color.options.taggable).to.be.true;
+    expect(color.options.exportable).to.be.true;
+    expect(color.options.fake).to.exist.and.be.a('function');
+
+    expect(account).to.exist;
+    expect(account).to.be.an.instanceof(SchemaTypes.String);
+    expect(account.options.trim).to.be.true;
+    expect(account.options.index).to.be.true;
+    expect(account.options.searchable).to.be.true;
+    expect(account.options.taggable).to.be.true;
+    expect(account.options.exportable).to.be.true;
+    expect(account.options.fake).to.exist.and.be.a('function');
+  });
+
   it('should have numbers field', () => {
     const numbers = Predefine.path('numbers');
     const weight = Predefine.path('numbers.weight');
     const steps = Predefine.path('numbers.steps');
 
     expect(numbers).to.exist;
+    expect(numbers).to.be.an.instanceof(SchemaTypes.Embedded);
     expect(numbers.options.type).to.be.an.instanceof(Schema);
 
     expect(weight).to.exist;
@@ -269,6 +318,7 @@ describe('Predefine Schema', () => {
     const active = Predefine.path('booleans.active');
 
     expect(booleans).to.exist;
+    expect(booleans).to.be.an.instanceof(SchemaTypes.Embedded);
     expect(booleans.options.type).to.be.an.instanceof(Schema);
 
     expect(preset).to.exist;
@@ -290,6 +340,7 @@ describe('Predefine Schema', () => {
     const endedAt = Predefine.path('dates.endedAt');
 
     expect(dates).to.exist;
+    expect(dates).to.be.an.instanceof(SchemaTypes.Embedded);
     expect(dates.options.type).to.be.an.instanceof(Schema);
 
     expect(startedAt).to.exist;
@@ -309,6 +360,7 @@ describe('Predefine Schema', () => {
     const geos = Predefine.path('geos');
 
     expect(geos).to.exist;
+    expect(geos).to.be.an.instanceof(SchemaTypes.Embedded);
     expect(geos.options.type).to.be.an.instanceof(Schema);
 
     const paths = [

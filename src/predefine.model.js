@@ -26,6 +26,7 @@ import {
   BUCKETS,
   DEFAULT_LOCALE,
   uniqueIndexes,
+  createStringsSchema,
   createNumbersSchema,
   createBooleansSchema,
   createDatesSchema,
@@ -437,6 +438,26 @@ const PredefineSchema = createSchema(
      *
      */
     geometry: Geometry,
+
+    /**
+     * @name strings
+     * @description A map of strings to allow storing vary string fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "code": "12TRTE"
+     *   "symbol": "$",
+     *   "color": "#CCCCCC"
+     * }
+     *
+     */
+    strings: createStringsSchema(),
 
     /**
      * @name numbers
