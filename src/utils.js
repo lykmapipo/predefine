@@ -357,6 +357,35 @@ export const createDatesSchema = () => {
 };
 
 /**
+ * @function geoPaths
+ * @name geoPaths
+ * @description Create predefine geos schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = geoPaths();
+ * // => ['point', ... ];
+ *
+ */
+export const geoPaths = () =>
+  sortedUniq([
+    'point',
+    'line',
+    'polygon',
+    'geometry',
+    'points',
+    'lines',
+    'polygons',
+    'geometries',
+  ]);
+
+/**
  * @function createGeosSchema
  * @name createGeosSchema
  * @description Create predefine geos schema

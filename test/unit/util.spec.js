@@ -10,6 +10,7 @@ import {
   createNumbersSchema,
   createBooleansSchema,
   createDatesSchema,
+  geoPaths,
   createGeosSchema,
 } from '../../src/utils';
 
@@ -125,37 +126,6 @@ describe('Predefine Utils', () => {
     expect(endedAt.options.fake).to.exist.and.be.a('function');
   });
 
-  it('should create geos schema', () => {
-    expect(createGeosSchema).to.exist;
-    expect(createGeosSchema).to.be.a('function');
-
-    const geos = createGeosSchema();
-    expect(geos).to.exist;
-    expect(geos).to.be.an.instanceof(Schema);
-    expect(geos.options._id).to.be.false;
-    expect(geos.options.id).to.be.false;
-    expect(geos.options.timestamps).to.be.false;
-    expect(geos.options.emitIndexErrors).to.be.true;
-
-    const paths = [
-      'point',
-      'line',
-      'polygon',
-      'geometry',
-      'points',
-      'lines',
-      'polygons',
-      'geometries',
-    ];
-    _.forEach(paths, path => {
-      const geo = geos.path(path);
-      expect(geo).to.exist;
-      expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);
-      expect(geo.options.index).to.exist.and.be.equal('2dsphere');
-      expect(geo.options.fake).to.exist.and.be.an('object');
-    });
-  });
-
   it('should create strings schema', () => {
     expect(createStringsSchema).to.exist;
     expect(createStringsSchema).to.be.a('function');
@@ -254,5 +224,51 @@ describe('Predefine Utils', () => {
     expect(preset.options.index).to.be.true;
     expect(preset.options.exportable).to.be.true;
     expect(preset.options.fake).to.exist.and.be.true;
+  });
+
+  it('should provide schema geo paths', () => {
+    const paths = geoPaths();
+    expect(paths).to.exist.and.be.an('array');
+    expect(paths).to.include.members([
+      'point',
+      'line',
+      'polygon',
+      'geometry',
+      'points',
+      'lines',
+      'polygons',
+      'geometries',
+    ]);
+  });
+
+  it('should create geos schema', () => {
+    expect(createGeosSchema).to.exist;
+    expect(createGeosSchema).to.be.a('function');
+
+    const geos = createGeosSchema();
+    expect(geos).to.exist;
+    expect(geos).to.be.an.instanceof(Schema);
+    expect(geos.options._id).to.be.false;
+    expect(geos.options.id).to.be.false;
+    expect(geos.options.timestamps).to.be.false;
+    expect(geos.options.emitIndexErrors).to.be.true;
+
+    const paths = [
+      'point',
+      'line',
+      'polygon',
+      'geometry',
+      'points',
+      'lines',
+      'polygons',
+      'geometries',
+    ];
+    _.forEach(paths, path => {
+      const geo = geos.path(path);
+      expect(geo).to.exist;
+      expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);
+      expect(geo.options.index).to.exist.and.be.equal('2dsphere');
+      expect(geo.options.fake).to.exist.and.be.an('object');
+    });
   });
 });
