@@ -3,6 +3,7 @@ import { getObject, getString, getStringSet } from '@lykmapipo/env';
 import { mergeObjects, sortedUniq, variableNameFor } from '@lykmapipo/common';
 import {
   collectionNameOf,
+  copyInstance,
   createSubSchema,
   createVarySubSchema,
   ObjectId,
@@ -321,6 +322,40 @@ export const booleanSchemaPaths = () =>
     ..._.map(DEFAULT_BOOLEAN_PATHS, 'name'),
     ...getStringSet('PREDEFINE_BOOLEANS', []),
   ]);
+
+/**
+ * @function booleansDefaultValue
+ * @name booleansDefaultValue
+ * @description Expose boolean paths, default values.
+ * @param {object} [values] valid boolean paths, values.
+ * @returns {object} hash of boolean paths, default values.
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const values = booleansDefaultValue();
+ * // => { default: false, preset: false, ... };
+ *
+ */
+export const booleansDefaultValue = values => {
+  // initialize defaults
+  let defaults = {};
+
+  // compute boolean defaults
+  _.forEach(DEFAULT_BOOLEAN_PATHS, path => {
+    defaults[path.name] = path.default();
+  });
+
+  // merge given
+  defaults = mergeObjects(defaults, copyInstance(values));
+
+  // return boolen paths, default values
+  return defaults;
+};
 
 /**
  * @function createBooleansSchema

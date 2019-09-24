@@ -9,6 +9,7 @@ import {
   createStringsSchema,
   createNumbersSchema,
   booleanSchemaPaths,
+  booleansDefaultValue,
   createBooleansSchema,
   createDatesSchema,
   geoSchemaPaths,
@@ -184,6 +185,12 @@ describe('Predefine Utils', () => {
     const paths = booleanSchemaPaths();
     expect(paths).to.exist.and.be.an('array');
     expect(paths).to.include.members(['default', 'preset']);
+  });
+
+  it('should provide booleans default value', () => {
+    const values = booleansDefaultValue({});
+    expect(values.default).to.exist.and.be.false;
+    expect(values.preset).to.exist.and.be.false;
   });
 
   it('should create booleans schema', () => {

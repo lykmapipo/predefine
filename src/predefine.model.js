@@ -27,6 +27,7 @@ import {
   uniqueIndexes,
   createStringsSchema,
   createNumbersSchema,
+  booleansDefaultValue,
   createBooleansSchema,
   createDatesSchema,
   createGeosSchema,
@@ -570,6 +571,9 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
 
   // ensure code
   this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
+
+  // ensure booleans, values
+  this.booleans = booleansDefaultValue(this.booleans);
 
   // continue
   return done(null, this);
