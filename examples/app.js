@@ -1,12 +1,7 @@
-const _ = require('lodash');
-const { get, mount, start } = require('@lykmapipo/express-common');
-const { connect, jsonSchema } = require('@lykmapipo/mongoose-common');
-const {
-  Predefine,
-  predefineRouter,
-  info,
-  apiVersion,
-} = require('../lib/index');
+import { forEach } from 'lodash';
+import { get, mount, start } from '@lykmapipo/express-common';
+import { connect, jsonSchema } from '@lykmapipo/mongoose-common';
+import { Predefine, predefineRouter, info, apiVersion } from '../src';
 
 const startHttpServer = () => {
   get('/', (request, response) => {
@@ -29,7 +24,7 @@ const startHttpServer = () => {
       throw error;
     }
     // start http server
-    _.forEach(Predefine.BUCKETS, bucket => {
+    forEach(Predefine.BUCKETS, bucket => {
       const path = `predefines/${bucket}`;
       console.log(`visit http://0.0.0.0:${env.PORT}/${apiVersion}/${path}`);
     });

@@ -93,7 +93,7 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: !isTest,
+      hide: !isTest(),
       fake: true,
     },
 
@@ -131,7 +131,7 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: !isTest,
+      hide: !isTest(),
       fake: true,
     },
 
