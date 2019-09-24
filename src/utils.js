@@ -273,6 +273,29 @@ export const createStringsSchema = () => {
 };
 
 /**
+ * @function numberSchemaPaths
+ * @name numberSchemaPaths
+ * @description Expose schema number paths
+ * @returns {Array} set of number paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = numberSchemaPaths();
+ * // => ['weight', ... ];
+ *
+ */
+export const numberSchemaPaths = () =>
+  sortedUniq([
+    ..._.map(DEFAULT_NUMBER_PATHS, 'name'),
+    ...getStringSet('PREDEFINE_NUMBERS', []),
+  ]);
+
+/**
  * @function createNumbersSchema
  * @name createNumbersSchema
  * @description Create predefine numbers schema

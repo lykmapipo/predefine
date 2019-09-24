@@ -166,7 +166,7 @@ describe('Predefine Schema', () => {
   });
 
   it('should have weight field', () => {
-    const weight = Predefine.path('weight');
+    const weight = Predefine.path('numbers.weight');
 
     expect(weight).to.exist;
     expect(weight).to.be.instanceof(SchemaTypes.Number);

@@ -7,6 +7,7 @@ import {
   parseGivenRelations,
   createRelationsSchema,
   createStringsSchema,
+  numberSchemaPaths,
   createNumbersSchema,
   booleanSchemaPaths,
   booleansDefaultValue,
@@ -152,6 +153,12 @@ describe('Predefine Utils', () => {
     expect(account.options.taggable).to.be.true;
     expect(account.options.exportable).to.be.true;
     expect(account.options.fake).to.exist.and.be.a('function');
+  });
+
+  it('should provide schema number paths', () => {
+    const paths = numberSchemaPaths();
+    expect(paths).to.exist.and.be.an('array');
+    expect(paths).to.include.members(['weight']);
   });
 
   it('should create numbers schema', () => {

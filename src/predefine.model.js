@@ -285,33 +285,6 @@ const PredefineSchema = createSchema(
     }),
 
     /**
-     * @name weight
-     * @description Weight of the predefine to help in ordering predefines of
-     * a given namespace.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} index - ensure database index
-     * @property {boolean} default - default value set when none provided
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 1.0.0
-     * @instance
-     * @example
-     * 0
-     *
-     */
-    weight: {
-      type: Number,
-      index: true,
-      default: 0,
-      exportable: true,
-      fake: f => f.random.number(),
-    },
-
-    /**
      * @name color
      * @description A color in hexadecimal format used to differentiate
      * predefined value visually from one other.
