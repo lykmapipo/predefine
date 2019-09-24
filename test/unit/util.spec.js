@@ -99,33 +99,6 @@ describe('Predefine Utils', () => {
     expect(relations.options.emitIndexErrors).to.be.true;
   });
 
-  it('should create dates schema', () => {
-    expect(createDatesSchema).to.exist;
-    expect(createDatesSchema).to.be.a('function');
-
-    const dates = createDatesSchema();
-    expect(dates).to.exist;
-    expect(dates).to.be.an.instanceof(Schema);
-    expect(dates.options._id).to.be.false;
-    expect(dates.options.id).to.be.false;
-    expect(dates.options.timestamps).to.be.false;
-    expect(dates.options.emitIndexErrors).to.be.true;
-
-    const startedAt = dates.path('startedAt');
-    expect(startedAt).to.exist;
-    expect(startedAt).to.be.an.instanceof(SchemaTypes.Date);
-    expect(startedAt.options.index).to.be.true;
-    expect(startedAt.options.exportable).to.be.true;
-    expect(startedAt.options.fake).to.exist.and.be.a('function');
-
-    const endedAt = dates.path('endedAt');
-    expect(endedAt).to.exist;
-    expect(endedAt).to.be.an.instanceof(SchemaTypes.Date);
-    expect(endedAt.options.index).to.be.true;
-    expect(endedAt.options.exportable).to.be.true;
-    expect(endedAt.options.fake).to.exist.and.be.a('function');
-  });
-
   it('should create strings schema', () => {
     expect(createStringsSchema).to.exist;
     expect(createStringsSchema).to.be.a('function');
@@ -224,6 +197,33 @@ describe('Predefine Utils', () => {
     expect(preset.options.index).to.be.true;
     expect(preset.options.exportable).to.be.true;
     expect(preset.options.fake).to.exist.and.be.true;
+  });
+
+  it('should create dates schema', () => {
+    expect(createDatesSchema).to.exist;
+    expect(createDatesSchema).to.be.a('function');
+
+    const dates = createDatesSchema();
+    expect(dates).to.exist;
+    expect(dates).to.be.an.instanceof(Schema);
+    expect(dates.options._id).to.be.false;
+    expect(dates.options.id).to.be.false;
+    expect(dates.options.timestamps).to.be.false;
+    expect(dates.options.emitIndexErrors).to.be.true;
+
+    const startedAt = dates.path('startedAt');
+    expect(startedAt).to.exist;
+    expect(startedAt).to.be.an.instanceof(SchemaTypes.Date);
+    expect(startedAt.options.index).to.be.true;
+    expect(startedAt.options.exportable).to.be.true;
+    expect(startedAt.options.fake).to.exist.and.be.a('function');
+
+    const endedAt = dates.path('endedAt');
+    expect(endedAt).to.exist;
+    expect(endedAt).to.be.an.instanceof(SchemaTypes.Date);
+    expect(endedAt.options.index).to.be.true;
+    expect(endedAt.options.exportable).to.be.true;
+    expect(endedAt.options.fake).to.exist.and.be.a('function');
   });
 
   it('should provide schema geo paths', () => {
