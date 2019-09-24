@@ -6,6 +6,7 @@ import {
   parseNamespaceRelations,
   parseGivenRelations,
   createRelationsSchema,
+  createStringsSchema,
   createNumbersSchema,
   createBooleansSchema,
   createDatesSchema,
@@ -153,6 +154,59 @@ describe('Predefine Utils', () => {
       expect(geo.options.index).to.exist.and.be.equal('2dsphere');
       expect(geo.options.fake).to.exist.and.be.an('object');
     });
+  });
+
+  it('should create strings schema', () => {
+    expect(createStringsSchema).to.exist;
+    expect(createStringsSchema).to.be.a('function');
+
+    const strings = createStringsSchema();
+    expect(strings).to.exist;
+    expect(strings).to.be.an.instanceof(Schema);
+    expect(strings.options._id).to.be.false;
+    expect(strings.options.id).to.be.false;
+    expect(strings.options.timestamps).to.be.false;
+    expect(strings.options.emitIndexErrors).to.be.true;
+
+    const code = strings.path('code');
+    expect(code).to.exist;
+    expect(code).to.be.an.instanceof(SchemaTypes.String);
+    expect(code.options.trim).to.be.true;
+    expect(code.options.index).to.be.true;
+    expect(code.options.searchable).to.be.true;
+    expect(code.options.taggable).to.be.true;
+    expect(code.options.exportable).to.be.true;
+    expect(code.options.fake).to.exist.and.be.a('function');
+
+    const symbol = strings.path('symbol');
+    expect(symbol).to.exist;
+    expect(symbol).to.be.an.instanceof(SchemaTypes.String);
+    expect(symbol.options.trim).to.be.true;
+    expect(symbol.options.index).to.be.true;
+    expect(symbol.options.searchable).to.be.true;
+    expect(symbol.options.taggable).to.be.true;
+    expect(symbol.options.exportable).to.be.true;
+    expect(symbol.options.fake).to.exist.and.be.a('function');
+
+    const color = strings.path('color');
+    expect(color).to.exist;
+    expect(color).to.be.an.instanceof(SchemaTypes.String);
+    expect(color.options.trim).to.be.true;
+    expect(color.options.index).to.be.true;
+    expect(color.options.searchable).to.be.true;
+    expect(color.options.taggable).to.be.true;
+    expect(color.options.exportable).to.be.true;
+    expect(color.options.fake).to.exist.and.be.a('function');
+
+    const account = strings.path('account');
+    expect(account).to.exist;
+    expect(account).to.be.an.instanceof(SchemaTypes.String);
+    expect(account.options.trim).to.be.true;
+    expect(account.options.index).to.be.true;
+    expect(account.options.searchable).to.be.true;
+    expect(account.options.taggable).to.be.true;
+    expect(account.options.exportable).to.be.true;
+    expect(account.options.fake).to.exist.and.be.a('function');
   });
 
   it('should create numbers schema', () => {

@@ -192,6 +192,50 @@ export const createRelationsSchema = () => {
 };
 
 /**
+ * @function createStringsSchema
+ * @name createStringsSchema
+ * @description Create predefine strings schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const strings = createStringsSchema();
+ * // => { code: { type: String, ... }, ... }
+ *
+ */
+export const createStringsSchema = () => {
+  // obtain strings schema paths
+  const strings = sortedUniq([
+    'code',
+    'symbol',
+    'color',
+    ...getStringSet('PREDEFINE_STRINGS', []),
+  ]);
+
+  // prepare strings schema path options
+  const options = {
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    fake: f => f.commerce.productName(),
+  };
+
+  // create strings sub schema
+  const schema = createVarySubSchema(options, ...strings);
+
+  // return strings sub schema
+  return schema;
+};
+
+/**
  * @function createNumbersSchema
  * @name createNumbersSchema
  * @description Create predefine numbers schema
@@ -205,12 +249,15 @@ export const createRelationsSchema = () => {
  * @example
  *
  * const numbers = createNumbersSchema();
- * // => { weight: { type: Number, ..}, ... }
+ * // => { weight: { type: Number, ... }, ... }
  *
  */
 export const createNumbersSchema = () => {
   // obtain numbers schema paths
-  const numbers = ['weight', ...getStringSet('PREDEFINE_NUMBERS', [])];
+  const numbers = sortedUniq([
+    'weight',
+    ...getStringSet('PREDEFINE_NUMBERS', []),
+  ]);
 
   // prepare numbers schema path options
   const options = {
@@ -242,16 +289,16 @@ export const createNumbersSchema = () => {
  * @example
  *
  * const booleans = createBooleansSchema();
- * // => { default: { type: Boolean, ..}, ... }
+ * // => { default: { type: Boolean, ... }, ... }
  *
  */
 export const createBooleansSchema = () => {
   // obtain booleans schema paths
-  const booleans = [
+  const booleans = sortedUniq([
     'default',
     'preset',
     ...getStringSet('PREDEFINE_BOOLEANS', []),
-  ];
+  ]);
 
   // prepare booleans schema path options
   const options = {
@@ -283,12 +330,12 @@ export const createBooleansSchema = () => {
  * @example
  *
  * const dates = createDatesSchema();
- * // => { startedAt: { type: Date, ..}, ... }
+ * // => { startedAt: { type: Date, ... }, ... }
  *
  */
 export const createDatesSchema = () => {
   // obtain dates schema paths
-  const dates = getStringSet('PREDEFINE_DATES', []);
+  const dates = sortedUniq([...getStringSet('PREDEFINE_DATES', [])]);
 
   // prepare dates schema path options
   const options = {
@@ -319,7 +366,7 @@ export const createDatesSchema = () => {
  * @example
  *
  * const dates = createGeosSchema();
- * // => { point: { type: Date, ..}, ... }
+ * // => { point: { type: Date, ... }, ... }
  *
  */
 export const createGeosSchema = () => {
