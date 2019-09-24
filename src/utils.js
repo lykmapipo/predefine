@@ -359,8 +359,8 @@ export const createDatesSchema = () => {
 /**
  * @function geoPaths
  * @name geoPaths
- * @description Create predefine geos schema
- * @returns {object} valid mongoose schema
+ * @description Expose schema geo paths
+ * @returns {Array} set of geo paths
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.9.0
