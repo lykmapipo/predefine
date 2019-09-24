@@ -15,10 +15,10 @@ import { COLLECTION_NAME } from './utils';
 
 /* constants */
 const API_VERSION = getString('API_VERSION', '1.0.0');
-const PATH_SINGLE = `/${COLLECTION_NAME}/:bucket/:id`;
-const PATH_LIST = `/${COLLECTION_NAME}/:bucket`;
-const PATH_EXPORT = `/${COLLECTION_NAME}/:bucket/export`;
-const PATH_SCHEMA = `/${COLLECTION_NAME}/:bucket/schema/`;
+const PATH_SINGLE = `/${COLLECTION_NAME}/:bucket/:id.:ext?`;
+const PATH_LIST = `/${COLLECTION_NAME}/:bucket.:ext?`;
+const PATH_EXPORT = `/${COLLECTION_NAME}/:bucket/export.:ext?`;
+const PATH_SCHEMA = `/${COLLECTION_NAME}/:bucket/schema.:ext?`;
 
 /**
  * @name PredefineHttpRouter
