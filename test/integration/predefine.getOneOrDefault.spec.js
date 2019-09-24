@@ -5,7 +5,7 @@ describe('Predefine getOneOrDefault', () => {
   before(done => clear(done));
 
   let predefine = Predefine.fake();
-  predefine.default = true;
+  predefine.set({ booleans: { default: true } });
 
   before(done => {
     predefine.post((error, created) => {

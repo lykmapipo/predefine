@@ -75,6 +75,25 @@ export const OPTION_AUTOPOPULATE = {
   maxDepth: 1,
 };
 
+export const DEFAULT_BOOLEAN_PATHS = [
+  {
+    name: 'default',
+    type: Boolean,
+    index: true,
+    exportable: true,
+    default: false,
+    fake: true,
+  },
+  {
+    name: 'preset',
+    type: Boolean,
+    index: true,
+    exportable: true,
+    default: false,
+    fake: true,
+  },
+];
+
 /**
  * @function uniqueIndexes
  * @name uniqueIndexes
@@ -298,12 +317,17 @@ export const createNumbersSchema = () => {
  *
  */
 export const createBooleansSchema = () => {
-  // obtain booleans schema paths
-  const booleans = sortedUniq([
-    'default',
-    'preset',
-    ...getStringSet('PREDEFINE_BOOLEANS', []),
-  ]);
+  // obtain given booleans schema paths
+  const givenPaths = getStringSet('PREDEFINE_BOOLEANS', []);
+
+  // omit default booleans paths
+  const actualPaths = _.without(
+    givenPaths,
+    ..._.map(DEFAULT_BOOLEAN_PATHS, 'name')
+  );
+
+  // merge default with given boolean paths
+  const paths = [...DEFAULT_BOOLEAN_PATHS, ...actualPaths];
 
   // prepare booleans schema path options
   const options = {
@@ -314,7 +338,7 @@ export const createBooleansSchema = () => {
   };
 
   // create booleans sub schema
-  const schema = createVarySubSchema(options, ...booleans);
+  const schema = createVarySubSchema(options, ...paths);
 
   // return booleans sub schema
   return schema;

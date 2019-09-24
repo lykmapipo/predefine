@@ -179,7 +179,7 @@ describe('Predefine Schema', () => {
   });
 
   it('should have default field', () => {
-    const isDefault = Predefine.path('default');
+    const isDefault = Predefine.path('booleans.default');
 
     expect(isDefault).to.exist;
     expect(isDefault).to.be.instanceof(SchemaTypes.Boolean);
@@ -193,7 +193,7 @@ describe('Predefine Schema', () => {
   });
 
   it('should have preset field', () => {
-    const preset = Predefine.path('preset');
+    const preset = Predefine.path('booleans.preset');
 
     expect(preset).to.exist;
     expect(preset).to.be.instanceof(SchemaTypes.Boolean);

@@ -329,13 +329,6 @@ const PredefineSchema = createSchema(
      * false
      *
      */
-    default: {
-      type: Boolean,
-      index: true,
-      exportable: true,
-      default: false,
-      fake: true,
-    },
 
     /**
      * @name preset
@@ -356,13 +349,6 @@ const PredefineSchema = createSchema(
      * false
      *
      */
-    preset: {
-      type: Boolean,
-      index: true,
-      exportable: true,
-      default: false,
-      fake: true,
-    },
 
     /**
      * @name color
@@ -695,7 +681,11 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   const allowId = !_.isEmpty(_id);
   const allowFilters = !_.isEmpty(filters);
 
-  const byDefault = mergeObjects({ namespace, bucket, default: true });
+  const byDefault = mergeObjects({
+    namespace,
+    bucket,
+    'booleans.default': true,
+  });
   const byId = mergeObjects({ _id });
   const byFilters = mergeObjects({ namespace, bucket }, filters);
 
