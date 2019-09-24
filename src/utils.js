@@ -273,6 +273,40 @@ export const createStringsSchema = () => {
 };
 
 /**
+ * @function numbersDefaultValue
+ * @name numbersDefaultValue
+ * @description Expose number paths, default values.
+ * @param {object} [values] valid number paths, values.
+ * @returns {object} hash of number paths, default values.
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const values = numbersDefaultValue();
+ * // => { default: false, preset: false, ... };
+ *
+ */
+export const numbersDefaultValue = values => {
+  // initialize defaults
+  let defaults = {};
+
+  // compute number defaults
+  _.forEach(DEFAULT_NUMBER_PATHS, path => {
+    defaults[path.name] = path.default();
+  });
+
+  // merge given
+  defaults = _.merge(defaults, copyInstance(values));
+
+  // return number paths, default values
+  return defaults;
+};
+
+/**
  * @function numberSchemaPaths
  * @name numberSchemaPaths
  * @description Expose schema number paths
@@ -313,11 +347,14 @@ export const numberSchemaPaths = () =>
  *
  */
 export const createNumbersSchema = () => {
-  // obtain numbers schema paths
-  const numbers = sortedUniq([
-    'weight',
-    ...getStringSet('PREDEFINE_NUMBERS', []),
-  ]);
+  // obtain given numbers schema paths
+  const givenPaths = _.without(
+    numberSchemaPaths(),
+    ..._.map(DEFAULT_NUMBER_PATHS, 'name')
+  );
+
+  // merge defaults with given number paths
+  const paths = [...DEFAULT_NUMBER_PATHS, ...givenPaths];
 
   // prepare numbers schema path options
   const options = {
@@ -328,7 +365,7 @@ export const createNumbersSchema = () => {
   };
 
   // create numbers sub schema
-  const schema = createVarySubSchema(options, ...numbers);
+  const schema = createVarySubSchema(options, ...paths);
 
   // return numbers sub schema
   return schema;
@@ -387,7 +424,7 @@ export const booleansDefaultValue = values => {
   // merge given
   defaults = mergeObjects(defaults, copyInstance(values));
 
-  // return boolen paths, default values
+  // return boolean paths, default values
   return defaults;
 };
 

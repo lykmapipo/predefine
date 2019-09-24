@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { expect } from '@lykmapipo/mongoose-test-helpers';
+import { expect, faker } from '@lykmapipo/mongoose-test-helpers';
 import { Schema, SchemaTypes } from '@lykmapipo/mongoose-common';
 import {
   uniqueIndexes,
@@ -8,6 +8,7 @@ import {
   createRelationsSchema,
   createStringsSchema,
   numberSchemaPaths,
+  numbersDefaultValue,
   createNumbersSchema,
   booleanSchemaPaths,
   booleansDefaultValue,
@@ -161,6 +162,11 @@ describe('Predefine Utils', () => {
     expect(paths).to.include.members(['weight']);
   });
 
+  it('should provide numbers default value', () => {
+    const values = numbersDefaultValue({});
+    expect(values.weight).to.exist.and.be.equal(0);
+  });
+
   it('should create numbers schema', () => {
     expect(createNumbersSchema).to.exist;
     expect(createNumbersSchema).to.be.a('function');
@@ -179,6 +185,7 @@ describe('Predefine Utils', () => {
     expect(weight.options.index).to.be.true;
     expect(weight.options.exportable).to.be.true;
     expect(weight.options.fake).to.exist.and.be.a('function');
+    expect(weight.options.fake(faker)).to.exist;
 
     const steps = numbers.path('steps');
     expect(steps).to.exist;
