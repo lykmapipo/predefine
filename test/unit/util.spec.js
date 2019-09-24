@@ -6,6 +6,7 @@ import {
   parseNamespaceRelations,
   parseGivenRelations,
   createRelationsSchema,
+  stringSchemaPaths,
   createStringsSchema,
   numberSchemaPaths,
   numbersDefaultValue,
@@ -27,7 +28,7 @@ describe('Predefine Utils', () => {
     expect(indexes).to.exist.and.be.an('object');
     expect(indexes.namespace).to.exist.and.be.equal(1);
     expect(indexes.bucket).to.exist.and.be.equal(1);
-    expect(indexes.code).to.exist.and.be.equal(1);
+    expect(indexes['strings.code']).to.exist.and.be.equal(1);
     expect(indexes['name.en']).to.exist.and.be.equal(1);
   });
 
@@ -49,22 +50,22 @@ describe('Predefine Utils', () => {
         refresh: true,
         select: {
           name: 1,
-          code: 1,
           abbreviation: 1,
-          symbol: 1,
-          weight: 1,
-          color: 1,
+          'strings.code': 1,
+          'strings.symbol': 1,
+          'numbers.weight': 1,
+          'strings.color': 1,
         },
       });
       expect(relation.autopopulate).to.exist.and.be.eql({
         maxDepth: 1,
         select: {
           name: 1,
-          code: 1,
           abbreviation: 1,
-          symbol: 1,
-          weight: 1,
-          color: 1,
+          'strings.code': 1,
+          'strings.symbol': 1,
+          'numbers.weight': 1,
+          'strings.color': 1,
         },
       });
       expect(relation.taggable).to.exist.and.be.true;
@@ -101,6 +102,12 @@ describe('Predefine Utils', () => {
     expect(relations.options.id).to.be.false;
     expect(relations.options.timestamps).to.be.false;
     expect(relations.options.emitIndexErrors).to.be.true;
+  });
+
+  it('should provide strings schema paths', () => {
+    const paths = stringSchemaPaths();
+    expect(paths).to.exist.and.be.an('array');
+    expect(paths).to.include.members(['code', 'symbol', 'color', 'icon']);
   });
 
   it('should create strings schema', () => {
@@ -156,7 +163,7 @@ describe('Predefine Utils', () => {
     expect(account.options.fake).to.exist.and.be.a('function');
   });
 
-  it('should provide schema number paths', () => {
+  it('should provide numbers schema paths', () => {
     const paths = numberSchemaPaths();
     expect(paths).to.exist.and.be.an('array');
     expect(paths).to.include.members(['weight']);
@@ -195,7 +202,7 @@ describe('Predefine Utils', () => {
     expect(steps.options.fake).to.exist.and.be.a('function');
   });
 
-  it('should provide schema boolean paths', () => {
+  it('should provide booleans schema paths', () => {
     const paths = booleanSchemaPaths();
     expect(paths).to.exist.and.be.an('array');
     expect(paths).to.include.members(['default', 'preset']);
@@ -224,7 +231,8 @@ describe('Predefine Utils', () => {
     expect(preset).to.be.an.instanceof(SchemaTypes.Boolean);
     expect(preset.options.index).to.be.true;
     expect(preset.options.exportable).to.be.true;
-    expect(preset.options.fake).to.exist.and.be.true;
+    expect(preset.options.fake).to.exist.and.be.a('function');
+    expect(preset.options.fake(faker)).to.exist;
   });
 
   it('should create dates schema', () => {
@@ -254,7 +262,7 @@ describe('Predefine Utils', () => {
     expect(endedAt.options.fake).to.exist.and.be.a('function');
   });
 
-  it('should provide schema geo paths', () => {
+  it('should provide geos schema paths', () => {
     const paths = geoSchemaPaths();
     expect(paths).to.exist.and.be.an('array');
     expect(paths).to.include.members([

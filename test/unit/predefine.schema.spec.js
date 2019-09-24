@@ -74,7 +74,7 @@ describe('Predefine Schema', () => {
   });
 
   it('should have code field', () => {
-    const code = Predefine.path('code');
+    const code = Predefine.path('strings.code');
 
     expect(code).to.exist;
     expect(code).to.be.instanceof(SchemaTypes.String);
@@ -89,7 +89,7 @@ describe('Predefine Schema', () => {
   });
 
   it('should have symbol field', () => {
-    const symbol = Predefine.path('symbol');
+    const symbol = Predefine.path('strings.symbol');
 
     expect(symbol).to.exist;
     expect(symbol).to.be.instanceof(SchemaTypes.String);
@@ -207,7 +207,7 @@ describe('Predefine Schema', () => {
   });
 
   it('should have color field', () => {
-    const color = Predefine.path('color');
+    const color = Predefine.path('strings.color');
 
     expect(color).to.exist;
     expect(color).to.be.instanceof(SchemaTypes.String);
@@ -221,7 +221,7 @@ describe('Predefine Schema', () => {
   });
 
   it('should have icon field', () => {
-    const icon = Predefine.path('icon');
+    const icon = Predefine.path('strings.icon');
 
     expect(icon).to.exist;
     expect(icon).to.be.instanceof(SchemaTypes.String);
@@ -315,13 +315,13 @@ describe('Predefine Schema', () => {
     expect(preset).to.be.an.instanceof(SchemaTypes.Boolean);
     expect(preset.options.index).to.be.true;
     expect(preset.options.exportable).to.be.true;
-    expect(preset.options.fake).to.exist.and.be.true;
+    expect(preset.options.fake).to.exist.and.be.a('function');
 
     expect(active).to.exist;
     expect(active).to.be.an.instanceof(SchemaTypes.Boolean);
     expect(active.options.index).to.be.true;
     expect(active.options.exportable).to.be.true;
-    expect(active.options.fake).to.exist.and.be.true;
+    expect(active.options.fake).to.exist.and.be.a('function');
   });
 
   it('should have dates field', () => {

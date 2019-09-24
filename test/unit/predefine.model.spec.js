@@ -167,12 +167,12 @@ describe('Predefine Instance', () => {
   });
 
   it('should set code from default abbreviation value', done => {
-    const predefine = Predefine.fakeExcept('code');
+    const predefine = Predefine.fakeExcept('strings.code');
 
     expect(predefine.code).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.code).to.exist;
-      expect(predefine.code).to.be.equal(predefine.abbreviation.en);
+      expect(predefine.strings.code).to.exist;
+      expect(predefine.strings.code).to.be.equal(predefine.abbreviation.en);
       done(error);
     });
   });
@@ -256,11 +256,11 @@ describe('Predefine Statics', () => {
     expect(Predefine.OPTION_SELECT).to.exist;
     expect(Predefine.OPTION_SELECT).to.be.eql({
       name: 1,
-      code: 1,
       abbreviation: 1,
-      symbol: 1,
-      weight: 1,
-      color: 1,
+      'strings.code': 1,
+      'strings.symbol': 1,
+      'numbers.weight': 1,
+      'strings.color': 1,
     });
   });
 
@@ -269,11 +269,11 @@ describe('Predefine Statics', () => {
     expect(Predefine.OPTION_AUTOPOPULATE).to.be.eql({
       select: {
         name: 1,
-        code: 1,
         abbreviation: 1,
-        symbol: 1,
-        weight: 1,
-        color: 1,
+        'strings.code': 1,
+        'strings.symbol': 1,
+        'numbers.weight': 1,
+        'strings.color': 1,
       },
       maxDepth: 1,
     });

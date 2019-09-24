@@ -1,6 +1,11 @@
 import _ from 'lodash';
 import { getObject, getString, getStringSet } from '@lykmapipo/env';
-import { mergeObjects, sortedUniq, variableNameFor } from '@lykmapipo/common';
+import {
+  mergeObjects,
+  randomColor,
+  sortedUniq,
+  variableNameFor,
+} from '@lykmapipo/common';
 import {
   collectionNameOf,
   copyInstance,
@@ -64,17 +69,55 @@ export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 
 export const OPTION_SELECT = {
   name: 1,
-  code: 1,
   abbreviation: 1,
-  symbol: 1,
-  weight: 1,
-  color: 1,
+  'strings.code': 1,
+  'strings.symbol': 1,
+  'numbers.weight': 1,
+  'strings.color': 1,
 };
 
 export const OPTION_AUTOPOPULATE = {
   select: OPTION_SELECT,
   maxDepth: 1,
 };
+
+export const DEFAULT_STRING_PATHS = [
+  {
+    name: 'code',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    default: () => undefined,
+    fake: f => f.finance.currencyCode(),
+  },
+  {
+    name: 'symbol',
+    type: String,
+    trim: true,
+    exportable: true,
+    default: () => undefined,
+    fake: f => f.finance.currencySymbol(),
+  },
+  {
+    name: 'color',
+    type: String,
+    trim: true,
+    uppercase: true,
+    exportable: true,
+    default: () => randomColor(),
+    fake: () => randomColor(),
+  },
+  {
+    name: 'icon',
+    type: String,
+    trim: true,
+    default: () => undefined,
+    fake: f => f.image.image(),
+  },
+];
 
 export const DEFAULT_NUMBER_PATHS = [
   {
@@ -94,7 +137,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
     index: true,
     exportable: true,
     default: () => false,
-    fake: true,
+    fake: f => f.random.boolean(),
   },
   {
     name: 'preset',
@@ -102,7 +145,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
     index: true,
     exportable: true,
     default: () => false,
-    fake: true,
+    fake: f => f.random.boolean(),
   },
 ];
 
@@ -125,7 +168,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
  */
 export const uniqueIndexes = () => {
   const indexes = mergeObjects(
-    { namespace: 1, bucket: 1, code: 1 },
+    { namespace: 1, bucket: 1, 'strings.code': 1 },
     localizedIndexesFor('name')
   );
   return indexes;
@@ -229,6 +272,63 @@ export const createRelationsSchema = () => {
 };
 
 /**
+ * @function stringsDefaultValue
+ * @name stringsDefaultValue
+ * @description Expose string paths, default values.
+ * @param {object} [values] valid string paths, values.
+ * @returns {object} hash of string paths, default values.
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const values = stringsDefaultValue();
+ * // => { code: 'UA', color: '#CCCCCC', ... };
+ *
+ */
+export const stringsDefaultValue = values => {
+  // initialize defaults
+  let defaults = {};
+
+  // compute string defaults
+  _.forEach(DEFAULT_STRING_PATHS, path => {
+    defaults[path.name] = path.default();
+  });
+
+  // merge given
+  defaults = mergeObjects(defaults, copyInstance(values));
+
+  // return string paths, default values
+  return defaults;
+};
+
+/**
+ * @function stringSchemaPaths
+ * @name stringSchemaPaths
+ * @description Expose schema string paths
+ * @returns {Array} set of string paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = stringSchemaPaths();
+ * // => ['code', 'symbol', 'color', 'icon', ... ];
+ *
+ */
+export const stringSchemaPaths = () =>
+  sortedUniq([
+    ..._.map(DEFAULT_STRING_PATHS, 'name'),
+    ...getStringSet('PREDEFINE_STRINGS', []),
+  ]);
+
+/**
  * @function createStringsSchema
  * @name createStringsSchema
  * @description Create predefine strings schema
@@ -246,13 +346,14 @@ export const createRelationsSchema = () => {
  *
  */
 export const createStringsSchema = () => {
-  // obtain strings schema paths
-  const strings = sortedUniq([
-    'code',
-    'symbol',
-    'color',
-    ...getStringSet('PREDEFINE_STRINGS', []),
-  ]);
+  // obtain given strings schema paths
+  const givenPaths = _.without(
+    stringSchemaPaths(),
+    ..._.map(DEFAULT_STRING_PATHS, 'name')
+  );
+
+  // merge defaults with given string paths
+  const paths = [...DEFAULT_STRING_PATHS, ...givenPaths];
 
   // prepare strings schema path options
   const options = {
@@ -266,7 +367,7 @@ export const createStringsSchema = () => {
   };
 
   // create strings sub schema
-  const schema = createVarySubSchema(options, ...strings);
+  const schema = createVarySubSchema(options, ...paths);
 
   // return strings sub schema
   return schema;
@@ -460,7 +561,7 @@ export const createBooleansSchema = () => {
     type: Boolean,
     index: true,
     exportable: true,
-    fake: true,
+    fake: f => f.random.boolean(),
   };
 
   // create booleans sub schema

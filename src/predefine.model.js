@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { idOf, compact, mergeObjects, randomColor } from '@lykmapipo/common';
+import { idOf, compact, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import {
@@ -25,6 +25,7 @@ import {
   BUCKETS,
   DEFAULT_LOCALE,
   uniqueIndexes,
+  stringsDefaultValue,
   createStringsSchema,
   numbersDefaultValue,
   createNumbersSchema,
@@ -170,64 +171,6 @@ const PredefineSchema = createSchema(
     }),
 
     /**
-     * @name code
-     * @description Human(and machine) readable, unique identifier of a
-     * prefined.
-     *
-     * It used in generation of physical tag or barcode when needed. It also
-     * used as variable name where applicable.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow searching
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * kg, usd
-     *
-     */
-    code: {
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      taggable: true,
-      exportable: true,
-      fake: f => f.finance.currencyCode(),
-    },
-
-    /**
-     * @name symbol
-     * @description A mark or sign that representing a prefined.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * £, $
-     *
-     */
-    symbol: {
-      type: String,
-      trim: true,
-      exportable: true,
-      fake: f => f.finance.currencySymbol(),
-    },
-
-    /**
      * @name abbreviation
      * @description Human readable short form of a predefine value.
      *
@@ -284,58 +227,6 @@ const PredefineSchema = createSchema(
       exportable: true,
       fake: f => f.lorem.sentence(),
     }),
-
-    /**
-     * @name color
-     * @description A color in hexadecimal format used to differentiate
-     * predefined value visually from one other.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} uppercase - force upper-casing
-     * @property {boolean} default - default value set when none provided
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * #CCCCCC
-     *
-     */
-    color: {
-      type: String,
-      trim: true,
-      uppercase: true,
-      exportable: true,
-      default: () => randomColor(),
-      fake: true,
-    },
-
-    /**
-     * @name icon
-     * @description An icon in url or base64 format used to differentiate
-     * predefines visually.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} default - default value set when none provided
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * https://img.icons8.com/ios/50/000000/marker.png
-     *
-     */
-    icon: {
-      type: String,
-      trim: true,
-      fake: f => f.image.image(),
-    },
 
     /**
      * @name strings
@@ -543,8 +434,12 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   );
   this.set(bucketAndNamespace);
 
+  // ensure strings, values
+  this.strings = stringsDefaultValue(this.strings);
+
   // ensure code
-  this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
+  this.strings.code =
+    _.trim(this.strings.code) || this.abbreviation[DEFAULT_LOCALE];
 
   // ensure numbers, values
   this.numbers = numbersDefaultValue(this.numbers);
@@ -592,7 +487,7 @@ PredefineSchema.statics.prepareSeedCriteria = seed => {
 
   const criteria = idOf(copyOfSeed)
     ? _.pick(copyOfSeed, '_id')
-    : _.pick(copyOfSeed, 'namespace', 'bucket', 'code', ...names);
+    : _.pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names);
   return criteria;
 };
 

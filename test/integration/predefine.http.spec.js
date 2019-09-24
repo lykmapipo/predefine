@@ -38,7 +38,9 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const created = new Predefine(body);
         expect(created._id).to.exist.and.be.eql(predefine._id);
-        expect(created.code).to.exist.and.be.eql(predefine.code);
+        expect(created.strings.code).to.exist.and.be.eql(
+          predefine.strings.code
+        );
         done(error, body);
       });
   });
@@ -88,7 +90,7 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const found = new Predefine(body);
         expect(found._id).to.exist.and.be.eql(predefine._id);
-        expect(found.code).to.exist.and.be.eql(predefine.code);
+        expect(found.strings.code).to.exist.and.be.eql(predefine.strings.code);
         expect(found.relations.parent._id).to.eql(parent._id);
         done(error, body);
       });
@@ -106,7 +108,9 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const patched = new Predefine(body);
         expect(patched._id).to.exist.and.be.eql(predefine._id);
-        expect(patched.code).to.exist.and.be.eql(predefine.code);
+        expect(patched.strings.code).to.exist.and.be.eql(
+          predefine.strings.code
+        );
         done(error, body);
       });
   });
@@ -123,7 +127,9 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const patched = new Predefine(body);
         expect(patched._id).to.exist.and.be.eql(predefine._id);
-        expect(patched.code).to.exist.and.be.eql(predefine.code);
+        expect(patched.strings.code).to.exist.and.be.eql(
+          predefine.strings.code
+        );
         done(error, body);
       });
   });
@@ -139,7 +145,9 @@ describe('Predefine Rest API', () => {
         expect(body).to.exist;
         const patched = new Predefine(body);
         expect(patched._id).to.exist.and.be.eql(predefine._id);
-        expect(patched.code).to.exist.and.be.eql(predefine.code);
+        expect(patched.strings.code).to.exist.and.be.eql(
+          predefine.strings.code
+        );
         done(error, body);
       });
   });
