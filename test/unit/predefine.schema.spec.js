@@ -17,8 +17,7 @@ describe('Predefine Schema', () => {
     expect(namespace.options.index).to.be.true;
     expect(namespace.options.searchable).to.be.true;
     expect(namespace.options.taggable).to.be.true;
-    // expect(namespace.options.hide).to.be.true;
-    // expect(namespace.options.default).to.be.exist;
+    expect(namespace.options.hide).to.exist;
     expect(namespace.options.fake).to.exist;
   });
 
@@ -35,8 +34,7 @@ describe('Predefine Schema', () => {
     expect(bucket.options.index).to.be.true;
     expect(bucket.options.searchable).to.be.true;
     expect(bucket.options.taggable).to.be.true;
-    // expect(bucket.options.hide).to.be.true;
-    // expect(bucket.options.default).to.exist;
+    expect(bucket.options.hide).to.exist;
     expect(bucket.options.fake).to.exist;
   });
 
@@ -46,6 +44,7 @@ describe('Predefine Schema', () => {
     const sw = Predefine.path('name.sw');
 
     expect(name).to.exist;
+    expect(name).to.be.an.instanceof(SchemaTypes.Embedded);
 
     expect(en).to.exist;
     expect(en).to.be.instanceof(SchemaTypes.String);
@@ -245,18 +244,18 @@ describe('Predefine Schema', () => {
 
   it('should have numbers field', () => {
     const numbers = Predefine.path('numbers');
+    const weight = Predefine.path('numbers.weight');
+    const steps = Predefine.path('numbers.steps');
 
     expect(numbers).to.exist;
     expect(numbers.options.type).to.be.an.instanceof(Schema);
 
-    const weight = Predefine.path('numbers.weight');
     expect(weight).to.exist;
     expect(weight).to.be.an.instanceof(SchemaTypes.Number);
     expect(weight.options.index).to.be.true;
     expect(weight.options.exportable).to.be.true;
     expect(weight.options.fake).to.exist.and.be.a('function');
 
-    const steps = Predefine.path('numbers.steps');
     expect(steps).to.exist;
     expect(steps).to.be.an.instanceof(SchemaTypes.Number);
     expect(steps.options.index).to.be.true;
@@ -266,32 +265,39 @@ describe('Predefine Schema', () => {
 
   it('should have booleans field', () => {
     const booleans = Predefine.path('booleans');
+    const preset = Predefine.path('booleans.preset');
+    const active = Predefine.path('booleans.active');
 
     expect(booleans).to.exist;
     expect(booleans.options.type).to.be.an.instanceof(Schema);
 
-    const preset = Predefine.path('booleans.preset');
     expect(preset).to.exist;
     expect(preset).to.be.an.instanceof(SchemaTypes.Boolean);
     expect(preset.options.index).to.be.true;
     expect(preset.options.exportable).to.be.true;
     expect(preset.options.fake).to.exist.and.be.true;
+
+    expect(active).to.exist;
+    expect(active).to.be.an.instanceof(SchemaTypes.Boolean);
+    expect(active.options.index).to.be.true;
+    expect(active.options.exportable).to.be.true;
+    expect(active.options.fake).to.exist.and.be.true;
   });
 
   it('should have dates field', () => {
     const dates = Predefine.path('dates');
+    const startedAt = Predefine.path('dates.startedAt');
+    const endedAt = Predefine.path('dates.endedAt');
 
     expect(dates).to.exist;
     expect(dates.options.type).to.be.an.instanceof(Schema);
 
-    const startedAt = Predefine.path('dates.startedAt');
     expect(startedAt).to.exist;
     expect(startedAt).to.be.an.instanceof(SchemaTypes.Date);
     expect(startedAt.options.index).to.be.true;
     expect(startedAt.options.exportable).to.be.true;
     expect(startedAt.options.fake).to.exist.and.be.a('function');
 
-    const endedAt = Predefine.path('dates.endedAt');
     expect(endedAt).to.exist;
     expect(endedAt).to.be.an.instanceof(SchemaTypes.Date);
     expect(endedAt.options.index).to.be.true;
