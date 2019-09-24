@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { idOf, compact, mergeObjects, randomColor } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
-import { Geometry } from 'mongoose-geojson-schemas';
 import {
   localize,
   localizedKeysFor,
@@ -416,28 +415,6 @@ const PredefineSchema = createSchema(
       trim: true,
       fake: f => f.image.image(),
     },
-
-    /**
-     * @name geometry
-     * @description A geo-geometry representation of a predefined.
-     *
-     * @type {object}
-     * @property {object} geomentry - geojson geometry
-     * @property {string} geometry.type - geojson geometry type
-     * @property {number[]} geometry.coordinates - coordinates pair(s) of a
-     * geometry
-     *
-     * @since 1.0.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * {
-     *    type: 'Point',
-     *    coordinates: [-76.80207859497996, 55.69469494228919]
-     * }
-     *
-     */
-    geometry: Geometry,
 
     /**
      * @name strings

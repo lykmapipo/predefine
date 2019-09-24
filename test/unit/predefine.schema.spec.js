@@ -232,16 +232,6 @@ describe('Predefine Schema', () => {
     expect(icon.options.fake).to.exist;
   });
 
-  it('should have geometry field', () => {
-    const geometry = Predefine.path('geometry');
-    const type = Predefine.path('geometry.type');
-    const coordinates = Predefine.path('geometry.coordinates');
-
-    expect(geometry).to.exist;
-    expect(type).to.be.instanceof(SchemaTypes.String);
-    expect(coordinates).to.be.instanceof(SchemaTypes.Array);
-  });
-
   it('should have strings field', () => {
     const strings = Predefine.path('strings');
     const code = Predefine.path('strings.code');
