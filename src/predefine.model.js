@@ -555,37 +555,6 @@ const PredefineSchema = createSchema(
      *
      */
     relations: createRelationsSchema(),
-
-    /**
-     * @name properties
-     * @description A map of key value pairs to allow to associate
-     * other meaningful information to a predefined.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {object} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * {
-     *   "section": "Billing"
-     * }
-     *
-     */
-    properties: {
-      type: Map,
-      of: String, // Mixed?
-      index: true,
-      taggable: true,
-      // exportable: true, ?
-      // index: true, ? wildcard index?
-      fake: f => f.helpers.createTransaction(),
-    },
   },
   SCHEMA_OPTIONS,
   actions,
