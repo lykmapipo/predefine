@@ -20,8 +20,8 @@
     "chore:deps": "ncu -u && npm install --save",
     "lint:config": "eslint --print-config rollup.config.js",
     "dev": "npm run seed && npm run start",
-    "start": "NODE_ENV=development BASE_PATH=./examples node ./examples/app.js",
-    "seed": "NODE_ENV=development BASE_PATH=./examples node ./examples/seed.js"
+    "start": "NODE_ENV=development BASE_PATH=./examples babel-node ./examples/app.js",
+    "seed": "NODE_ENV=development BASE_PATH=./examples babel-node ./examples/seed.js"
   },
   "keywords": [
     "lykmapipo",

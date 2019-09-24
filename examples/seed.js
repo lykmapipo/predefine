@@ -1,7 +1,7 @@
-const _ = require('lodash');
-const { waterfall } = require('async');
-const { connect } = require('@lykmapipo/mongoose-common');
-const { Predefine } = require('../lib/index');
+import { isArray } from 'lodash';
+import { waterfall } from 'async';
+import { connect } from '@lykmapipo/mongoose-common';
+import { Predefine } from '../src';
 
 // naive logger
 const log = (stage, error, result) => {
@@ -9,7 +9,7 @@ const log = (stage, error, result) => {
     console.error(`${stage} seed error`, error);
   }
   if (result) {
-    const val = _.isArray(result) ? result.length : result;
+    const val = isArray(result) ? result.length : result;
     console.info(`${stage} seed result`, val);
   }
 };
