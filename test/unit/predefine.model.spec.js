@@ -191,7 +191,7 @@ describe('Predefine Validations', () => {
     });
   });
 
-  it('should throw if not in enum namespace', done => {
+  it('should throw if namespace is not allowed', done => {
     const predefine = Predefine.fakeExcept('namespace', 'bucket');
     predefine.set({ namespace: faker.lorem.word() });
     predefine.validate(error => {
@@ -216,7 +216,7 @@ describe('Predefine Validations', () => {
     });
   });
 
-  it('should throw if not in enum namespace', done => {
+  it('should throw if bucket is not allowed', done => {
     const predefine = Predefine.fakeExcept('namespace', 'bucket');
     predefine.set({ bucket: faker.lorem.word() });
     predefine.validate(error => {
@@ -279,14 +279,14 @@ describe('Predefine Statics', () => {
     });
   });
 
-  it('should prepase seed criteria from object id', () => {
+  it('should prepare seed criteria from object id', () => {
     const predefine = Predefine.fake().toObject();
     const seed = Predefine.prepareSeedCriteria(predefine);
     expect(seed).to.exist;
     expect(seed._id).to.exist;
   });
 
-  it('should prepase seed criteria from object id', () => {
+  it('should prepare seed criteria from object id', () => {
     const predefine = _.omit(Predefine.fake().toObject(), '_id');
     const seed = Predefine.prepareSeedCriteria(predefine);
     expect(seed).to.exist;
@@ -305,6 +305,7 @@ describe('Predefine Faker', () => {
     const predefine = Predefine.fake();
     expect(predefine.booleans.default).to.exist.and.be.a('boolean');
     expect(predefine.booleans.preset).to.exist.and.be.a('boolean');
+    expect(predefine.booleans.active).to.exist.and.be.a('boolean');
   });
 
   it('should fake dates', () => {
