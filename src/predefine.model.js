@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { idOf, compact, mergeObjects } from '@lykmapipo/common';
+import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import {
@@ -487,7 +487,7 @@ PredefineSchema.statics.prepareSeedCriteria = seed => {
 
   const criteria = idOf(copyOfSeed)
     ? _.pick(copyOfSeed, '_id')
-    : _.pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names);
+    : flat(_.pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names));
   return criteria;
 };
 

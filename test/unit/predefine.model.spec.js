@@ -279,6 +279,16 @@ describe('Predefine Statics', () => {
     });
   });
 
+  it('should prepare seed criteria', () => {
+    const { _id, ...rest } = Predefine.fake().toObject();
+    const seed = Predefine.prepareSeedCriteria(rest);
+    expect(seed).to.exist;
+    expect(seed.namespace).to.exist;
+    expect(seed.bucket).to.exist;
+    expect(seed['strings.code']).to.exist;
+    expect(seed['name.en']).to.exist;
+  });
+
   it('should prepare seed criteria from object id', () => {
     const predefine = Predefine.fake().toObject();
     const seed = Predefine.prepareSeedCriteria(predefine);
