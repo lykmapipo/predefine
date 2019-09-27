@@ -13,13 +13,13 @@ describe('Predefine Instance', () => {
 
   it('should set abbreviation on pre validate', done => {
     const predefine = Predefine.fakeExcept(
-      'abbreviation.en',
-      'abbreviation.sw'
+      'strings.abbreviation.en',
+      'strings.abbreviation.sw'
     );
 
-    expect(predefine.abbreviation).to.not.exist;
+    expect(predefine.strings.abbreviation).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.abbreviation).to.exist;
+      expect(predefine.strings.abbreviation).to.exist;
       done(error);
     });
   });
@@ -73,95 +73,110 @@ describe('Predefine Instance', () => {
   });
 
   it('should set localized name values', done => {
-    const predefine = Predefine.fakeExcept('name.sw');
+    const predefine = Predefine.fakeExcept('strings.name.sw');
 
-    expect(predefine.name.sw).to.not.exist;
+    expect(predefine.strings.name.sw).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.name.sw).to.exist;
-      expect(predefine.name.sw).to.be.equal(predefine.name.en);
+      expect(predefine.strings.name.sw).to.exist;
+      expect(predefine.strings.name.sw).to.be.equal(predefine.strings.name.en);
       done(error);
     });
   });
 
   it('should set localized name values', done => {
-    const predefine = Predefine.fakeExcept('name.en');
+    const predefine = Predefine.fakeExcept('strings.name.en');
 
-    expect(predefine.name.en).to.not.exist;
+    expect(predefine.strings.name.en).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.name.en).to.exist;
-      expect(predefine.name.en).to.be.equal(predefine.name.sw);
+      expect(predefine.strings.name.en).to.exist;
+      expect(predefine.strings.name.en).to.be.equal(predefine.strings.name.sw);
       done(error);
     });
   });
 
   it('should set localized description values', done => {
-    const predefine = Predefine.fakeExcept('description.sw');
+    const predefine = Predefine.fakeExcept('strings.description.sw');
 
-    expect(predefine.description.sw).to.not.exist;
+    expect(predefine.strings.description.sw).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.description.sw).to.exist;
-      expect(predefine.description.sw).to.be.equal(predefine.description.en);
+      expect(predefine.strings.description.sw).to.exist;
+      expect(predefine.strings.description.sw).to.be.equal(
+        predefine.strings.description.en
+      );
       done(error);
     });
   });
 
   it('should set localized description values', done => {
-    const predefine = Predefine.fakeExcept('description.en');
+    const predefine = Predefine.fakeExcept('strings.description.en');
 
-    expect(predefine.description.en).to.not.exist;
+    expect(predefine.strings.description.en).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.description.en).to.exist;
-      expect(predefine.description.en).to.be.equal(predefine.description.sw);
+      expect(predefine.strings.description.en).to.exist;
+      expect(predefine.strings.description.en).to.be.equal(
+        predefine.strings.description.sw
+      );
       done(error);
     });
   });
 
   it('should set localized description values from name', done => {
-    const predefine = Predefine.fakeExcept('description.en', 'description.sw');
+    const predefine = Predefine.fakeExcept(
+      'strings.description.en',
+      'strings.description.sw'
+    );
 
     expect(predefine.description).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.description.sw).to.exist;
-      expect(predefine.description.en).to.exist;
-      expect(predefine.description.en).to.be.equal(predefine.name.en);
-      expect(predefine.description.sw).to.be.equal(predefine.name.sw);
+      expect(predefine.strings.description.sw).to.exist;
+      expect(predefine.strings.description.en).to.exist;
+      expect(predefine.strings.description.en).to.be.equal(
+        predefine.strings.name.en
+      );
+      expect(predefine.strings.description.sw).to.be.equal(
+        predefine.strings.name.sw
+      );
       done(error);
     });
   });
 
   it('should set localized abbreviation values', done => {
-    const predefine = Predefine.fakeExcept('abbreviation.sw');
+    const predefine = Predefine.fakeExcept('strings.abbreviation.sw');
 
-    expect(predefine.abbreviation.sw).to.not.exist;
+    expect(predefine.strings.abbreviation.sw).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.abbreviation.sw).to.exist;
-      expect(predefine.abbreviation.sw).to.be.equal(predefine.abbreviation.en);
+      expect(predefine.strings.abbreviation.sw).to.exist;
+      expect(predefine.strings.abbreviation.sw).to.be.equal(
+        predefine.strings.abbreviation.en
+      );
       done(error);
     });
   });
 
   it('should set localized abbreviation values', done => {
-    const predefine = Predefine.fakeExcept('abbreviation.en');
+    const predefine = Predefine.fakeExcept('strings.abbreviation.en');
 
-    expect(predefine.abbreviation.en).to.not.exist;
+    expect(predefine.strings.abbreviation.en).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.abbreviation.en).to.exist;
-      expect(predefine.abbreviation.en).to.be.equal(predefine.abbreviation.sw);
+      expect(predefine.strings.abbreviation.en).to.exist;
+      expect(predefine.strings.abbreviation.en).to.be.equal(
+        predefine.strings.abbreviation.sw
+      );
       done(error);
     });
   });
 
   it('should set localized abbreviation values from name', done => {
     const predefine = Predefine.fakeExcept(
-      'abbreviation.en',
-      'abbreviation.sw'
+      'strings.abbreviation.en',
+      'strings.abbreviation.sw'
     );
 
-    expect(predefine.abbreviation).to.not.exist;
+    expect(predefine.strings.abbreviation).to.not.exist;
     predefine.preValidate(error => {
-      expect(predefine.abbreviation).to.exist;
-      expect(predefine.abbreviation.en).to.exist;
-      expect(predefine.abbreviation.sw).to.exist;
+      expect(predefine.strings.abbreviation).to.exist;
+      expect(predefine.strings.abbreviation.en).to.exist;
+      expect(predefine.strings.abbreviation.sw).to.exist;
       done(error);
     });
   });
@@ -172,7 +187,9 @@ describe('Predefine Instance', () => {
     expect(predefine.code).to.not.exist;
     predefine.preValidate(error => {
       expect(predefine.strings.code).to.exist;
-      expect(predefine.strings.code).to.be.equal(predefine.abbreviation.en);
+      expect(predefine.strings.code).to.be.equal(
+        predefine.strings.abbreviation.en
+      );
       done(error);
     });
   });
@@ -230,12 +247,12 @@ describe('Predefine Validations', () => {
   });
 
   it('should throw if no name', done => {
-    const predefine = Predefine.fakeOnly('description');
+    const predefine = Predefine.fakeOnly('strings.description');
     predefine.validate(error => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
-      expect(error.errors.name).to.exist;
-      expect(error.errors.name.name).to.be.equal('ValidationError');
+      expect(error.errors.strings.name).to.exist;
+      // expect(error.errors.strings.name.name).to.be.equal('ValidationError');
       done();
     });
   });
@@ -255,8 +272,8 @@ describe('Predefine Statics', () => {
   it('should expose select options', () => {
     expect(Predefine.OPTION_SELECT).to.exist;
     expect(Predefine.OPTION_SELECT).to.be.eql({
-      name: 1,
-      abbreviation: 1,
+      'strings.name': 1,
+      'strings.abbreviation': 1,
       'strings.code': 1,
       'strings.symbol': 1,
       'numbers.weight': 1,
@@ -268,8 +285,8 @@ describe('Predefine Statics', () => {
     expect(Predefine.OPTION_AUTOPOPULATE).to.exist;
     expect(Predefine.OPTION_AUTOPOPULATE).to.be.eql({
       select: {
-        name: 1,
-        abbreviation: 1,
+        'strings.name': 1,
+        'strings.abbreviation': 1,
         'strings.code': 1,
         'strings.symbol': 1,
         'numbers.weight': 1,
@@ -286,7 +303,7 @@ describe('Predefine Statics', () => {
     expect(seed.namespace).to.exist;
     expect(seed.bucket).to.exist;
     expect(seed['strings.code']).to.exist;
-    expect(seed['name.en']).to.exist;
+    expect(seed['strings.name.en']).to.exist;
   });
 
   it('should prepare seed criteria from object id', () => {

@@ -26,21 +26,24 @@ describe('Predefine getById', () => {
   it('should be able to get with options', done => {
     const options = {
       _id: predefine._id,
-      select: 'name',
+      select: 'strings.name',
     };
 
     Predefine.getById(options, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist;
       expect(found._id).to.eql(predefine._id);
-      expect(found.name).to.exist;
+      expect(found.strings.name).to.exist;
 
       // ...assert selection
       const fields = _.keys(found.toObject());
       expect(fields).to.have.length(3);
-      _.map(['namespace', 'description', 'createdAt', 'updatedAt'], field => {
-        expect(fields).to.not.include(field);
-      });
+      _.map(
+        ['namespace', 'strings.description', 'createdAt', 'updatedAt'],
+        field => {
+          expect(fields).to.not.include(field);
+        }
+      );
       done(error, found);
     });
   });

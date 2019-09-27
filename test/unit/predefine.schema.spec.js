@@ -39,9 +39,9 @@ describe('Predefine Schema', () => {
   });
 
   it('should have name field', () => {
-    const name = Predefine.path('name');
-    const en = Predefine.path('name.en');
-    const sw = Predefine.path('name.sw');
+    const name = Predefine.path('strings.name');
+    const en = Predefine.path('strings.name.en');
+    const sw = Predefine.path('strings.name.sw');
 
     expect(name).to.exist;
     expect(name).to.be.an.instanceof(SchemaTypes.Embedded);
@@ -102,9 +102,9 @@ describe('Predefine Schema', () => {
   });
 
   it('should have abbreviation field', () => {
-    const abbreviation = Predefine.path('abbreviation');
-    const en = Predefine.path('abbreviation.en');
-    const sw = Predefine.path('abbreviation.sw');
+    const abbreviation = Predefine.path('strings.abbreviation');
+    const en = Predefine.path('strings.abbreviation.en');
+    const sw = Predefine.path('strings.abbreviation.sw');
 
     expect(abbreviation).to.exist;
 
@@ -134,9 +134,9 @@ describe('Predefine Schema', () => {
   });
 
   it('should have description field', () => {
-    const description = Predefine.path('description');
-    const en = Predefine.path('description.en');
-    const sw = Predefine.path('description.sw');
+    const description = Predefine.path('strings.description');
+    const en = Predefine.path('strings.description.en');
+    const sw = Predefine.path('strings.description.sw');
 
     expect(description).to.exist;
 

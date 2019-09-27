@@ -3,7 +3,6 @@ import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
 import {
-  localize,
   localizedKeysFor,
   localizedValuesFor,
   localizedAbbreviationsFor,
@@ -53,10 +52,11 @@ import {
  *
  * const unit = {
  *  namespace: 'Unit',
- *  bucket: 'units',
- *  name: { en: 'Kilogram' },
- *  code: 'Kg',
- *  abbreviation: { en: 'Kg' }
+ *  strings: {
+ *    name: { en: 'Kilogram' },
+ *    code: 'Kg',
+ *    abbreviation: { en: 'Kg' }
+ *  }
  * };
  * Predefine.create(unit, (error, created) => { ... });
  *
@@ -136,97 +136,6 @@ const PredefineSchema = createSchema(
       hide: !isTest(),
       fake: true,
     },
-
-    /**
-     * @name name
-     * @alias value
-     * @description Human readable value of a predefine.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} required - mark required
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow for searching
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * Kilogram, US Dollar
-     *
-     */
-    name: localize({
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      taggable: true,
-      exportable: true,
-      fake: f => f.commerce.productName(),
-    }),
-
-    /**
-     * @name abbreviation
-     * @description Human readable short form of a predefine value.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow for searching
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * kg, usd
-     *
-     */
-    abbreviation: localize({
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      taggable: true,
-      exportable: true,
-      fake: f => _.toUpper(f.hacker.abbreviation()),
-    }),
-
-    /**
-     * @name description
-     * @description A brief summary about a predefine if available.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow for searching
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * Default date format
-     *
-     */
-    description: localize({
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      exportable: true,
-      fake: f => f.lorem.sentence(),
-    }),
 
     /**
      * @name strings
@@ -409,19 +318,28 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @instance
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
+  // ensure strings, values
+  this.strings = stringsDefaultValue(this.strings);
+
+  // ensure numbers, values
+  this.numbers = numbersDefaultValue(this.numbers);
+
+  // ensure booleans, values
+  this.booleans = booleansDefaultValue(this.booleans);
+
   // ensure name  for all locales
-  this.name = localizedValuesFor(this.name);
+  this.strings.name = localizedValuesFor(this.strings.name);
 
   // ensure description for all locales
-  this.description = mergeObjects(
-    localizedValuesFor(this.name),
-    localizedValuesFor(this.description)
+  this.strings.description = mergeObjects(
+    localizedValuesFor(this.strings.name),
+    localizedValuesFor(this.strings.description)
   );
 
   // ensure abbreviation for all locales
-  this.abbreviation = mergeObjects(
-    localizedAbbreviationsFor(this.name),
-    localizedValuesFor(this.abbreviation)
+  this.strings.abbreviation = mergeObjects(
+    localizedAbbreviationsFor(this.strings.name),
+    localizedValuesFor(this.strings.abbreviation)
   );
 
   // ensure correct namespace and bucket
@@ -434,18 +352,9 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   );
   this.set(bucketAndNamespace);
 
-  // ensure strings, values
-  this.strings = stringsDefaultValue(this.strings);
-
   // ensure code
   this.strings.code =
-    _.trim(this.strings.code) || this.abbreviation[DEFAULT_LOCALE];
-
-  // ensure numbers, values
-  this.numbers = numbersDefaultValue(this.numbers);
-
-  // ensure booleans, values
-  this.booleans = booleansDefaultValue(this.booleans);
+    _.trim(this.strings.code) || this.strings.abbreviation[DEFAULT_LOCALE];
 
   // continue
   return done(null, this);
@@ -480,10 +389,10 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
-  const names = localizedKeysFor('name');
+  const names = localizedKeysFor('strings.name');
 
   const copyOfSeed = seed;
-  copyOfSeed.name = localizedValuesFor(seed.name);
+  copyOfSeed.name = localizedValuesFor(seed.strings.name);
 
   const criteria = idOf(copyOfSeed)
     ? _.pick(copyOfSeed, '_id')

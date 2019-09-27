@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import { getObject, getString, getStringSet } from '@lykmapipo/env';
 import {
   mergeObjects,
   randomColor,
   sortedUniq,
   variableNameFor,
 } from '@lykmapipo/common';
+import { getObject, getString, getStringSet } from '@lykmapipo/env';
 import {
   collectionNameOf,
   copyInstance,
@@ -13,7 +13,7 @@ import {
   createVarySubSchema,
   ObjectId,
 } from '@lykmapipo/mongoose-common';
-import { localizedIndexesFor } from 'mongoose-locale-schema';
+import { localize, localizedIndexesFor } from 'mongoose-locale-schema';
 import {
   Point,
   LineString,
@@ -68,8 +68,8 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
 
 export const OPTION_SELECT = {
-  name: 1,
-  abbreviation: 1,
+  'strings.name': 1,
+  'strings.abbreviation': 1,
   'strings.code': 1,
   'strings.symbol': 1,
   'numbers.weight': 1,
@@ -82,6 +82,38 @@ export const OPTION_AUTOPOPULATE = {
 };
 
 export const DEFAULT_STRING_PATHS = [
+  {
+    name: 'name',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    localize: true,
+    fake: f => f.commerce.productName(),
+  },
+  {
+    name: 'abbreviation',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    localize: true,
+    fake: f => _.toUpper(f.hacker.abbreviation()),
+  },
+  {
+    name: 'description',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    exportable: true,
+    localize: true,
+    fake: f => f.lorem.sentence(),
+  },
   {
     name: 'code',
     type: String,
@@ -97,6 +129,9 @@ export const DEFAULT_STRING_PATHS = [
     name: 'symbol',
     type: String,
     trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
     exportable: true,
     default: () => undefined,
     fake: f => f.finance.currencySymbol(),
@@ -106,6 +141,9 @@ export const DEFAULT_STRING_PATHS = [
     type: String,
     trim: true,
     uppercase: true,
+    index: true,
+    searchable: true,
+    taggable: true,
     exportable: true,
     default: () => randomColor(),
     fake: () => randomColor(),
@@ -295,7 +333,7 @@ export const stringsDefaultValue = values => {
 
   // compute string defaults
   _.forEach(DEFAULT_STRING_PATHS, path => {
-    defaults[path.name] = path.default();
+    defaults[path.name] = path.default && path.default();
   });
 
   // merge given
@@ -346,15 +384,6 @@ export const stringSchemaPaths = () =>
  *
  */
 export const createStringsSchema = () => {
-  // obtain given strings schema paths
-  const givenPaths = _.without(
-    stringSchemaPaths(),
-    ..._.map(DEFAULT_STRING_PATHS, 'name')
-  );
-
-  // merge defaults with given string paths
-  const paths = [...DEFAULT_STRING_PATHS, ...givenPaths];
-
   // prepare strings schema path options
   const options = {
     type: String,
@@ -366,8 +395,29 @@ export const createStringsSchema = () => {
     fake: f => f.commerce.productName(),
   };
 
+  // obtain given strings schema paths
+  let givenPaths = _.without(
+    stringSchemaPaths(),
+    ..._.map(DEFAULT_STRING_PATHS, 'name')
+  );
+
+  // convert given paths to schema definition
+  givenPaths = _.map(givenPaths, givenPath => {
+    return mergeObjects(options, { name: givenPath });
+  });
+
+  // merge defaults with given string paths
+  const paths = [...DEFAULT_STRING_PATHS, ...givenPaths];
+
+  // build stings schema definition
+  const definition = {};
+  _.forEach(paths, path => {
+    const { name, ...optns } = path;
+    definition[path.name] = optns.localize ? localize(optns) : optns;
+  });
+
   // create strings sub schema
-  const schema = createVarySubSchema(options, ...paths);
+  const schema = createSubSchema(definition);
 
   // return strings sub schema
   return schema;

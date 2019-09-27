@@ -1,20 +1,27 @@
 module.exports = [
   {
     namespace: 'Currency',
-    name: { en: 'US Dollar' },
-    abbreviation: { en: 'USD' },
-    strings: { code: 'USD', symbol: '$' },
+    strings: {
+      name: { en: 'US Dollar' },
+      abbreviation: { en: 'USD' },
+      code: 'USD',
+      symbol: '$',
+    },
   },
   {
     namespace: 'Unit',
-    name: { en: 'Kilogram' },
-    abbreviation: { en: 'Kg' },
-    strings: { code: 'Kg' },
+    strings: {
+      name: { en: 'Kilogram' },
+      abbreviation: { en: 'Kg' },
+      code: 'Kg',
+    },
   },
   {
     namespace: 'Item',
-    name: { en: 'Soap' },
-    abbreviation: { en: 'SP' },
-    strings: { code: 'SP' },
+    strings: {
+      name: { en: 'Soap' },
+      abbreviation: { en: 'SP' },
+      code: 'SP',
+    },
   },
 ];

@@ -49,8 +49,8 @@ describe('Predefine Utils', () => {
       expect(relation.exists).to.exist.and.be.eql({
         refresh: true,
         select: {
-          name: 1,
-          abbreviation: 1,
+          'strings.name': 1,
+          'strings.abbreviation': 1,
           'strings.code': 1,
           'strings.symbol': 1,
           'numbers.weight': 1,
@@ -60,8 +60,8 @@ describe('Predefine Utils', () => {
       expect(relation.autopopulate).to.exist.and.be.eql({
         maxDepth: 1,
         select: {
-          name: 1,
-          abbreviation: 1,
+          'strings.name': 1,
+          'strings.abbreviation': 1,
           'strings.code': 1,
           'strings.symbol': 1,
           'numbers.weight': 1,
@@ -131,6 +131,15 @@ describe('Predefine Utils', () => {
     expect(code.options.taggable).to.be.true;
     expect(code.options.exportable).to.be.true;
     expect(code.options.fake).to.exist.and.be.a('function');
+
+    const name = strings.path('name');
+    expect(name).to.exist;
+
+    const abbreviation = strings.path('abbreviation');
+    expect(abbreviation).to.exist;
+
+    const description = strings.path('description');
+    expect(description).to.exist;
 
     const symbol = strings.path('symbol');
     expect(symbol).to.exist;

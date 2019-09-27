@@ -1,26 +1,21 @@
 import _ from 'lodash';
-import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Static Patch', () => {
+  const predefine = Predefine.fake();
+
   before(done => clear(done));
 
-  let predefine = Predefine.fake();
-
-  before(done => {
-    predefine.post((error, created) => {
-      predefine = created;
-      done(error, created);
-    });
-  });
+  before(done => create(predefine, done));
 
   it('should be able to patch', done => {
-    predefine = predefine.fakeOnly('description.en');
-    Predefine.patch(predefine._id, predefine, (error, updated) => {
+    const { strings } = Predefine.fakeOnly('strings.description.en');
+    Predefine.patch(predefine._id, { strings }, (error, updated) => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
       expect(updated._id).to.eql(predefine._id);
-      expect(updated.description.en).to.eql(predefine.description.en);
+      expect(updated.strings.description.en).to.eql(strings.description.en);
       done(error, updated);
     });
   });
@@ -40,24 +35,19 @@ describe('Predefine Static Patch', () => {
 });
 
 describe('Predefine Instance Patch', () => {
+  const predefine = Predefine.fake();
+
   before(done => clear(done));
 
-  let predefine = Predefine.fake();
-
-  before(done => {
-    predefine.post((error, created) => {
-      predefine = created;
-      done(error, created);
-    });
-  });
+  before(done => create(predefine, done));
 
   it('should be able to patch', done => {
-    predefine = predefine.fakeOnly('description.en');
-    predefine.patch((error, updated) => {
+    const { strings } = Predefine.fakeOnly('strings.description.en');
+    predefine.patch({ strings }, (error, updated) => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
       expect(updated._id).to.eql(predefine._id);
-      expect(updated.description.en).to.eql(predefine.description.en);
+      expect(updated.strings.description.en).to.eql(strings.description.en);
       done(error, updated);
     });
   });
