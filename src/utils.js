@@ -1,4 +1,5 @@
 import {
+  find,
   forEach,
   map,
   mapValues,
@@ -13,7 +14,7 @@ import {
   sortedUniq,
   variableNameFor,
 } from '@lykmapipo/common';
-import { getObject, getString, getStringSet } from '@lykmapipo/env';
+import { getObject, getString, getStringSet, isTest } from '@lykmapipo/env';
 import {
   collectionNameOf,
   copyInstance,
@@ -218,6 +219,45 @@ export const uniqueIndexes = () => {
     localizedIndexesFor('name')
   );
   return indexes;
+};
+
+/**
+ * @function ensureBucketAndNamespace
+ * @name ensureBucketAndNamespace
+ * @description Derive bucket and namespace of a given predefine bucker
+ * or namespace.
+ * @param {string} [bucketOrNamespace] valid predefine bucket or namespace
+ * @returns {object} predefine bucket and namespace
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const val = ensureBucketAndNamespace();
+ * // => { bucket: ..., namespace: ... }
+ *
+ * const val = ensureBucketAndNamespace('Setting');
+ * // => { bucket: ..., namespace: ... };
+ *
+ */
+export const ensureBucketAndNamespace = bucketOrNamespace => {
+  // initialize defaults
+  const defaults = isTest()
+    ? {}
+    : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE };
+
+  // derive bucket and namespace
+  const bucketAndNamespace = mergeObjects(
+    defaults,
+    find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
+    find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
+  );
+
+  // return bucket and namespace
+  return bucketAndNamespace;
 };
 
 /**

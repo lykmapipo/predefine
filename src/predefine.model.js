@@ -1,4 +1,4 @@
-import { find, isEmpty, pick, trim } from 'lodash';
+import { isEmpty, pick, trim } from 'lodash';
 import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
@@ -19,11 +19,11 @@ import {
   OPTION_AUTOPOPULATE,
   DEFAULT_NAMESPACE,
   NAMESPACES,
-  NAMESPACE_MAP,
   DEFAULT_BUCKET,
   BUCKETS,
   DEFAULT_LOCALE,
   uniqueIndexes,
+  ensureBucketAndNamespace,
   stringsDefaultValue,
   createStringsSchema,
   numbersDefaultValue,
@@ -343,13 +343,8 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   );
 
   // ensure correct namespace and bucket
-  // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
-  const bucketAndNamespace = mergeObjects(
-    isTest() ? {} : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
-    find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
-    find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
-  );
+  const bucketAndNamespace = ensureBucketAndNamespace(bucketOrNamespace);
   this.set(bucketAndNamespace);
 
   // ensure code
