@@ -85,8 +85,10 @@ export const OPTION_SELECT = {
   'strings.abbreviation': 1,
   'strings.code': 1,
   'strings.symbol': 1,
-  'numbers.weight': 1,
   'strings.color': 1,
+  'numbers.weight': 1,
+  'booleans.default': 1,
+  'booleans.preset': 1,
 };
 
 export const OPTION_AUTOPOPULATE = {

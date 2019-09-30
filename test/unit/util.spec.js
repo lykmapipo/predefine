@@ -55,8 +55,10 @@ describe('Predefine Utils', () => {
           'strings.abbreviation': 1,
           'strings.code': 1,
           'strings.symbol': 1,
-          'numbers.weight': 1,
           'strings.color': 1,
+          'numbers.weight': 1,
+          'booleans.default': 1,
+          'booleans.preset': 1,
         },
       });
       expect(relation.autopopulate).to.exist.and.be.eql({
@@ -66,8 +68,10 @@ describe('Predefine Utils', () => {
           'strings.abbreviation': 1,
           'strings.code': 1,
           'strings.symbol': 1,
-          'numbers.weight': 1,
           'strings.color': 1,
+          'numbers.weight': 1,
+          'booleans.default': 1,
+          'booleans.preset': 1,
         },
       });
       expect(relation.taggable).to.exist.and.be.true;

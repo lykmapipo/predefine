@@ -276,8 +276,10 @@ describe('Predefine Statics', () => {
       'strings.abbreviation': 1,
       'strings.code': 1,
       'strings.symbol': 1,
-      'numbers.weight': 1,
       'strings.color': 1,
+      'numbers.weight': 1,
+      'booleans.default': 1,
+      'booleans.preset': 1,
     });
   });
 
@@ -289,8 +291,10 @@ describe('Predefine Statics', () => {
         'strings.abbreviation': 1,
         'strings.code': 1,
         'strings.symbol': 1,
-        'numbers.weight': 1,
         'strings.color': 1,
+        'numbers.weight': 1,
+        'booleans.default': 1,
+        'booleans.preset': 1,
       },
       maxDepth: 1,
     });
