@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { find, isEmpty, pick, trim } from 'lodash';
 import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
@@ -346,15 +346,15 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
   const bucketAndNamespace = mergeObjects(
-    isTest ? {} : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
-    _.find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
-    _.find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
+    isTest() ? {} : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
+    find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
+    find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
   );
   this.set(bucketAndNamespace);
 
   // ensure code
   this.strings.code =
-    _.trim(this.strings.code) || this.strings.abbreviation[DEFAULT_LOCALE];
+    trim(this.strings.code) || this.strings.abbreviation[DEFAULT_LOCALE];
 
   // continue
   return done(null, this);
@@ -395,8 +395,8 @@ PredefineSchema.statics.prepareSeedCriteria = seed => {
   copyOfSeed.name = localizedValuesFor(seed.strings.name);
 
   const criteria = idOf(copyOfSeed)
-    ? _.pick(copyOfSeed, '_id')
-    : flat(_.pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names));
+    ? pick(copyOfSeed, '_id')
+    : flat(pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names));
   return criteria;
 };
 
@@ -422,9 +422,9 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   // normalize criteria
   const { _id, namespace, bucket, ...filters } = mergeObjects(criteria);
 
-  const allowDefault = !_.isEmpty(namespace || bucket);
-  const allowId = !_.isEmpty(_id);
-  const allowFilters = !_.isEmpty(filters);
+  const allowDefault = !isEmpty(namespace || bucket);
+  const allowId = !isEmpty(_id);
+  const allowFilters = !isEmpty(filters);
 
   const byDefault = mergeObjects({
     namespace,

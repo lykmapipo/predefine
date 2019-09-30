@@ -1,4 +1,12 @@
-import _ from 'lodash';
+import {
+  forEach,
+  map,
+  mapValues,
+  merge,
+  toUpper,
+  without,
+  zipObject,
+} from 'lodash';
 import {
   mergeObjects,
   randomColor,
@@ -54,18 +62,18 @@ export const NAMESPACES = getStringSet(
   DEFAULT_NAMESPACE
 );
 
-export const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
+export const NAMESPACE_MAP = map(NAMESPACES, namespace => {
   return { namespace, bucket: collectionNameOf(namespace) };
 });
 
-export const NAMESPACE_DICTIONARY = _.zipObject(
+export const NAMESPACE_DICTIONARY = zipObject(
   NAMESPACES,
-  _.map(NAMESPACES, namespace => collectionNameOf(namespace))
+  map(NAMESPACES, namespace => collectionNameOf(namespace))
 );
 
 export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
-export const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
+export const BUCKETS = sortedUniq(map(NAMESPACE_MAP, 'bucket'));
 
 export const OPTION_SELECT = {
   'strings.name': 1,
@@ -102,7 +110,7 @@ export const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     localize: true,
-    fake: f => _.toUpper(f.hacker.abbreviation()),
+    fake: f => toUpper(f.hacker.abbreviation()),
   },
   {
     name: 'description',
@@ -231,12 +239,12 @@ export const uniqueIndexes = () => {
  */
 export const parseNamespaceRelations = () => {
   // use namespace and parent
-  let paths = _.map(NAMESPACES, path => variableNameFor(path));
+  let paths = map(NAMESPACES, path => variableNameFor(path));
   paths = ['parent', ...paths];
 
   // map relations to valid schema definitions
-  let relations = _.zipObject(paths, paths);
-  relations = _.mapValues(relations, () => {
+  let relations = zipObject(paths, paths);
+  relations = mapValues(relations, () => {
     return mergeObjects({
       type: ObjectId,
       ref: MODEL_NAME,
@@ -272,7 +280,7 @@ export const parseNamespaceRelations = () => {
  */
 export const parseGivenRelations = () => {
   let relations = getObject('PREDEFINE_RELATIONS', {});
-  relations = _.mapValues(relations, relation => {
+  relations = mapValues(relations, relation => {
     return mergeObjects(relation, {
       type: ObjectId,
       ref: relation.ref || MODEL_NAME,
@@ -332,7 +340,7 @@ export const stringsDefaultValue = values => {
   let defaults = {};
 
   // compute string defaults
-  _.forEach(DEFAULT_STRING_PATHS, path => {
+  forEach(DEFAULT_STRING_PATHS, path => {
     defaults[path.name] = path.default && path.default();
   });
 
@@ -362,7 +370,7 @@ export const stringsDefaultValue = values => {
  */
 export const stringSchemaPaths = () =>
   sortedUniq([
-    ..._.map(DEFAULT_STRING_PATHS, 'name'),
+    ...map(DEFAULT_STRING_PATHS, 'name'),
     ...getStringSet('PREDEFINE_STRINGS', []),
   ]);
 
@@ -396,13 +404,13 @@ export const createStringsSchema = () => {
   };
 
   // obtain given strings schema paths
-  let givenPaths = _.without(
+  let givenPaths = without(
     stringSchemaPaths(),
-    ..._.map(DEFAULT_STRING_PATHS, 'name')
+    ...map(DEFAULT_STRING_PATHS, 'name')
   );
 
   // convert given paths to schema definition
-  givenPaths = _.map(givenPaths, givenPath => {
+  givenPaths = map(givenPaths, givenPath => {
     return mergeObjects(options, { name: givenPath });
   });
 
@@ -411,7 +419,7 @@ export const createStringsSchema = () => {
 
   // build stings schema definition
   const definition = {};
-  _.forEach(paths, path => {
+  forEach(paths, path => {
     const { name, ...optns } = path;
     definition[path.name] = optns.localize ? localize(optns) : optns;
   });
@@ -446,12 +454,12 @@ export const numbersDefaultValue = values => {
   let defaults = {};
 
   // compute number defaults
-  _.forEach(DEFAULT_NUMBER_PATHS, path => {
+  forEach(DEFAULT_NUMBER_PATHS, path => {
     defaults[path.name] = path.default();
   });
 
   // merge given
-  defaults = _.merge(defaults, copyInstance(values));
+  defaults = merge(defaults, copyInstance(values));
 
   // return number paths, default values
   return defaults;
@@ -476,7 +484,7 @@ export const numbersDefaultValue = values => {
  */
 export const numberSchemaPaths = () =>
   sortedUniq([
-    ..._.map(DEFAULT_NUMBER_PATHS, 'name'),
+    ...map(DEFAULT_NUMBER_PATHS, 'name'),
     ...getStringSet('PREDEFINE_NUMBERS', []),
   ]);
 
@@ -499,9 +507,9 @@ export const numberSchemaPaths = () =>
  */
 export const createNumbersSchema = () => {
   // obtain given numbers schema paths
-  const givenPaths = _.without(
+  const givenPaths = without(
     numberSchemaPaths(),
-    ..._.map(DEFAULT_NUMBER_PATHS, 'name')
+    ...map(DEFAULT_NUMBER_PATHS, 'name')
   );
 
   // merge defaults with given number paths
@@ -541,7 +549,7 @@ export const createNumbersSchema = () => {
  */
 export const booleanSchemaPaths = () =>
   sortedUniq([
-    ..._.map(DEFAULT_BOOLEAN_PATHS, 'name'),
+    ...map(DEFAULT_BOOLEAN_PATHS, 'name'),
     ...getStringSet('PREDEFINE_BOOLEANS', []),
   ]);
 
@@ -568,7 +576,7 @@ export const booleansDefaultValue = values => {
   let defaults = {};
 
   // compute boolean defaults
-  _.forEach(DEFAULT_BOOLEAN_PATHS, path => {
+  forEach(DEFAULT_BOOLEAN_PATHS, path => {
     defaults[path.name] = path.default();
   });
 
@@ -598,9 +606,9 @@ export const booleansDefaultValue = values => {
  */
 export const createBooleansSchema = () => {
   // obtain given booleans schema paths
-  const givenPaths = _.without(
+  const givenPaths = without(
     booleanSchemaPaths(),
-    ..._.map(DEFAULT_BOOLEAN_PATHS, 'name')
+    ...map(DEFAULT_BOOLEAN_PATHS, 'name')
   );
 
   // merge defaults with given boolean paths
