@@ -1,18 +1,15 @@
-import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
+import { copyInstance } from '@lykmapipo/mongoose-common';
+import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
+import { flat } from '@lykmapipo/common';
 import { Predefine } from '../../src';
 
 describe('Predefine getOneOrDefault', () => {
-  before(done => clear(done));
-
-  let predefine = Predefine.fake();
+  const predefine = Predefine.fake();
   predefine.set({ booleans: { default: true } });
 
-  before(done => {
-    predefine.post((error, created) => {
-      predefine = created;
-      done(error, created);
-    });
-  });
+  before(done => clear(done));
+
+  before(done => create(predefine, done));
 
   it('should be able to get existing by id', done => {
     const { _id } = predefine;
@@ -37,6 +34,16 @@ describe('Predefine getOneOrDefault', () => {
   it('should be able to get default with criteria', done => {
     const { bucket } = predefine;
     Predefine.getOneOrDefault({ bucket }, (error, found) => {
+      expect(error).to.not.exist;
+      expect(found).to.exist;
+      expect(found._id).to.eql(predefine._id);
+      done(error, found);
+    });
+  });
+
+  it('should be able to get default with criteria filter', done => {
+    const { code } = flat(copyInstance(predefine.strings));
+    Predefine.getOneOrDefault({ 'strings.code': code }, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist;
       expect(found._id).to.eql(predefine._id);
