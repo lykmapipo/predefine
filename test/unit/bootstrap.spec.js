@@ -8,3 +8,4 @@ process.env.PREDEFINE_DATES = 'startedAt,endedAt';
 process.env.PREDEFINE_BOOLEANS = 'active';
 process.env.PREDEFINE_RELATIONS =
   '{"priority":{"ref":"Predefine"},"status":{}}';
+process.env.PREDEFINE_RELATIONS_IGNORED = 'ItemUnit';

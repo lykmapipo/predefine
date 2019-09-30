@@ -104,6 +104,9 @@ describe('Predefine Utils', () => {
     expect(relations.options.id).to.be.false;
     expect(relations.options.timestamps).to.be.false;
     expect(relations.options.emitIndexErrors).to.be.true;
+
+    expect(relations.path('itemUnit')).to.not.exist;
+    expect(relations.path('ItemUnit')).to.not.exist;
   });
 
   it('should provide strings schema paths', () => {

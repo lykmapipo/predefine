@@ -1,9 +1,11 @@
 import {
   find,
   forEach,
+  includes,
   map,
   mapValues,
   merge,
+  omitBy,
   toUpper,
   without,
   zipObject,
@@ -352,11 +354,23 @@ export const parseGivenRelations = () => {
  *
  */
 export const createRelationsSchema = () => {
+  // obtain ignored relations
+  const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
+  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
+
+  // derive relations
   const relations = mergeObjects(
     parseGivenRelations(),
     parseNamespaceRelations()
   );
-  return createSubSchema(relations);
+
+  // reomve ignored
+  const allowedRelations = omitBy(relations, ({ ref }, key) => {
+    return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
+  });
+
+  return createSubSchema(allowedRelations);
 };
 
 /**
