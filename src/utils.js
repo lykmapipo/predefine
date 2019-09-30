@@ -1,10 +1,12 @@
 import {
   find,
   forEach,
+  get,
   includes,
   map,
   mapValues,
   merge,
+  omit,
   omitBy,
   toUpper,
   without,
@@ -845,4 +847,32 @@ export const listScopes = (...ignored) => {
 
   // return predefine scopes
   return scopes;
+};
+
+/**
+ * @function normalizeQueryFilter
+ * @name normalizeQueryFilter
+ * @description Normalize query filter
+ * @param {object} [optns={}] valid query filter
+ * @returns {object} normalized query filter
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const filter = normalizeQueryFilter(mquery);
+ * // => { ... };
+ *
+ */
+export const normalizeQueryFilter = (optns = {}) => {
+  let options = mergeObjects(optns);
+  const isDefaultBucket = get(options, 'filter.bucket') === 'defaults';
+  if (isDefaultBucket) {
+    options = omit(options, 'filter.bucket');
+    options = mergeObjects(options, { filter: { 'booleans.default': true } });
+  }
+  return options;
 };

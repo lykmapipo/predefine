@@ -17,6 +17,15 @@ module.exports = [
     },
   },
   {
+    namespace: 'Unit',
+    strings: {
+      name: { en: 'Gram' },
+      abbreviation: { en: 'g' },
+      code: 'g',
+    },
+    booleans: { default: true },
+  },
+  {
     namespace: 'Item',
     strings: {
       name: { en: 'Soap' },

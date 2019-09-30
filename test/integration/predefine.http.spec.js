@@ -12,7 +12,7 @@ import { Predefine, predefineRouter } from '../../src';
 describe('Predefine Rest API', () => {
   const parent = Predefine.fake();
   const predefine = Predefine.fake();
-  predefine.set({ relations: { parent } });
+  predefine.set({ relations: { parent }, booleans: { default: true } });
   const { bucket } = predefine;
 
   const options = {
@@ -64,6 +64,25 @@ describe('Predefine Rest API', () => {
       });
   });
 
+  it('should handle HTTP GET on /predefines/defaults', done => {
+    const { testGet } = testRouter(options, predefineRouter);
+    testGet({ bucket: 'defaults' })
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((error, { body }) => {
+        expect(error).to.not.exist;
+        expect(body).to.exist;
+        expect(body.data).to.exist;
+        expect(body.total).to.exist;
+        expect(body.limit).to.exist;
+        expect(body.skip).to.exist;
+        expect(body.page).to.exist;
+        expect(body.pages).to.exist;
+        expect(body.lastModified).to.exist;
+        done(error, body);
+      });
+  });
+
   it('should handle GET /predefines/:bucket/schema', done => {
     const { testGetSchema } = testRouter(options, predefineRouter);
     testGetSchema({ bucket }).expect(200, done);
@@ -72,6 +91,16 @@ describe('Predefine Rest API', () => {
   it('should handle GET /predefines/:bucket/export', done => {
     const { testGetExport } = testRouter(options, predefineRouter);
     testGetExport({ bucket })
+      .expect('Content-Type', 'text/csv; charset=utf-8')
+      .expect(({ headers }) => {
+        expect(headers['content-disposition']).to.exist;
+      })
+      .expect(200, done);
+  });
+
+  it('should handle GET /predefines/defaults/export', done => {
+    const { testGetExport } = testRouter(options, predefineRouter);
+    testGetExport({ bucket: 'defaults' })
       .expect('Content-Type', 'text/csv; charset=utf-8')
       .expect(({ headers }) => {
         expect(headers['content-disposition']).to.exist;

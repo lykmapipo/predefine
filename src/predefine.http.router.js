@@ -11,7 +11,7 @@ import {
   Router,
 } from '@lykmapipo/express-rest-actions';
 import Predefine from './predefine.model';
-import { COLLECTION_NAME } from './utils';
+import { COLLECTION_NAME, normalizeQueryFilter } from './utils';
 
 /* constants */
 const API_VERSION = getString('API_VERSION', '1.0.0');
@@ -45,7 +45,10 @@ const router = new Router({
 router.get(
   PATH_LIST,
   getFor({
-    get: (options, done) => Predefine.get(options, done),
+    get: (optns, done) => {
+      const options = normalizeQueryFilter(optns);
+      return Predefine.get(options, done);
+    },
   })
 );
 
@@ -57,7 +60,7 @@ router.get(
 router.get(
   PATH_SCHEMA,
   schemaFor({
-    getSchema: (query, done) => {
+    getSchema: (optns, done) => {
       const jsonSchema = Predefine.jsonSchema();
       return done(null, jsonSchema);
     },
@@ -72,8 +75,9 @@ router.get(
 router.get(
   PATH_EXPORT,
   downloadFor({
-    download: (options, done) => {
-      const { bucket } = options.filter;
+    download: (optns, done) => {
+      const options = normalizeQueryFilter(optns);
+      const { bucket = 'defaults' } = options.filter;
       const fileName = `${bucket}_exports_${Date.now()}.csv`;
       const readStream = Predefine.exportCsv(options);
       return done(null, { fileName, readStream });
@@ -101,7 +105,7 @@ router.post(
 router.get(
   PATH_SINGLE,
   getByIdFor({
-    getById: (options, done) => Predefine.getById(options, done),
+    getById: (optns, done) => Predefine.getById(optns, done),
   })
 );
 
@@ -113,7 +117,7 @@ router.get(
 router.patch(
   PATH_SINGLE,
   patchFor({
-    patch: (options, done) => Predefine.patch(options, done),
+    patch: (optns, done) => Predefine.patch(optns, done),
   })
 );
 
@@ -125,7 +129,7 @@ router.patch(
 router.put(
   PATH_SINGLE,
   putFor({
-    put: (options, done) => Predefine.put(options, done),
+    put: (optns, done) => Predefine.put(optns, done),
   })
 );
 
@@ -137,7 +141,7 @@ router.put(
 router.delete(
   PATH_SINGLE,
   deleteFor({
-    del: (options, done) => Predefine.del(options, done),
+    del: (optns, done) => Predefine.del(optns, done),
     soft: true,
   })
 );

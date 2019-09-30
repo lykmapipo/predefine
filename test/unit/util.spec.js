@@ -19,6 +19,7 @@ import {
   createGeosSchema,
   listPermissions,
   listScopes,
+  normalizeQueryFilter,
 } from '../../src/utils';
 
 describe('Predefine Utils', () => {
@@ -362,5 +363,14 @@ describe('Predefine Utils', () => {
       'setting:export',
       'setting:download'
     );
+  });
+
+  it('should normalize query filter', () => {
+    const normalized = normalizeQueryFilter({
+      filter: { bucket: 'defaults' },
+    });
+    expect(normalized).to.exist.and.be.eql({
+      filter: { 'booleans.default': true },
+    });
   });
 });
