@@ -10,7 +10,9 @@ import {
 } from 'lodash';
 import {
   mergeObjects,
+  permissionsFor,
   randomColor,
+  scopesFor,
   sortedUniq,
   variableNameFor,
 } from '@lykmapipo/common';
@@ -769,4 +771,62 @@ export const createGeosSchema = () => {
 
   // return geos sub schema
   return schema;
+};
+
+/**
+ * @function listPermissions
+ * @name listPermissions
+ * @description Generate predefine permissions
+ * @param {...string} [ignored] valid ignored namespaces
+ * @returns {object[]} valid permissions
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const permissions = listPermissions();
+ * // => [{resource: 'Setting', wildcard: 'setting:create', action: ...}, ....];
+ *
+ */
+export const listPermissions = (...ignored) => {
+  // collect allowed namespace resource
+  const resources = sortedUniq(without(NAMESPACES, ...ignored));
+
+  // generate resources permissions
+  const permissions = permissionsFor(...resources);
+
+  // return predefine permissions
+  return permissions;
+};
+
+/**
+ * @function listScopes
+ * @name listScopes
+ * @description Generate predefine scopes
+ * @param {...string} [ignored] valid ignored namespaces
+ * @returns {string[]} valid scopes
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const scopes = listScopes();
+ * // => ['setting:create', ....];
+ *
+ */
+export const listScopes = (...ignored) => {
+  // collect allowed namespace resource
+  const resources = sortedUniq(without(NAMESPACES, ...ignored));
+
+  // generate resources scopes
+  const scopes = scopesFor(...resources);
+
+  // return predefine scopes
+  return scopes;
 };

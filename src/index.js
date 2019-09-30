@@ -17,6 +17,7 @@
 import { pkg } from '@lykmapipo/common';
 import { apiVersion as httpApiVersion } from '@lykmapipo/env';
 import { start } from '@lykmapipo/express-rest-actions';
+import { listPermissions, listScopes } from './utils';
 import Predefine from './predefine.model';
 import predefineRouter from './predefine.http.router';
 
@@ -41,6 +42,28 @@ export const info = pkg(
   'sandbox',
   'contributors'
 );
+
+/**
+ * @function listPermissions
+ * @name listPermissions
+ * @description Generate predefine permissions
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ */
+export { listPermissions };
+
+/**
+ * @function listScopes
+ * @name listScopes
+ * @description Generate predefine scopes
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ */
+export { listScopes };
 
 /**
  * @name Predefine

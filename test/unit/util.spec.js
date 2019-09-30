@@ -17,6 +17,8 @@ import {
   createDatesSchema,
   geoSchemaPaths,
   createGeosSchema,
+  listPermissions,
+  listScopes,
 } from '../../src/utils';
 
 describe('Predefine Utils', () => {
@@ -315,5 +317,43 @@ describe('Predefine Utils', () => {
       expect(geo.options.index).to.exist.and.be.equal('2dsphere');
       expect(geo.options.fake).to.exist.and.be.an('object');
     });
+  });
+
+  it('should generate predefine permissions', () => {
+    const permissions = listPermissions();
+    expect(permissions).to.exist.and.be.an('array');
+    expect(_.map(permissions, 'resource')).to.include(
+      'Setting',
+      'Currency',
+      'Item',
+      'ItemUnit'
+    );
+    expect(_.map(permissions, 'wildcard')).to.include(
+      'setting:create',
+      'setting:view',
+      'setting:edit',
+      'setting:delete',
+      'setting:share',
+      'setting:print',
+      'setting:import',
+      'setting:export',
+      'setting:download'
+    );
+  });
+
+  it('should generate predefine scopes', () => {
+    const scopes = listScopes();
+    expect(scopes).to.exist.and.be.an('array');
+    expect(scopes).to.include(
+      'setting:create',
+      'setting:view',
+      'setting:edit',
+      'setting:delete',
+      'setting:share',
+      'setting:print',
+      'setting:import',
+      'setting:export',
+      'setting:download'
+    );
   });
 });
