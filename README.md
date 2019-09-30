@@ -29,9 +29,9 @@ npm install @lykmapipo/predefine --save
 ## Usage
 
 ```js
-import { connect } form '@lykmapipo/mongoose-common';
-import { start, mount } form '@lykmapipo/express-common';
-import { Predefine, predefineRouter } form '@lykmapipo/predefine';
+import { connect } from '@lykmapipo/mongoose-common';
+import { start, mount } from '@lykmapipo/express-common';
+import { Predefine, predefineRouter } from '@lykmapipo/predefine';
 
 // connect to mongodb
 connect(process.env.MONGODB_URI, error => { ... });
@@ -45,7 +45,15 @@ start(error => { ... });
 
 ## Environment
 ```js
-PREDEFINE_NAMESPACES=Currency,Unit,Setting
+DEFAULT_LOCALE = 'en';
+LOCALES = 'en,sw';
+PREDEFINE_NAMESPACES =
+PREDEFINE_STRINGS =
+PREDEFINE_NUMBERS =
+PREDEFINE_DATES = 
+PREDEFINE_BOOLEANS = 
+PREDEFINE_RELATIONS =
+PREDEFINE_RELATIONS_IGNORED =
 ```
 
 ## Testing
