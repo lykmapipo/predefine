@@ -371,6 +371,7 @@ describe('Predefine Utils', () => {
     });
     expect(normalized).to.exist.and.be.eql({
       filter: { 'booleans.default': true },
+      paginate: { limit: Number.MAX_SAFE_INTEGER },
     });
   });
 });

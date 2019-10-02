@@ -872,7 +872,9 @@ export const normalizeQueryFilter = (optns = {}) => {
   const isDefaultBucket = get(options, 'filter.bucket') === 'defaults';
   if (isDefaultBucket) {
     options = omit(options, 'filter.bucket');
-    options = mergeObjects(options, { filter: { 'booleans.default': true } });
+    const paginate = { limit: Number.MAX_SAFE_INTEGER };
+    const filter = { 'booleans.default': true };
+    options = mergeObjects(options, { filter, paginate });
   }
   return options;
 };
