@@ -1,7 +1,9 @@
 import { resolve as resolvePath } from 'path';
 import { createWriteStream } from 'fs';
-import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
+import _ from 'lodash';
 import csv2array from 'csv-to-array';
+import { autoParse, assign } from '@lykmapipo/common';
+import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 const csvPath = resolvePath(`${__dirname}/../fixtures/out.csv`);
@@ -14,6 +16,18 @@ describe('Predefine Export', () => {
   const assertExport = (error, records) => {
     expect(error).to.not.exist;
     expect(records).to.exist;
+    const results = _.map(autoParse(records), v => {
+      assign(v, { 'Booleans Default': Boolean(v['Booleans Default']) });
+      return v;
+    });
+
+    const names = _.map([predefine], 'strings.name.en');
+    const weights = _.map([predefine], 'numbers.weight');
+    const defaults = _.map([predefine], 'booleans.default');
+
+    expect(names).to.include.members(_.map(results, 'Strings Name En'));
+    expect(defaults).to.include.members(_.map(results, 'Booleans Default'));
+    expect(weights).to.include.members(_.map(results, 'Numbers Weight'));
   };
 
   before(done => clear(done));
@@ -48,6 +62,20 @@ describe('Predefine Export', () => {
   it('should be able to export to csv', done => {
     const out = createWriteStream(csvPath);
     const options = { sort: { updatedAt: -1 } };
+    Predefine.exportCsv(options, out, (/* error */) => {
+      readCsv((error, records) => {
+        assertExport(error, records);
+        done(error, records);
+      });
+    });
+  });
+
+  it('should be able to export to csv', done => {
+    const out = createWriteStream(csvPath);
+    const options = {
+      filter: { 'numbers.weight': predefine.numbers.weight },
+      sort: { updatedAt: -1 },
+    };
     Predefine.exportCsv(options, out, (/* error */) => {
       readCsv((error, records) => {
         assertExport(error, records);
