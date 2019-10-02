@@ -103,12 +103,12 @@
     "@lykmapipo/express-common": ">=0.17.12",
     "@lykmapipo/express-rest-actions": ">=0.7.1",
     "@lykmapipo/mongoose-common": ">=0.26.0",
-    "@lykmapipo/mongoose-exportable": ">=0.3.9",
+    "@lykmapipo/mongoose-exportable": ">=0.3.10",
     "async": ">=3.1.0",
     "lodash": ">=4.17.15",
     "mongoose-geojson-schemas": ">=0.10.12",
     "mongoose-locale-schema": ">=0.4.3",
-    "mongoose-rest-actions": ">=0.29.1"
+    "mongoose-rest-actions": ">=0.29.2"
   },
   "engines": {
     "node": ">=12.4.0",
