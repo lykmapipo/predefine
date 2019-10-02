@@ -20,7 +20,9 @@ import {
   listPermissions,
   listScopes,
   normalizeQueryFilter,
+  mapToGeoJSONFeature,
 } from '../../src/utils';
+import Predefine from '../../src/predefine.model';
 
 describe('Predefine Utils', () => {
   it('should derive unique indexes', () => {
@@ -372,6 +374,23 @@ describe('Predefine Utils', () => {
     expect(normalized).to.exist.and.be.eql({
       filter: { 'booleans.default': true },
       paginate: { limit: Number.MAX_SAFE_INTEGER },
+    });
+  });
+
+  it('should map to GeoJSON feature(s)', () => {
+    const predefine = Predefine.fake();
+    const features = mapToGeoJSONFeature(predefine);
+    expect(features).to.exist.and.be.an('array');
+
+    const paths = geoSchemaPaths();
+    _.forEach(paths, path => {
+      const id = `${path}:${predefine._id}`;
+      const feature = _.find(features, { id });
+      expect(feature).to.exist.and.be.an('object');
+      expect(feature.id).to.exist.and.be.equal(id);
+      expect(feature.type).to.exist.and.be.equal('Feature');
+      expect(feature.properties).to.exist.and.be.an('object');
+      expect(feature.geometry).to.exist.and.be.an('object');
     });
   });
 });

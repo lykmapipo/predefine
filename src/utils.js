@@ -878,3 +878,56 @@ export const normalizeQueryFilter = (optns = {}) => {
   }
   return options;
 };
+
+/**
+ * @function mapToGeoJSONFeature
+ * @name mapToGeoJSONFeature
+ * @description Transform predefine to GeoJSON feature(s)
+ * @param {object} predefine valid predefine instance
+ * @returns {object} GeoJSON feature(s)
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const feature = mapToGeoJSONFeature(predefine);
+ * // => { type: 'Feature', geometry: ..., properties: ... };
+ *
+ */
+export const mapToGeoJSONFeature = (predefine = {}) => {
+  // copy predefine
+  const {
+    _id,
+    namespace,
+    bucket,
+    strings,
+    numbers,
+    booleans,
+    dates,
+    geos,
+    relations,
+  } = copyInstance(predefine);
+
+  // prepare properties
+  const properties = {
+    namespace,
+    bucket,
+    strings,
+    numbers,
+    booleans,
+    dates,
+    relations,
+  };
+
+  // derive feature(s)
+  const type = 'Feature';
+  const features = map(geos, (geometry, path) => {
+    const id = `${path}:${_id}`;
+    return { _id, id, type, properties, geometry };
+  });
+
+  return features;
+};
