@@ -601,5 +601,54 @@ PredefineSchema.statics.postByExtension = (optns, done) => {
   return waterfall([post, transform], done);
 };
 
+/**
+ * @name deleteByExtension
+ * @function deleteByExtension
+ * @description Delete existing predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} deleted predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.deleteByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.deleteByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // delete existing data
+  const del = next => Predefine.del(options, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([del, transform], done);
+};
+
 /* export predefine model */
 export default model(MODEL_NAME, PredefineSchema);
