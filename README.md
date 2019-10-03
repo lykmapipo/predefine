@@ -13,6 +13,8 @@
 
 A representation of stored and retrieved information that does not qualify to belongs to their own domain model.
 
+**Note!: v1+ is not compactible with all previous version**
+
 ## Requirements
 
 - [NodeJS v12+](https://nodejs.org)
