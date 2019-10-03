@@ -529,7 +529,7 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
   const options = mergeObjects(optns);
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
-  // fetch data
+  // fetch data by id
   const getById = next => Predefine.getById(options, next);
 
   // transform by extension
@@ -550,6 +550,55 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
 
   // return
   return waterfall([getById, transform], done);
+};
+
+/**
+ * @name postByExtension
+ * @function postByExtension
+ * @description Create predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} created predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { body: { ... }, params: {ext: 'geojson'}, ...};
+ * Predefine.postByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.postByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { body, params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // post data
+  const post = next => Predefine.post(body, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([post, transform], done);
 };
 
 /* export predefine model */
