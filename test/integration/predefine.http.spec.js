@@ -16,10 +16,10 @@ describe('Predefine Rest API', () => {
   const { bucket } = predefine;
 
   const options = {
-    pathSingle: '/predefines/:bucket/:id',
-    pathList: '/predefines/:bucket',
-    pathSchema: '/predefines/:bucket/schema/',
-    pathExport: '/predefines/:bucket/export/',
+    pathSingle: '/predefines/:bucket/:id.:ext?',
+    pathList: '/predefines/:bucket.:ext?',
+    pathSchema: '/predefines/:bucket/schema.:ext?',
+    pathExport: '/predefines/:bucket/export.:ext?',
   };
 
   before(() => clearHttp());
@@ -127,7 +127,7 @@ describe('Predefine Rest API', () => {
 
   it('should handle HTTP PATCH on /predefines/:bucket/:id', done => {
     const { testPatch } = testRouter(options, predefineRouter);
-    const { description } = predefine.fakeOnly('description');
+    const { strings: { description } = {} } = Predefine.fake().toObject();
     const params = { bucket, id: predefine._id.toString() };
     testPatch(params, { description })
       .expect(200)
@@ -146,8 +146,8 @@ describe('Predefine Rest API', () => {
 
   it('should handle HTTP PUT on /predefines/:bucket/:id', done => {
     const { testPut } = testRouter(options, predefineRouter);
-    const { description } = predefine.fakeOnly('description');
-    const params = { bucket, id: predefine._id.toString() };
+    const { strings: { description } = {} } = Predefine.fake().toObject();
+    const params = { bucket, id: predefine._id.toString(), ext: 'json' };
     testPut(params, { description })
       .expect(200)
       .expect('Content-Type', /json/)

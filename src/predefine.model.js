@@ -504,6 +504,55 @@ PredefineSchema.statics.getByExtension = (optns, done) => {
 };
 
 /**
+ * @name postByExtension
+ * @function postByExtension
+ * @description Create predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} created predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { body: { ... }, params: {ext: 'geojson'}, ...};
+ * Predefine.postByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.postByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { body, params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // post data
+  const post = next => Predefine.post(body, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([post, transform], done);
+};
+
+/**
  * @name getByIdByExtension
  * @function getByIdByExtension
  * @description Find existing predefine and convert it to required format
@@ -553,12 +602,12 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
 };
 
 /**
- * @name postByExtension
- * @function postByExtension
- * @description Create predefine and convert it to required format
+ * @name patchByExtension
+ * @function patchByExtension
+ * @description Patch existing predefine and convert it to required format
  * @param {object} [optns={}] valid options
  * @param {Function} done callback to invoke on success or error
- * @returns {object|Error} created predefine or error
+ * @returns {object|Error} updated predefine or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.9.0
@@ -566,20 +615,20 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
  * @static
  * @example
  *
- * const optns = { body: { ... }, params: {ext: 'geojson'}, ...};
- * Predefine.postByExtension(optns, (error, results) => { ... });
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.patchByExtension(optns, (error, results) => { ... });
  *
  */
-PredefineSchema.statics.postByExtension = (optns, done) => {
+PredefineSchema.statics.patchByExtension = (optns, done) => {
   // ref
   const Predefine = model(MODEL_NAME);
 
   // normalize options
   const options = mergeObjects(optns);
-  const { body, params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+  const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
 
-  // post data
-  const post = next => Predefine.post(body, next);
+  // patch data
+  const patch = next => Predefine.patch(_id, body, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -598,7 +647,56 @@ PredefineSchema.statics.postByExtension = (optns, done) => {
   };
 
   // return
-  return waterfall([post, transform], done);
+  return waterfall([patch, transform], done);
+};
+
+/**
+ * @name putByExtension
+ * @function putByExtension
+ * @description Put existing predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} updated predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.putByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.putByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
+
+  // put data
+  const put = next => Predefine.put(_id, body, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([put, transform], done);
 };
 
 /**
