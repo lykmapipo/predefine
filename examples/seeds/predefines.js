@@ -33,4 +33,30 @@ module.exports = [
       code: 'SP',
     },
   },
+  {
+    namespace: 'Area',
+    strings: {
+      name: { en: 'Serengeti Park' },
+      abbreviation: { en: 'SP' },
+      code: 'SP',
+    },
+    geos: {
+      point: {
+        coordinates: [30, 10],
+      },
+    },
+  },
+  {
+    namespace: 'Area',
+    strings: {
+      name: { en: 'Ngorongoro Park' },
+      abbreviation: { en: 'NP' },
+      code: 'NP',
+    },
+    geos: {
+      polygon: {
+        coordinates: [[[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]],
+      },
+    },
+  },
 ];

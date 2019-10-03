@@ -1,3 +1,4 @@
+import { mergeObjects } from '@lykmapipo/common';
 import { getString } from '@lykmapipo/env';
 import {
   getFor,
@@ -45,10 +46,7 @@ const router = new Router({
 router.get(
   PATH_LIST,
   getFor({
-    get: (optns, done) => {
-      const options = normalizeQueryFilter(optns);
-      return Predefine.get(options, done);
-    },
+    get: (optns, done) => Predefine.getByExtension(optns, done),
   })
 );
 
@@ -105,7 +103,7 @@ router.post(
 router.get(
   PATH_SINGLE,
   getByIdFor({
-    getById: (optns, done) => Predefine.getById(optns, done),
+    getById: (optns, done) => Predefine.getByIdByExtension(optns, done),
   })
 );
 
@@ -117,7 +115,11 @@ router.get(
 router.patch(
   PATH_SINGLE,
   patchFor({
-    patch: (optns, done) => Predefine.patch(optns, done),
+    patch: (optns, done) => {
+      // TODO: fix in next updates
+      const { params, _id, ...body } = mergeObjects(optns);
+      return Predefine.patchByExtension({ params, _id, body }, done);
+    },
   })
 );
 
@@ -129,7 +131,11 @@ router.patch(
 router.put(
   PATH_SINGLE,
   putFor({
-    put: (optns, done) => Predefine.put(optns, done),
+    put: (optns, done) => {
+      // TODO: fix in next updates
+      const { params, _id, ...body } = mergeObjects(optns);
+      Predefine.putByExtension({ params, _id, body }, done);
+    },
   })
 );
 
@@ -141,7 +147,7 @@ router.put(
 router.delete(
   PATH_SINGLE,
   deleteFor({
-    del: (optns, done) => Predefine.del(optns, done),
+    del: (optns, done) => Predefine.deleteByExtension(optns, done),
     soft: true,
   })
 );

@@ -5,7 +5,7 @@ import { Predefine } from '../../src';
 describe('Predefine GetByExtension', () => {
   before(done => clear(done));
 
-  let predefines = Predefine.fake(32);
+  let predefines = [Predefine.fake()];
 
   before(done => {
     Predefine.insertMany(predefines, (error, created) => {
