@@ -13,6 +13,7 @@ import {
   without,
   zipObject,
 } from 'lodash';
+import { topology as toTopoJSON } from 'topojson-server';
 import {
   mergeObjects,
   permissionsFor,
@@ -962,4 +963,33 @@ export const mapToGeoJSONFeatureCollection = (...predefines) => {
 
   // return geojson feature collections
   return collections;
+};
+
+/**
+ * @function mapToTopoJSON
+ * @name mapToTopoJSON
+ * @description Transform predefines to topojson.
+ * @param {...object} predefines valid predefines instance
+ * @returns {object} valid topojson
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const topojson = mapToTopoJSON(predefine);
+ * // => { type: 'Topology', objects: [ ... ], ... };
+ *
+ */
+export const mapToTopoJSON = (...predefines) => {
+  // map predefines to feature collections
+  const collection = mapToGeoJSONFeatureCollection(...predefines);
+
+  // derive topojson
+  const topojson = toTopoJSON({ collection });
+
+  // return topojson
+  return topojson;
 };
