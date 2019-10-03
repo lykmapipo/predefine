@@ -1,4 +1,5 @@
 import { isEmpty, pick, trim } from 'lodash';
+import { waterfall } from 'async';
 import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model } from '@lykmapipo/mongoose-common';
@@ -22,6 +23,9 @@ import {
   DEFAULT_BUCKET,
   BUCKETS,
   DEFAULT_LOCALE,
+  CONTENT_TYPE_JSON,
+  CONTENT_TYPE_GEOJSON,
+  CONTENT_TYPE_TOPOJSON,
   uniqueIndexes,
   ensureBucketAndNamespace,
   stringsDefaultValue,
@@ -33,6 +37,9 @@ import {
   createDatesSchema,
   createGeosSchema,
   createRelationsSchema,
+  normalizeQueryFilter,
+  mapToGeoJSONFeatureCollection,
+  mapToTopoJSON,
 } from './utils';
 
 /**
@@ -443,6 +450,106 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   return Predefine.findOne(filter)
     .orFail()
     .exec(done);
+};
+
+/**
+ * @name getByExtension
+ * @function getByExtension
+ * @description Find existing predefines and convert them to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} found predefines or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { filter: {...}, params: {ext: 'geojson'}, ...};
+ * Predefine.getByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.getByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = normalizeQueryFilter(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // fetch data
+  const get = next => Predefine.get(options, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // collect data
+    const data = compact([].concat(result.data));
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(...data);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(...data);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([get, transform], done);
+};
+
+/**
+ * @name getByIdByExtension
+ * @function getByIdByExtension
+ * @description Find existing predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} found predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.getByIdByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.getByIdByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // fetch data
+  const getById = next => Predefine.getById(options, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([getById, transform], done);
 };
 
 /* export predefine model */
