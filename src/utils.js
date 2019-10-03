@@ -1,5 +1,6 @@
 import {
   find,
+  flatMap,
   forEach,
   get,
   includes,
@@ -929,5 +930,36 @@ export const mapToGeoJSONFeature = (predefine = {}) => {
     return { _id, id, type, properties, geometry };
   });
 
+  // return geojson features
   return features;
+};
+
+/**
+ * @function mapToGeoJSONFeatureCollection
+ * @name mapToGeoJSONFeatureCollection
+ * @description Transform predefines to GeoJSON feature collection.
+ * @param {...object} predefines valid predefines instance
+ * @returns {object} GeoJSON feature collection
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const features = mapToGeoJSONFeatureCollection(predefine);
+ * // => { type: 'FeatureCollection', features: [ ... ], ... };
+ *
+ */
+export const mapToGeoJSONFeatureCollection = (...predefines) => {
+  // map predefines to features
+  const features = flatMap([...predefines], mapToGeoJSONFeature);
+
+  // derive geojson feature collection
+  const type = 'FeatureCollection';
+  const collections = { type, features };
+
+  // return geojson feature collections
+  return collections;
 };

@@ -21,6 +21,7 @@ import {
   listScopes,
   normalizeQueryFilter,
   mapToGeoJSONFeature,
+  mapToGeoJSONFeatureCollection,
 } from '../../src/utils';
 import Predefine from '../../src/predefine.model';
 
@@ -386,6 +387,25 @@ describe('Predefine Utils', () => {
     _.forEach(paths, path => {
       const id = `${path}:${predefine._id}`;
       const feature = _.find(features, { id });
+      expect(feature).to.exist.and.be.an('object');
+      expect(feature.id).to.exist.and.be.equal(id);
+      expect(feature.type).to.exist.and.be.equal('Feature');
+      expect(feature.properties).to.exist.and.be.an('object');
+      expect(feature.geometry).to.exist.and.be.an('object');
+    });
+  });
+
+  it('should map to GeoJSON feature collection', () => {
+    const predefine = Predefine.fake();
+    const collection = mapToGeoJSONFeatureCollection(predefine);
+    expect(collection).to.exist.and.be.an('object');
+    expect(collection.type).to.exist.and.be.equal('FeatureCollection');
+    expect(collection.features).to.exist.and.be.an('array');
+
+    const paths = geoSchemaPaths();
+    _.forEach(paths, path => {
+      const id = `${path}:${predefine._id}`;
+      const feature = _.find(collection.features, { id });
       expect(feature).to.exist.and.be.an('object');
       expect(feature.id).to.exist.and.be.equal(id);
       expect(feature.type).to.exist.and.be.equal('Feature');
