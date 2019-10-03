@@ -1,13 +1,21 @@
-import { sortedUniq, mergeObjects, singularize, randomColor, compact, pkg } from '@lykmapipo/common';
-import { getString, getStringSet, getObject, isTest, apiVersion as apiVersion$1 } from '@lykmapipo/env';
+import { sortedUniq, permissionsFor, scopesFor, mergeObjects, variableNameFor, randomColor, idOf, flat, compact, pkg } from '@lykmapipo/common';
+import { getString, getStringSet, isTest, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor } from '@lykmapipo/express-rest-actions';
 export { start } from '@lykmapipo/express-rest-actions';
-import _ from 'lodash';
-import { collectionNameOf, createSubSchema, ObjectId, model, createSchema } from '@lykmapipo/mongoose-common';
-import { Geometry } from 'mongoose-geojson-schemas';
+import { map, zipObject, without, find, omitBy, includes, forEach, merge, get, omit, toUpper, mapValues, flatMap, trim, pick, isEmpty } from 'lodash';
+import { topology } from 'topojson-server';
+import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema } from '@lykmapipo/mongoose-common';
 import { localizedIndexesFor, localize, localizedValuesFor, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
+import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
+import { waterfall } from 'async';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
+
+const CONTENT_TYPE_JSON = 'json';
+
+const CONTENT_TYPE_GEOJSON = 'geojson';
+
+const CONTENT_TYPE_TOPOJSON = 'topojson';
 
 const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
@@ -32,26 +40,28 @@ const NAMESPACES = getStringSet(
   DEFAULT_NAMESPACE
 );
 
-const NAMESPACE_MAP = _.map(NAMESPACES, namespace => {
+const NAMESPACE_MAP = map(NAMESPACES, namespace => {
   return { namespace, bucket: collectionNameOf(namespace) };
 });
 
-const NAMESPACE_DICTIONARY = _.zipObject(
+const NAMESPACE_DICTIONARY = zipObject(
   NAMESPACES,
-  _.map(NAMESPACES, namespace => collectionNameOf(namespace))
+  map(NAMESPACES, namespace => collectionNameOf(namespace))
 );
 
 const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
-const BUCKETS = sortedUniq(_.map(NAMESPACE_MAP, 'bucket'));
+const BUCKETS = sortedUniq(map(NAMESPACE_MAP, 'bucket'));
 
 const OPTION_SELECT = {
-  name: 1,
-  code: 1,
-  abbreviation: 1,
-  symbol: 1,
-  weight: 1,
-  color: 1,
+  'strings.name': 1,
+  'strings.abbreviation': 1,
+  'strings.code': 1,
+  'strings.symbol': 1,
+  'strings.color': 1,
+  'numbers.weight': 1,
+  'booleans.default': 1,
+  'booleans.preset': 1,
 };
 
 const OPTION_AUTOPOPULATE = {
@@ -59,11 +69,117 @@ const OPTION_AUTOPOPULATE = {
   maxDepth: 1,
 };
 
+const DEFAULT_STRING_PATHS = [
+  {
+    name: 'name',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    localize: true,
+    fake: f => f.commerce.productName(),
+  },
+  {
+    name: 'abbreviation',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    localize: true,
+    fake: f => toUpper(f.hacker.abbreviation()),
+  },
+  {
+    name: 'description',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    exportable: true,
+    localize: true,
+    fake: f => f.lorem.sentence(),
+  },
+  {
+    name: 'code',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    default: () => undefined,
+    fake: f => f.finance.currencyCode(),
+  },
+  {
+    name: 'symbol',
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    default: () => undefined,
+    fake: f => f.finance.currencySymbol(),
+  },
+  {
+    name: 'color',
+    type: String,
+    trim: true,
+    uppercase: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    default: () => randomColor(),
+    fake: () => randomColor(),
+  },
+  {
+    name: 'icon',
+    type: String,
+    trim: true,
+    default: () => undefined,
+    fake: f => f.image.image(),
+  },
+];
+
+const DEFAULT_NUMBER_PATHS = [
+  {
+    name: 'weight',
+    type: Number,
+    index: true,
+    default: () => 0,
+    exportable: true,
+    fake: f => f.random.number(),
+  },
+];
+
+const DEFAULT_BOOLEAN_PATHS = [
+  {
+    name: 'default',
+    type: Boolean,
+    index: true,
+    exportable: true,
+    default: () => false,
+    fake: f => f.random.boolean(),
+  },
+  {
+    name: 'preset',
+    type: Boolean,
+    index: true,
+    exportable: true,
+    default: () => false,
+    fake: f => f.random.boolean(),
+  },
+];
+
 /**
  * @function uniqueIndexes
  * @name uniqueIndexes
  * @description Generate unique index definition of predefine
- * @return {Object} unique index definition
+ * @returns {object} unique index definition
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -78,17 +194,56 @@ const OPTION_AUTOPOPULATE = {
  */
 const uniqueIndexes = () => {
   const indexes = mergeObjects(
-    { namespace: 1, bucket: 1, code: 1 },
+    { namespace: 1, bucket: 1, 'strings.code': 1 },
     localizedIndexesFor('name')
   );
   return indexes;
 };
 
 /**
+ * @function ensureBucketAndNamespace
+ * @name ensureBucketAndNamespace
+ * @description Derive bucket and namespace of a given predefine bucker
+ * or namespace.
+ * @param {string} [bucketOrNamespace] valid predefine bucket or namespace
+ * @returns {object} predefine bucket and namespace
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const val = ensureBucketAndNamespace();
+ * // => { bucket: ..., namespace: ... }
+ *
+ * const val = ensureBucketAndNamespace('Setting');
+ * // => { bucket: ..., namespace: ... };
+ *
+ */
+const ensureBucketAndNamespace = bucketOrNamespace => {
+  // initialize defaults
+  const defaults = isTest()
+    ? {}
+    : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE };
+
+  // derive bucket and namespace
+  const bucketAndNamespace = mergeObjects(
+    defaults,
+    find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
+    find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
+  );
+
+  // return bucket and namespace
+  return bucketAndNamespace;
+};
+
+/**
  * @function parseNamespaceRelations
  * @name parseNamespaceRelations
  * @description Convert all specified namespace to relations
- * @return {Object} valid normalized relations
+ * @returns {object} valid normalized relations
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -102,18 +257,25 @@ const uniqueIndexes = () => {
  *
  */
 const parseNamespaceRelations = () => {
-  const paths = _.map(NAMESPACES, path => _.toLower(singularize(path)));
-  let relations = _.zipObject(paths, paths);
-  relations = _.mapValues(relations, () => {
+  // use namespace and parent
+  let paths = map(NAMESPACES, path => variableNameFor(path));
+  paths = ['parent', ...paths];
+
+  // map relations to valid schema definitions
+  let relations = zipObject(paths, paths);
+  relations = mapValues(relations, () => {
     return mergeObjects({
       type: ObjectId,
       ref: MODEL_NAME,
       index: true,
       aggregatable: true,
       taggable: true,
-      autopopulate: { maxDepth: 1 },
+      exists: { refresh: true, select: OPTION_SELECT },
+      autopopulate: { maxDepth: 1, select: OPTION_SELECT },
     });
   });
+
+  // return namespaces relations
   return relations;
 };
 
@@ -121,8 +283,7 @@ const parseNamespaceRelations = () => {
  * @function parseGivenRelations
  * @name parseGivenRelations
  * @description Safely parse and normalize predefine relation config
- * @param {Mixed} relations relation to parse
- * @return {Object} valid normalized relations
+ * @returns {object} valid normalized relations
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -138,7 +299,7 @@ const parseNamespaceRelations = () => {
  */
 const parseGivenRelations = () => {
   let relations = getObject('PREDEFINE_RELATIONS', {});
-  relations = _.mapValues(relations, relation => {
+  relations = mapValues(relations, relation => {
     return mergeObjects(relation, {
       type: ObjectId,
       ref: relation.ref || MODEL_NAME,
@@ -155,7 +316,7 @@ const parseGivenRelations = () => {
  * @function createRelationsSchema
  * @name createRelationsSchema
  * @description Create predefine relations schema
- * @return {Schema} valid mongoose schema
+ * @returns {object} valid mongoose schema
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -168,11 +329,609 @@ const parseGivenRelations = () => {
  *
  */
 const createRelationsSchema = () => {
+  // obtain ignored relations
+  const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
+  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
+
+  // derive relations
   const relations = mergeObjects(
     parseGivenRelations(),
     parseNamespaceRelations()
   );
-  return createSubSchema(relations);
+
+  // reomve ignored
+  const allowedRelations = omitBy(relations, ({ ref }, key) => {
+    return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
+  });
+
+  return createSubSchema(allowedRelations);
+};
+
+/**
+ * @function stringsDefaultValue
+ * @name stringsDefaultValue
+ * @description Expose string paths, default values.
+ * @param {object} [values] valid string paths, values.
+ * @returns {object} hash of string paths, default values.
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const values = stringsDefaultValue();
+ * // => { code: 'UA', color: '#CCCCCC', ... };
+ *
+ */
+const stringsDefaultValue = values => {
+  // initialize defaults
+  let defaults = {};
+
+  // compute string defaults
+  forEach(DEFAULT_STRING_PATHS, path => {
+    defaults[path.name] = path.default && path.default();
+  });
+
+  // merge given
+  defaults = mergeObjects(defaults, copyInstance(values));
+
+  // return string paths, default values
+  return defaults;
+};
+
+/**
+ * @function stringSchemaPaths
+ * @name stringSchemaPaths
+ * @description Expose schema string paths
+ * @returns {Array} set of string paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = stringSchemaPaths();
+ * // => ['code', 'symbol', 'color', 'icon', ... ];
+ *
+ */
+const stringSchemaPaths = () =>
+  sortedUniq([
+    ...map(DEFAULT_STRING_PATHS, 'name'),
+    ...getStringSet('PREDEFINE_STRINGS', []),
+  ]);
+
+/**
+ * @function createStringsSchema
+ * @name createStringsSchema
+ * @description Create predefine strings schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const strings = createStringsSchema();
+ * // => { code: { type: String, ... }, ... }
+ *
+ */
+const createStringsSchema = () => {
+  // prepare strings schema path options
+  const options = {
+    type: String,
+    trim: true,
+    index: true,
+    searchable: true,
+    taggable: true,
+    exportable: true,
+    fake: f => f.commerce.productName(),
+  };
+
+  // obtain given strings schema paths
+  let givenPaths = without(
+    stringSchemaPaths(),
+    ...map(DEFAULT_STRING_PATHS, 'name')
+  );
+
+  // convert given paths to schema definition
+  givenPaths = map(givenPaths, givenPath => {
+    return mergeObjects(options, { name: givenPath });
+  });
+
+  // merge defaults with given string paths
+  const paths = [...DEFAULT_STRING_PATHS, ...givenPaths];
+
+  // build stings schema definition
+  const definition = {};
+  forEach(paths, path => {
+    const { name, ...optns } = path;
+    definition[path.name] = optns.localize ? localize(optns) : optns;
+  });
+
+  // create strings sub schema
+  const schema = createSubSchema(definition);
+
+  // return strings sub schema
+  return schema;
+};
+
+/**
+ * @function numbersDefaultValue
+ * @name numbersDefaultValue
+ * @description Expose number paths, default values.
+ * @param {object} [values] valid number paths, values.
+ * @returns {object} hash of number paths, default values.
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const values = numbersDefaultValue();
+ * // => { default: false, preset: false, ... };
+ *
+ */
+const numbersDefaultValue = values => {
+  // initialize defaults
+  let defaults = {};
+
+  // compute number defaults
+  forEach(DEFAULT_NUMBER_PATHS, path => {
+    defaults[path.name] = path.default();
+  });
+
+  // merge given
+  defaults = merge(defaults, copyInstance(values));
+
+  // return number paths, default values
+  return defaults;
+};
+
+/**
+ * @function numberSchemaPaths
+ * @name numberSchemaPaths
+ * @description Expose schema number paths
+ * @returns {Array} set of number paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = numberSchemaPaths();
+ * // => ['weight', ... ];
+ *
+ */
+const numberSchemaPaths = () =>
+  sortedUniq([
+    ...map(DEFAULT_NUMBER_PATHS, 'name'),
+    ...getStringSet('PREDEFINE_NUMBERS', []),
+  ]);
+
+/**
+ * @function createNumbersSchema
+ * @name createNumbersSchema
+ * @description Create predefine numbers schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const numbers = createNumbersSchema();
+ * // => { weight: { type: Number, ... }, ... }
+ *
+ */
+const createNumbersSchema = () => {
+  // obtain given numbers schema paths
+  const givenPaths = without(
+    numberSchemaPaths(),
+    ...map(DEFAULT_NUMBER_PATHS, 'name')
+  );
+
+  // merge defaults with given number paths
+  const paths = [...DEFAULT_NUMBER_PATHS, ...givenPaths];
+
+  // prepare numbers schema path options
+  const options = {
+    type: Number,
+    index: true,
+    exportable: true,
+    fake: f => f.random.number(),
+  };
+
+  // create numbers sub schema
+  const schema = createVarySubSchema(options, ...paths);
+
+  // return numbers sub schema
+  return schema;
+};
+
+/**
+ * @function booleanSchemaPaths
+ * @name booleanSchemaPaths
+ * @description Expose schema boolean paths
+ * @returns {Array} set of boolean paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = booleanSchemaPaths();
+ * // => ['default', 'preset', ... ];
+ *
+ */
+const booleanSchemaPaths = () =>
+  sortedUniq([
+    ...map(DEFAULT_BOOLEAN_PATHS, 'name'),
+    ...getStringSet('PREDEFINE_BOOLEANS', []),
+  ]);
+
+/**
+ * @function booleansDefaultValue
+ * @name booleansDefaultValue
+ * @description Expose boolean paths, default values.
+ * @param {object} [values] valid boolean paths, values.
+ * @returns {object} hash of boolean paths, default values.
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const values = booleansDefaultValue();
+ * // => { default: false, preset: false, ... };
+ *
+ */
+const booleansDefaultValue = values => {
+  // initialize defaults
+  let defaults = {};
+
+  // compute boolean defaults
+  forEach(DEFAULT_BOOLEAN_PATHS, path => {
+    defaults[path.name] = path.default();
+  });
+
+  // merge given
+  defaults = mergeObjects(defaults, copyInstance(values));
+
+  // return boolean paths, default values
+  return defaults;
+};
+
+/**
+ * @function createBooleansSchema
+ * @name createBooleansSchema
+ * @description Create predefine booleans schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const booleans = createBooleansSchema();
+ * // => { default: { type: Boolean, ... }, ... }
+ *
+ */
+const createBooleansSchema = () => {
+  // obtain given booleans schema paths
+  const givenPaths = without(
+    booleanSchemaPaths(),
+    ...map(DEFAULT_BOOLEAN_PATHS, 'name')
+  );
+
+  // merge defaults with given boolean paths
+  const paths = [...DEFAULT_BOOLEAN_PATHS, ...givenPaths];
+
+  // prepare booleans schema path options
+  const options = {
+    type: Boolean,
+    index: true,
+    exportable: true,
+    fake: f => f.random.boolean(),
+  };
+
+  // create booleans sub schema
+  const schema = createVarySubSchema(options, ...paths);
+
+  // return booleans sub schema
+  return schema;
+};
+
+/**
+ * @function createDatesSchema
+ * @name createDatesSchema
+ * @description Create predefine dates schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const dates = createDatesSchema();
+ * // => { startedAt: { type: Date, ... }, ... }
+ *
+ */
+const createDatesSchema = () => {
+  // obtain dates schema paths
+  const dates = sortedUniq([...getStringSet('PREDEFINE_DATES', [])]);
+
+  // prepare dates schema path options
+  const options = {
+    type: Date,
+    index: true,
+    exportable: true,
+    fake: f => f.date.recent(),
+  };
+
+  // create dates sub schema
+  const schema = createVarySubSchema(options, ...dates);
+
+  // return dates sub schema
+  return schema;
+};
+
+/**
+ * @function createGeosSchema
+ * @name createGeosSchema
+ * @description Create predefine geos schema
+ * @returns {object} valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const dates = createGeosSchema();
+ * // => { point: { type: Date, ... }, ... }
+ *
+ */
+const createGeosSchema = () => {
+  // prepare geos schema path options
+  const geos = {
+    point: Point,
+    line: LineString,
+    polygon: Polygon,
+    geometry: Geometry,
+    points: MultiPoint,
+    lines: MultiLineString,
+    polygons: MultiPolygon,
+    geometries: GeometryCollection,
+  };
+
+  // create geos sub schema
+  const schema = createSubSchema(geos);
+
+  // return geos sub schema
+  return schema;
+};
+
+/**
+ * @function listPermissions
+ * @name listPermissions
+ * @description Generate predefine permissions
+ * @param {...string} [ignored] valid ignored namespaces
+ * @returns {object[]} valid permissions
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const permissions = listPermissions();
+ * // => [{resource: 'Setting', wildcard: 'setting:create', action: ...}, ....];
+ *
+ */
+const listPermissions = (...ignored) => {
+  // collect allowed namespace resource
+  const resources = sortedUniq(without(NAMESPACES, ...ignored));
+
+  // generate resources permissions
+  const permissions = permissionsFor(...resources);
+
+  // return predefine permissions
+  return permissions;
+};
+
+/**
+ * @function listScopes
+ * @name listScopes
+ * @description Generate predefine scopes
+ * @param {...string} [ignored] valid ignored namespaces
+ * @returns {string[]} valid scopes
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const scopes = listScopes();
+ * // => ['setting:create', ....];
+ *
+ */
+const listScopes = (...ignored) => {
+  // collect allowed namespace resource
+  const resources = sortedUniq(without(NAMESPACES, ...ignored));
+
+  // generate resources scopes
+  const scopes = scopesFor(...resources);
+
+  // return predefine scopes
+  return scopes;
+};
+
+/**
+ * @function normalizeQueryFilter
+ * @name normalizeQueryFilter
+ * @description Normalize query filter
+ * @param {object} [optns={}] valid query filter
+ * @returns {object} normalized query filter
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const filter = normalizeQueryFilter(mquery);
+ * // => { ... };
+ *
+ */
+const normalizeQueryFilter = (optns = {}) => {
+  let options = mergeObjects(optns);
+  const isDefaultBucket = get(options, 'filter.bucket') === 'defaults';
+  if (isDefaultBucket) {
+    options = omit(options, 'filter.bucket');
+    const paginate = { limit: Number.MAX_SAFE_INTEGER };
+    const filter = { 'booleans.default': true };
+    options = mergeObjects(options, { filter, paginate });
+  }
+  return options;
+};
+
+/**
+ * @function mapToGeoJSONFeature
+ * @name mapToGeoJSONFeature
+ * @description Transform predefine to GeoJSON feature(s)
+ * @param {object} predefine valid predefine instance
+ * @returns {object} GeoJSON feature(s)
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const feature = mapToGeoJSONFeature(predefine);
+ * // => { type: 'Feature', geometry: ..., properties: ... };
+ *
+ */
+const mapToGeoJSONFeature = (predefine = {}) => {
+  // copy predefine
+  const {
+    _id,
+    namespace,
+    bucket,
+    strings,
+    numbers,
+    booleans,
+    dates,
+    geos,
+    relations,
+  } = copyInstance(predefine);
+
+  // prepare properties
+  const properties = {
+    namespace,
+    bucket,
+    strings,
+    numbers,
+    booleans,
+    dates,
+    relations,
+  };
+
+  // derive feature(s)
+  const type = 'Feature';
+  const features = map(geos, (geometry, path) => {
+    const id = `${path}:${_id}`;
+    return { _id, id, type, properties, geometry };
+  });
+
+  // return geojson features
+  return features;
+};
+
+/**
+ * @function mapToGeoJSONFeatureCollection
+ * @name mapToGeoJSONFeatureCollection
+ * @description Transform predefines to GeoJSON feature collection.
+ * @param {...object} predefines valid predefines instance
+ * @returns {object} GeoJSON feature collection
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const features = mapToGeoJSONFeatureCollection(predefine);
+ * // => { type: 'FeatureCollection', features: [ ... ], ... };
+ *
+ */
+const mapToGeoJSONFeatureCollection = (...predefines) => {
+  // map predefines to features
+  const features = flatMap([...predefines], mapToGeoJSONFeature);
+
+  // derive geojson feature collection
+  const type = 'FeatureCollection';
+  const collections = { type, features };
+
+  // return geojson feature collections
+  return collections;
+};
+
+/**
+ * @function mapToTopoJSON
+ * @name mapToTopoJSON
+ * @description Transform predefines to topojson.
+ * @param {...object} predefines valid predefines instance
+ * @returns {object} valid topojson
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @private
+ * @example
+ *
+ * const topojson = mapToTopoJSON(predefine);
+ * // => { type: 'Topology', objects: [ ... ], ... };
+ *
+ */
+const mapToTopoJSON = (...predefines) => {
+  // map predefines to feature collections
+  const collection = mapToGeoJSONFeatureCollection(...predefines);
+
+  // derive topojson
+  const topojson = topology({ collection });
+
+  // return topojson
+  return topojson;
 };
 
 /**
@@ -180,6 +939,7 @@ const createRelationsSchema = () => {
  * @name Predefine
  * @description A representation of stored and retrieved information
  * that does not qualify to belongs to their own domain model.
+ *
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.1.0
@@ -191,22 +951,14 @@ const createRelationsSchema = () => {
  *
  * const unit = {
  *  namespace: 'Unit',
- *  bucket: 'units',
- *  name: { en: 'Kilogram' },
- *  code: 'Kg',
- *  abbreviation: { en: 'Kg' }
+ *  strings: {
+ *    name: { en: 'Kilogram' },
+ *    code: 'Kg',
+ *    abbreviation: { en: 'Kg' }
+ *  }
  * };
  * Predefine.create(unit, (error, created) => { ... });
  *
- */
-
-/**
- * @name PredefineSchema
- * @type {Schema}
- * @author lally elias <lallyelias87@gmail.com>
- * @since 0.1.0
- * @version 0.1.0
- * @private
  */
 const PredefineSchema = createSchema(
   {
@@ -242,7 +994,7 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: !isTest,
+      hide: !isTest(),
       fake: true,
     },
 
@@ -280,313 +1032,107 @@ const PredefineSchema = createSchema(
       index: true,
       searchable: true,
       taggable: true,
-      hide: !isTest,
+      hide: !isTest(),
       fake: true,
     },
 
     /**
-     * @name name
-     * @alias value
-     * @description Human readable value of a predefine.
+     * @name strings
+     * @description A map of strings to allow storing vary string fields to
+     * a predefined.
      *
      * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} required - mark required
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow for searching
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
      *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * Kilogram, US Dollar
-     *
-     */
-    name: localize({
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      taggable: true,
-      exportable: true,
-      fake: f => f.commerce.productName(),
-    }),
-
-    /**
-     * @name code
-     * @description Human(and machine) readable, unique identifier of a
-     * prefined.
-     *
-     * It used in generation of physical tag or barcode when needed. It also
-     * used as variable name where applicable.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow searching
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * kg, usd
-     *
-     */
-    code: {
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      taggable: true,
-      exportable: true,
-      fake: f => f.finance.currencyCode(),
-    },
-
-    /**
-     * @name symbol
-     * @description A mark or sign that representing a prefined.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * £, $
-     *
-     */
-    symbol: {
-      type: String,
-      trim: true,
-      exportable: true,
-      fake: f => f.finance.currencySymbol(),
-    },
-
-    /**
-     * @name abbreviation
-     * @description Human readable short form of a predefine value.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow for searching
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {boolean} exportable - allow field to be exported
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * kg, usd
-     *
-     */
-    abbreviation: localize({
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      taggable: true,
-      exportable: true,
-      fake: f => _.toUpper(f.hacker.abbreviation()),
-    }),
-
-    /**
-     * @name description
-     * @description A brief summary about a predefine if available.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} searchable - allow for searching
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * Default date format
-     *
-     */
-    description: localize({
-      type: String,
-      trim: true,
-      index: true,
-      searchable: true,
-      exportable: true,
-      fake: f => f.lorem.sentence(),
-    }),
-
-    /**
-     * @name weight
-     * @description Weight of the predefine to help in ordering predefines of
-     * a given namespace.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} index - ensure database index
-     * @property {boolean} default - default value set when none provided
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 1.0.0
-     * @instance
-     * @example
-     * 0
-     *
-     */
-    weight: {
-      type: Number,
-      index: true,
-      default: 0,
-      exportable: true,
-      fake: f => f.random.number(),
-    },
-
-    /**
-     * @name default
-     * @description Tells whether a predefine is the default value of its
-     * bucket or namespace.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} index - ensure database index
-     * @property {boolean} default - default value set when none provided
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * false
-     *
-     */
-    default: {
-      type: Boolean,
-      index: true,
-      exportable: true,
-      default: false,
-      fake: true,
-    },
-
-    /**
-     * @name preset
-     * @description Tells whether a predefine is the part of preset value
-     * of its bucket or namespace.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} index - ensure database index
-     * @property {boolean} default - default value set when none provided
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * false
-     *
-     */
-    preset: {
-      type: Boolean,
-      index: true,
-      exportable: true,
-      default: false,
-      fake: true,
-    },
-
-    /**
-     * @name color
-     * @description A color in hexadecimal format used to differentiate
-     * predefined value visually from one other.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} uppercase - force upper-casing
-     * @property {boolean} default - default value set when none provided
-     * @property {object|boolean} fake - fake data generator options
-     *
-     * @author lally elias <lallyelias87@gmail.com>
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * #CCCCCC
-     *
-     */
-    color: {
-      type: String,
-      trim: true,
-      uppercase: true,
-      exportable: true,
-      default: () => randomColor(),
-      fake: true,
-    },
-
-    /**
-     * @name icon
-     * @description An icon in url or base64 format used to differentiate
-     * predefines visually.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} default - default value set when none provided
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * https://img.icons8.com/ios/50/000000/marker.png
-     *
-     */
-    icon: {
-      type: String,
-      trim: true,
-      fake: f => f.image.image(),
-    },
-
-    /**
-     * @name geometry
-     * @description A geo-geometry representation of a predefined.
-     *
-     * @type {object}
-     * @property {object} geomentry - geojson geometry
-     * @property {string} geometry.type - geojson geometry type
-     * @property {number[]} geometry.coordinates - coordinates pair(s) of a
-     * geometry
-     *
-     * @since 1.0.0
+     * @since 0.9.0
      * @version 0.1.0
      * @instance
      * @example
      * {
-     *    type: 'Point',
-     *    coordinates: [-76.80207859497996, 55.69469494228919]
+     *   "code": "12TRTE"
+     *   "symbol": "$",
+     *   "color": "#CCCCCC"
      * }
      *
      */
-    geometry: Geometry,
+    strings: createStringsSchema(),
+
+    /**
+     * @name numbers
+     * @description A map of numbers to allow storing vary number fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "weight": 1
+     *   "steps": 1
+     * }
+     *
+     */
+    numbers: createNumbersSchema(),
+
+    /**
+     * @name booleans
+     * @description A map of booleans to allow storing vary boolean fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "default": true
+     *   "preset": true
+     * }
+     *
+     */
+    booleans: createBooleansSchema(),
+
+    /**
+     * @name dates
+     * @description A map of dates to allow storing vary date fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "startedAt": "2018-09-17T00:23:38.000Z"
+     *   "endedAt": "2019-09-17T09:23:38.046Z"
+     * }
+     *
+     */
+    dates: createDatesSchema(),
+
+    /**
+     * @name geos
+     * @description A map of geometries to allow storing vary geo fields to
+     * a predefined.
+     *
+     * @type {object}
+     *
+     * @since 0.9.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *  point: {
+     *   type: 'Point',
+     *   coordinates: [-76.80207859497996, 55.69469494228919]
+     *  }
+     * }
+     *
+     */
+    geos: createGeosSchema(),
 
     /**
      * @name relations
@@ -594,10 +1140,6 @@ const PredefineSchema = createSchema(
      * reprents 1-to-1 relationship of other domain models with a predefine.
      *
      * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} index - ensure database index
-     * @property {boolean} aggregatable - allow field use for aggregation
-     * @property {boolean} taggable - allow field use for tagging
      *
      * @since 0.4.0
      * @version 0.1.0
@@ -610,35 +1152,6 @@ const PredefineSchema = createSchema(
      *
      */
     relations: createRelationsSchema(),
-
-    /**
-     * @name properties
-     * @description A map of key value pairs to allow to associate
-     * other meaningful information to a predefined.
-     *
-     * @type {object}
-     * @property {object} type - schema(data) type
-     * @property {boolean} trim - force trimming
-     * @property {boolean} index - ensure database index
-     * @property {boolean} taggable - allow field use for tagging
-     * @property {object} fake - fake data generator options
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     * @instance
-     * @example
-     * {
-     *   "section": "Billing"
-     * }
-     *
-     */
-    properties: {
-      type: Map,
-      of: String,
-      index: true,
-      taggable: true,
-      fake: f => f.helpers.createTransaction(),
-    },
   },
   SCHEMA_OPTIONS,
   actions,
@@ -673,7 +1186,8 @@ PredefineSchema.index(uniqueIndexes(), { unique: true });
  * @name validate
  * @function validate
  * @description predefine schema pre validation hook
- * @param {function} done callback to invoke on success or error
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} valid instance or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -681,7 +1195,7 @@ PredefineSchema.index(uniqueIndexes(), { unique: true });
  * @private
  */
 PredefineSchema.pre('validate', function onPreValidate(done) {
-  this.preValidate(done);
+  return this.preValidate(done);
 });
 
 /*
@@ -694,7 +1208,8 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @name preValidate
  * @function preValidate
  * @description predefine schema pre validation hook logic
- * @param {function} done callback to invoke on success or error
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} valid instance or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -702,36 +1217,41 @@ PredefineSchema.pre('validate', function onPreValidate(done) {
  * @instance
  */
 PredefineSchema.methods.preValidate = function preValidate(done) {
+  // ensure strings, values
+  this.strings = stringsDefaultValue(this.strings);
+
+  // ensure numbers, values
+  this.numbers = numbersDefaultValue(this.numbers);
+
+  // ensure booleans, values
+  this.booleans = booleansDefaultValue(this.booleans);
+
   // ensure name  for all locales
-  this.name = localizedValuesFor(this.name);
+  this.strings.name = localizedValuesFor(this.strings.name);
 
   // ensure description for all locales
-  this.description = mergeObjects(
-    localizedValuesFor(this.name),
-    localizedValuesFor(this.description)
+  this.strings.description = mergeObjects(
+    localizedValuesFor(this.strings.name),
+    localizedValuesFor(this.strings.description)
   );
 
   // ensure abbreviation for all locales
-  this.abbreviation = mergeObjects(
-    localizedAbbreviationsFor(this.name),
-    localizedValuesFor(this.abbreviation)
+  this.strings.abbreviation = mergeObjects(
+    localizedAbbreviationsFor(this.strings.name),
+    localizedValuesFor(this.strings.abbreviation)
   );
 
   // ensure correct namespace and bucket
-  // TODO refactor to util.ensureBucketAndNamaspace
   const bucketOrNamespace = this.bucket || this.namespace;
-  const bucketAndNamespace = mergeObjects(
-    isTest ? {} : { bucket: DEFAULT_BUCKET, namespace: DEFAULT_NAMESPACE },
-    _.find(NAMESPACE_MAP, { namespace: bucketOrNamespace }),
-    _.find(NAMESPACE_MAP, { bucket: bucketOrNamespace })
-  );
+  const bucketAndNamespace = ensureBucketAndNamespace(bucketOrNamespace);
   this.set(bucketAndNamespace);
 
   // ensure code
-  this.code = _.trim(this.code) || this.abbreviation[DEFAULT_LOCALE];
+  this.strings.code =
+    trim(this.strings.code) || this.strings.abbreviation[DEFAULT_LOCALE];
 
   // continue
-  done();
+  return done(null, this);
 };
 
 /*
@@ -754,8 +1274,8 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @name prepareSeedCriteria
  * @function prepareSeedCriteria
  * @description define seed data criteria
- * @param {Object} seed predefined to be seeded
- * @returns {Object} packed criteria for seeding
+ * @param {object} seed predefined to be seeded
+ * @returns {object} packed criteria for seeding
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.2.0
@@ -763,14 +1283,14 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = seed => {
-  const names = localizedKeysFor('name');
+  const names = localizedKeysFor('strings.name');
 
   const copyOfSeed = seed;
-  copyOfSeed.name = localizedValuesFor(seed.name);
+  copyOfSeed.name = localizedValuesFor(seed.strings.name);
 
-  const criteria = _.get(copyOfSeed, '_id')
-    ? _.pick(copyOfSeed, '_id')
-    : _.pick(copyOfSeed, 'namespace', 'bucket', 'code', ...names);
+  const criteria = idOf(copyOfSeed)
+    ? pick(copyOfSeed, '_id')
+    : flat(pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names));
   return criteria;
 };
 
@@ -778,9 +1298,9 @@ PredefineSchema.statics.prepareSeedCriteria = seed => {
  * @name getOneOrDefault
  * @function getOneOrDefault
  * @description Find existing predefine or default based on given criteria
- * @param {Object} criteria valid query criteria
+ * @param {object} criteria valid query criteria
  * @param {Function} done callback to invoke on success or error
- * @returns {Object|Error} found model or error
+ * @returns {object|Error} found model or error
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.6.0
@@ -796,11 +1316,15 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   // normalize criteria
   const { _id, namespace, bucket, ...filters } = mergeObjects(criteria);
 
-  const allowDefault = !_.isEmpty(namespace || bucket);
-  const allowId = !_.isEmpty(_id);
-  const allowFilters = !_.isEmpty(filters);
+  const allowDefault = !isEmpty(namespace || bucket);
+  const allowId = !isEmpty(_id);
+  const allowFilters = !isEmpty(filters);
 
-  const byDefault = mergeObjects({ namespace, bucket, default: true });
+  const byDefault = mergeObjects({
+    namespace,
+    bucket,
+    'booleans.default': true,
+  });
   const byId = mergeObjects({ _id });
   const byFilters = mergeObjects({ namespace, bucket }, filters);
 
@@ -820,68 +1344,350 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
     .exec(done);
 };
 
+/**
+ * @name getByExtension
+ * @function getByExtension
+ * @description Find existing predefines and convert them to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} found predefines or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { filter: {...}, params: {ext: 'geojson'}, ...};
+ * Predefine.getByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.getByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = normalizeQueryFilter(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // fetch data
+  const get = next => Predefine.get(options, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // collect data
+    const data = compact([].concat(result.data));
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(...data);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(...data);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([get, transform], done);
+};
+
+/**
+ * @name postByExtension
+ * @function postByExtension
+ * @description Create predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} created predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { body: { ... }, params: {ext: 'geojson'}, ...};
+ * Predefine.postByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.postByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { body, params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // post data
+  const post = next => Predefine.post(body, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([post, transform], done);
+};
+
+/**
+ * @name getByIdByExtension
+ * @function getByIdByExtension
+ * @description Find existing predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} found predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.getByIdByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.getByIdByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // fetch data by id
+  const getById = next => Predefine.getById(options, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([getById, transform], done);
+};
+
+/**
+ * @name patchByExtension
+ * @function patchByExtension
+ * @description Patch existing predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} updated predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.patchByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.patchByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
+
+  // patch data
+  const patch = next => Predefine.patch(_id, body, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([patch, transform], done);
+};
+
+/**
+ * @name putByExtension
+ * @function putByExtension
+ * @description Put existing predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} updated predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.putByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.putByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
+
+  // put data
+  const put = next => Predefine.put(_id, body, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([put, transform], done);
+};
+
+/**
+ * @name deleteByExtension
+ * @function deleteByExtension
+ * @description Delete existing predefine and convert it to required format
+ * @param {object} [optns={}] valid options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} deleted predefine or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const optns = { _id: ..., params: {ext: 'geojson'}, ...};
+ * Predefine.deleteByExtension(optns, (error, results) => { ... });
+ *
+ */
+PredefineSchema.statics.deleteByExtension = (optns, done) => {
+  // ref
+  const Predefine = model(MODEL_NAME);
+
+  // normalize options
+  const options = mergeObjects(optns);
+  const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
+
+  // delete existing data
+  const del = next => Predefine.del(options, next);
+
+  // transform by extension
+  const transform = (result, next) => {
+    // reply with geojson
+    if (ext === CONTENT_TYPE_GEOJSON) {
+      const collection = mapToGeoJSONFeatureCollection(result);
+      return next(null, collection);
+    }
+    // reply with topojson
+    if (ext === CONTENT_TYPE_TOPOJSON) {
+      const topology = mapToTopoJSON(result);
+      return next(null, topology);
+    }
+    // always return json
+    return next(null, result);
+  };
+
+  // return
+  return waterfall([del, transform], done);
+};
+
 /* export predefine model */
 var Predefine = model(MODEL_NAME, PredefineSchema);
 
+/* constants */
+const API_VERSION = getString('API_VERSION', '1.0.0');
+const PATH_SINGLE = `/${COLLECTION_NAME}/:bucket/:id.:ext?`;
+const PATH_LIST = `/${COLLECTION_NAME}/:bucket.:ext?`;
+const PATH_EXPORT = `/${COLLECTION_NAME}/:bucket/export.:ext?`;
+const PATH_SCHEMA = `/${COLLECTION_NAME}/:bucket/schema.:ext?`;
+
 /**
- * @apiDefine Predefine Predefine
+ * @name PredefineHttpRouter
+ * @namespace PredefineHttpRouter
  *
- * @apiDescription A representation of stored and retrieved information
+ * @description A representation of stored and retrieved information
  * that does not qualify to belongs to their own domain model.
+ *
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since  0.1.0
- * @version 0.1.0
+ * @version 1.0.0
  * @public
  */
-
-/* constants */
-const API_VERSION = getString('API_VERSION', '1.0.0');
-const PATH_SINGLE = '/predefines/:bucket/:id';
-const PATH_LIST = '/predefines/:bucket';
-const PATH_EXPORT = '/predefines/:bucket/export';
-const PATH_SCHEMA = '/predefines/:bucket/schema/';
-
-/* declarations */
 const router = new Router({
   version: API_VERSION,
 });
 
 /**
- * @api {get} /predefines List Predefines
- * @apiVersion 1.0.0
- * @apiName GetPredefines
- * @apiGroup Predefine
- * @apiDescription Returns a list of predefines
- * @apiUse RequestHeaders
- * @apiUse Predefines
- *
- * @apiUse RequestHeadersExample
- * @apiUse PredefinesSuccessResponse
- * @apiUse JWTError
- * @apiUse JWTErrorExample
- * @apiUse AuthorizationHeaderError
- * @apiUse AuthorizationHeaderErrorExample
+ * @name GetPredefines
+ * @memberof PredefineHttpRouter
+ * @description Returns a list of predefines
  */
 router.get(
   PATH_LIST,
   getFor({
-    get: (options, done) => Predefine.get(options, done),
+    get: (optns, done) => Predefine.getByExtension(optns, done),
   })
 );
 
 /**
- * @api {get} /predefines/schema Get Predefine Schema
- * @apiVersion 1.0.0
- * @apiName GetPredefineSchema
- * @apiGroup Predefine
- * @apiDescription Returns predefine json schema definition
- * @apiUse RequestHeaders
+ * @name GetPredefineSchema
+ * @memberof PredefineHttpRouter
+ * @description Returns predefine json schema definition
  */
 router.get(
   PATH_SCHEMA,
   schemaFor({
-    getSchema: (query, done) => {
+    getSchema: (optns, done) => {
       const jsonSchema = Predefine.jsonSchema();
       return done(null, jsonSchema);
     },
@@ -889,18 +1695,16 @@ router.get(
 );
 
 /**
- * @api {get} /predefines/export Export Predefines
- * @apiVersion 1.0.0
- * @apiName ExportPredefines
- * @apiGroup Predefine
- * @apiDescription Export predefines as csv
- * @apiUse RequestHeaders
+ * @name ExportPredefines
+ * @memberof PredefineHttpRouter
+ * @description Export predefines as csv
  */
 router.get(
   PATH_EXPORT,
   downloadFor({
-    download: (options, done) => {
-      const { bucket } = options.filter;
+    download: (optns, done) => {
+      const options = normalizeQueryFilter(optns);
+      const { bucket = 'defaults' } = options.filter;
       const fileName = `${bucket}_exports_${Date.now()}.csv`;
       const readStream = Predefine.exportCsv(options);
       return done(null, { fileName, readStream });
@@ -909,20 +1713,9 @@ router.get(
 );
 
 /**
- * @api {post} /predefines Create New Predefine
- * @apiVersion 1.0.0
- * @apiName PostPredefine
- * @apiGroup Predefine
- * @apiDescription Create new predefine
- * @apiUse RequestHeaders
- * @apiUse Predefine
- *
- * @apiUse RequestHeadersExample
- * @apiUse PredefineSuccessResponse
- * @apiUse JWTError
- * @apiUse JWTErrorExample
- * @apiUse AuthorizationHeaderError
- * @apiUse AuthorizationHeaderErrorExample
+ * @name PostPredefine
+ * @memberof PredefineHttpRouter
+ * @description Create new predefine
  */
 router.post(
   PATH_LIST,
@@ -932,93 +1725,58 @@ router.post(
 );
 
 /**
- * @api {get} /predefines/:id Get Existing Predefine
- * @apiVersion 1.0.0
- * @apiName GetPredefine
- * @apiGroup Predefine
- * @apiDescription Get existing predefine
- * @apiUse RequestHeaders
- * @apiUse Predefine
- *
- * @apiUse RequestHeadersExample
- * @apiUse PredefineSuccessResponse
- * @apiUse JWTErrorExample
- * @apiUse AuthorizationHeaderError
- * @apiUse AuthorizationHeaderErrorExample
+ * @name GetPredefine
+ * @memberof PredefineHttpRouter
+ * @description Get existing predefine
  */
 router.get(
   PATH_SINGLE,
   getByIdFor({
-    getById: (options, done) => Predefine.getById(options, done),
+    getById: (optns, done) => Predefine.getByIdByExtension(optns, done),
   })
 );
 
 /**
- * @api {patch} /predefines/:id Patch Existing Predefine
- * @apiVersion 1.0.0
- * @apiName PatchPredefine
- * @apiGroup Predefine
- * @apiDescription Patch existing predefine
- * @apiUse RequestHeaders
- * @apiUse Predefine
- *
- * @apiUse RequestHeadersExample
- * @apiUse PredefineSuccessResponse
- * @apiUse JWTError
- * @apiUse JWTErrorExample
- * @apiUse AuthorizationHeaderError
- * @apiUse AuthorizationHeaderErrorExample
+ * @name PatchPredefine
+ * @memberof PredefineHttpRouter
+ * @description Patch existing predefine
  */
 router.patch(
   PATH_SINGLE,
   patchFor({
-    patch: (options, done) => Predefine.patch(options, done),
+    patch: (optns, done) => {
+      // TODO: fix in next updates
+      const { params, _id, ...body } = mergeObjects(optns);
+      return Predefine.patchByExtension({ params, _id, body }, done);
+    },
   })
 );
 
 /**
- * @api {put} /predefines/:id Put Existing Predefine
- * @apiVersion 1.0.0
- * @apiName PutPredefine
- * @apiGroup Predefine
- * @apiDescription Put existing predefine
- * @apiUse RequestHeaders
- * @apiUse Predefine
- *
- * @apiUse RequestHeadersExample
- * @apiUse PredefineSuccessResponse
- * @apiUse JWTError
- * @apiUse JWTErrorExample
- * @apiUse AuthorizationHeaderError
- * @apiUse AuthorizationHeaderErrorExample
+ * @name PutPredefine
+ * @memberof PredefineHttpRouter
+ * @description Put existing predefine
  */
 router.put(
   PATH_SINGLE,
   putFor({
-    put: (options, done) => Predefine.put(options, done),
+    put: (optns, done) => {
+      // TODO: fix in next updates
+      const { params, _id, ...body } = mergeObjects(optns);
+      Predefine.putByExtension({ params, _id, body }, done);
+    },
   })
 );
 
 /**
- * @api {delete} /predefines/:id Delete Existing Predefine
- * @apiVersion 1.0.0
- * @apiName DeletePredefine
- * @apiGroup Predefine
- * @apiDescription Delete existing predefine
- * @apiUse RequestHeaders
- * @apiUse Predefine
- *
- * @apiUse RequestHeadersExample
- * @apiUse PredefineSuccessResponse
- * @apiUse JWTError
- * @apiUse JWTErrorExample
- * @apiUse AuthorizationHeaderError
- * @apiUse AuthorizationHeaderErrorExample
+ * @name DeletePredefine
+ * @memberof PredefineHttpRouter
+ * @description Delete existing predefine
  */
 router.delete(
   PATH_SINGLE,
   deleteFor({
-    del: (options, done) => Predefine.del(options, done),
+    del: (optns, done) => Predefine.deleteByExtension(optns, done),
     soft: true,
   })
 );
@@ -1030,20 +1788,20 @@ router.delete(
  * that does not qualify to belongs to their own domain model.
  *
  * @author lally elias <lallyelias87@gmail.com>
- * @licence MIT
  * @since  0.1.0
- * @version 0.2.0
+ * @version 0.1.0
+ * @license MIT
  * @example
  *
- * const { app } = require('@lykmapipo/predefine');
- * app.start();
+ * const { Predefine, start } = require('@lykmapipo/predefine');
+ * start(error => { ... });
  *
  */
 
 /**
  * @name info
  * @description package information
- * @type {Object}
+ * @type {object}
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 1.0.0
@@ -1065,7 +1823,7 @@ const info = pkg(
 /**
  * @name apiVersion
  * @description http router api version
- * @type {String}
+ * @type {string}
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
@@ -1073,4 +1831,4 @@ const info = pkg(
  */
 const apiVersion = apiVersion$1();
 
-export { Predefine, apiVersion, info, router as predefineRouter };
+export { Predefine, apiVersion, info, listPermissions, listScopes, router as predefineRouter };

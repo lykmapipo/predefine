@@ -1,3 +1,110 @@
+#### 1.0.0 (2019-10-03)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([20a6a81d](https://github.com/lykmapipo/predefine/commit/20a6a81db5e67c9cbf6e520950554cc5335167d0))
+  *  force latest version & audit fix ([c87e98eb](https://github.com/lykmapipo/predefine/commit/c87e98ebb884a331e958d51b2b45878e945d4644))
+  *  force latest version & audit fix ([50e5b8b7](https://github.com/lykmapipo/predefine/commit/50e5b8b7641cba8d78c500835846b7eb9c846187))
+  *  force latest version & audit fix ([ffd2b916](https://github.com/lykmapipo/predefine/commit/ffd2b916ff419421732f04149c7d3f0e5ebf285d))
+  *  force latest version & audit fix ([a142fb47](https://github.com/lykmapipo/predefine/commit/a142fb478a58aa6f26ef8090c9e14db6c6914615))
+  *  force latest version & audit fix ([8da6b0c3](https://github.com/lykmapipo/predefine/commit/8da6b0c3cf05dd867336255f4beb0fbf31b8a85f))
+  *  force latest version & audit fix ([cab79721](https://github.com/lykmapipo/predefine/commit/cab79721dcaf127eddea39beac26e190d3810659))
+  *  force latest version & audit fix ([5048845e](https://github.com/lykmapipo/predefine/commit/5048845ee159ae7150c520734e656708a5e57ee6))
+  *  force latest version & audit fix ([794f4635](https://github.com/lykmapipo/predefine/commit/794f4635b37968d24fea03b3b5e3b86d292f72c9))
+  *  force latest version & audit fix ([27e18c58](https://github.com/lykmapipo/predefine/commit/27e18c58ec27e50199b8d76ff728b59d2b2f746c))
+  *  force latest version & audit fix ([a973fb9c](https://github.com/lykmapipo/predefine/commit/a973fb9c55b6325e65b7eb9df67c3046c769379a))
+  *  remove unused ([6a5d0825](https://github.com/lykmapipo/predefine/commit/6a5d0825aba185edd8d60228449bab1798ef6d98))
+  *  force latest version & audit fix ([ff317a3f](https://github.com/lykmapipo/predefine/commit/ff317a3fa7aa08c9d27172096cd30e94c179a632))
+* **examples:**
+  *  ensure indexes before seeding ([529f277e](https://github.com/lykmapipo/predefine/commit/529f277ec9f1162f35248a0103faee97b7204cde))
+  *  use babel node to run sample app ([fdbf62ef](https://github.com/lykmapipo/predefine/commit/fdbf62efdd444185b2447842c616864722eca0be))
+  *  use babel node to run seed ([07bc00dc](https://github.com/lykmapipo/predefine/commit/07bc00dcb9ad7ff5a72aa095a0be40f19b06a8b4))
+* **configs:**
+  *  update eslint configs ([563a6ef4](https://github.com/lykmapipo/predefine/commit/563a6ef44a211e5ac3be9c322dc90d90e21cd804))
+  *  update prettier configs ([b6eb5243](https://github.com/lykmapipo/predefine/commit/b6eb5243eade5f876e1dc6abae1288fe035af71b))
+  *  update npm files ([27cd26b5](https://github.com/lykmapipo/predefine/commit/27cd26b55413b6c8e0c0d8556206059c4cf62acb))
+  *  update git files ([90f0f4fa](https://github.com/lykmapipo/predefine/commit/90f0f4fa35d8cd380660750bc22bcecc276b2b38))
+* **ci:**  update travis configs ([37006545](https://github.com/lykmapipo/predefine/commit/370065457bb9a91caaa8f4107ebfcb192fa63293))
+
+##### Documentation Changes
+
+*  improve usage & environment variables ([5915e720](https://github.com/lykmapipo/predefine/commit/5915e720588b0053a2e9e72fa90fcf4047f61260))
+*  update requirements ([fd2d8274](https://github.com/lykmapipo/predefine/commit/fd2d827418848ec44967d0ff3fd4085bb6a56dee))
+*  update status badges ([90031717](https://github.com/lykmapipo/predefine/commit/90031717f89a27f711716277c449f45cd8357f8c))
+
+##### New Features
+
+* **router:**  support content nogotiation by extension ([6400035f](https://github.com/lykmapipo/predefine/commit/6400035f793b1a0b9ed33283450b835cbf221965))
+* **model:**
+  *  implement patch & put and result by extension ([74850ba2](https://github.com/lykmapipo/predefine/commit/74850ba29f86b0f7b1fae02fa23e77e5615ca27a))
+  *  implement delete and result by extension ([cffe38b0](https://github.com/lykmapipo/predefine/commit/cffe38b0f2f0ea9caefb5f16c911bab4d5bba348))
+  *  implement post and result by extension ([b1cbb2c1](https://github.com/lykmapipo/predefine/commit/b1cbb2c17c042e6c2c8a9686b9f43e21cd52e5b1))
+  *  impliment get result by extension ([3a4416e5](https://github.com/lykmapipo/predefine/commit/3a4416e5b8259dc3da72eba5ebd7248fab5dbfc3))
+  *  ensure numbes paths default value ([87fbe52f](https://github.com/lykmapipo/predefine/commit/87fbe52f9587f57482352b81c0a341025b2f6fb8))
+  *  ensure booleans paths value ([375f8810](https://github.com/lykmapipo/predefine/commit/375f8810d710943c38b928c6290838e33cfbe6df))
+  *  add booleans schema path ([43274b08](https://github.com/lykmapipo/predefine/commit/43274b0845d4bbe67c6bc93b99f361e86406d2a9))
+  *  add numbers schema path ([903a39ef](https://github.com/lykmapipo/predefine/commit/903a39efafa5b1074ed0dd4c8982b2110735a272))
+  *  add geos schema path ([fcbaac8b](https://github.com/lykmapipo/predefine/commit/fcbaac8b630e4171c0e8ccdac8f14d4d76c22b55))
+  *  add dates schema path ([59d25055](https://github.com/lykmapipo/predefine/commit/59d25055b3a71397f7acc449c61879247beedf0a))
+* **utils:**
+  *  add map to topojson helper ([0db61b30](https://github.com/lykmapipo/predefine/commit/0db61b304c6fc5e38ef72ef88b6ffebf94842dba))
+  *  add map to geojson collection helper ([2175c932](https://github.com/lykmapipo/predefine/commit/2175c9325c0c4ab278f23c7373c8387796dbd3fb))
+  *  add map to geojson helper ([8e0c92dc](https://github.com/lykmapipo/predefine/commit/8e0c92dc2679ce77773265160cffd439c0054bc9))
+  *  add default number paths ([e36b016a](https://github.com/lykmapipo/predefine/commit/e36b016ace005f0e95e28a9ce79813478ef87e71))
+  *  expose geo paths ([77fcbdb2](https://github.com/lykmapipo/predefine/commit/77fcbdb224758720176221467686bc1ea7a61a85))
+  *  add content types ([b3248b8d](https://github.com/lykmapipo/predefine/commit/b3248b8d5656bafc14941b35f3206f4886277ed7))
+*  expose defaults as bucket ([b2dde188](https://github.com/lykmapipo/predefine/commit/b2dde1881c21c865b885541661832e283a48391e))
+*  ignore namespaces from relations ([8a97fef1](https://github.com/lykmapipo/predefine/commit/8a97fef1e2211df3bdb91f2d3b2e3a9bedb03912))
+*  expose permissions & scopes ([0f52ac6b](https://github.com/lykmapipo/predefine/commit/0f52ac6bce216d3f2cacb503bf71c9cfa5585f07))
+*  add strings schema paths ([d943b200](https://github.com/lykmapipo/predefine/commit/d943b200c62645b727c60a38a7fdb09ea79c1644))
+*  add strings sub schema create helper ([67a60dbd](https://github.com/lykmapipo/predefine/commit/67a60dbde157c05268b1e71a764f22beb2435d1b))
+*  add booleans sub schema create helper ([7f906dd3](https://github.com/lykmapipo/predefine/commit/7f906dd34468b70c4eba4bb832074e7d442e02f1))
+*  add number sub schema create helper ([1145927f](https://github.com/lykmapipo/predefine/commit/1145927f90c44299b91589d542072583aed0fda4))
+*  add geos sub schema create helper ([97d2678b](https://github.com/lykmapipo/predefine/commit/97d2678b67668ce5043e97c387f173ba2f783517))
+*  add dates sub schema create helper ([618de96e](https://github.com/lykmapipo/predefine/commit/618de96ee6065416ea1960369c45c71b5c9cdbac))
+* **http:**  add support for path extensions ([3302aa26](https://github.com/lykmapipo/predefine/commit/3302aa260bddafdee18c6a673757c7b6e6283311))
+
+##### Bug Fixes
+
+* **router:**  allow max export on defaults bucket ([2a693cd0](https://github.com/lykmapipo/predefine/commit/2a693cd0b42a111a3faad58aad08f3501b0e6043))
+
+##### Refactors
+
+* **model:**
+  *  improve autopopulated paths ([1e63b0fc](https://github.com/lykmapipo/predefine/commit/1e63b0fc1bd43ccfd9aa45101809afba83706713))
+  *  add ensure bucket and namespace helper ([6823f5bd](https://github.com/lykmapipo/predefine/commit/6823f5bd37684f94fbd8cbd5c9a92dd1a6627e22))
+  *  improve data structure ([616fde09](https://github.com/lykmapipo/predefine/commit/616fde09bbeec72ab6a17ba7fbb7d08c40c57b4b))
+  *  improve prepareSeed criteria to support subdocs ([5414c4fa](https://github.com/lykmapipo/predefine/commit/5414c4fa7f9973a9a7fea3567ae1aa4f37991d3b))
+  *  add paths code, symbol, color & icon to strings ([5cbc7073](https://github.com/lykmapipo/predefine/commit/5cbc7073803b66882f2cf468a6b0f812cbc612ca))
+  *  merge weight path into numbers ([ab934fc8](https://github.com/lykmapipo/predefine/commit/ab934fc8db594db10f1ad3c3c9319fce2b2bd89e))
+  *  merge preset & default fields to booleans ([1b6f91b3](https://github.com/lykmapipo/predefine/commit/1b6f91b3ae122375bc20389e8b3528e58aa9f80a))
+  *  remove default value on numbers & booleans ([db2f55b8](https://github.com/lykmapipo/predefine/commit/db2f55b8007b99ab66a2fd462707c79a390b355a))
+  *  drop geomentry path ([890dc53a](https://github.com/lykmapipo/predefine/commit/890dc53ab0eb4dcf8edbfbc217f075f3c6976e01))
+  *  drop properties path ([70133a6a](https://github.com/lykmapipo/predefine/commit/70133a6aca832771045c86f89b44f944d13886b3))
+*  use lodash named imports ([ebf52b56](https://github.com/lykmapipo/predefine/commit/ebf52b568686a5e672edb2d4472b320d3170b6d6))
+*  improve docs & fix lint errors ([4a6c5bd6](https://github.com/lykmapipo/predefine/commit/4a6c5bd6b7fda2aa8531f40c6cc8a5d2ebb95d62))
+*  extract apidoc and use jsdoc for router docs ([96298365](https://github.com/lykmapipo/predefine/commit/962983657aa570683fe3b0928935b416cbcab535))
+*  add apidoc ([ff8ad716](https://github.com/lykmapipo/predefine/commit/ff8ad71627c5011a7fba239149d5d649166e2a10))
+* **utils:**  add helpers to get booleans and geo schema paths ([8b328815](https://github.com/lykmapipo/predefine/commit/8b3288155658a11e6418590ac01e94b4a99096ae))
+
+##### Code Style Changes
+
+* **model:**
+  *  remove default and preset jsdocs ([1ad0df19](https://github.com/lykmapipo/predefine/commit/1ad0df19156b3e3acce88b0de008289e29ae038e))
+  *  imprve jsdocs ([0e7920e5](https://github.com/lykmapipo/predefine/commit/0e7920e534a2cc4a36db0fdecfb32d11b372a496))
+* **utils:**  improve jdocs ([b8e2a188](https://github.com/lykmapipo/predefine/commit/b8e2a18873a7851a6054bf11d25dde74c41923ef))
+* **test:**  fix test cases typos ([292bae0c](https://github.com/lykmapipo/predefine/commit/292bae0c352b8d3243b0c16e19326e9a1eea9cb2))
+
+##### Tests
+
+*  improve export assertions ([e6328649](https://github.com/lykmapipo/predefine/commit/e6328649241251601d2dcf7de158a69a9165de40))
+*  add export test cases ([d2014008](https://github.com/lykmapipo/predefine/commit/d20140089d6e931974045ce06f7008cec38674ed))
+*  improve getOneOrDefault test case ([2573a7c1](https://github.com/lykmapipo/predefine/commit/2573a7c1a9ace0bd3c6585e866e6b98d1f4e15f1))
+*  improve schema assertions ([bb2b9d26](https://github.com/lykmapipo/predefine/commit/bb2b9d26b59fbed587f26d3f09db7155af04c5ac))
+*  drop /index from imports ([a5fd67da](https://github.com/lykmapipo/predefine/commit/a5fd67da603931b3b9a9a566ba9a212d38632115))
+* **utils:**  re-order test cases ([a2f5eb82](https://github.com/lykmapipo/predefine/commit/a2f5eb8271cb4e62c41f7410c421f2f0436dc867))
+
 #### 0.8.1 (2019-09-16)
 
 ##### Chores
