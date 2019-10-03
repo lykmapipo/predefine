@@ -79,11 +79,11 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jsdoc": "^15.9.5",
+    "eslint-plugin-jsdoc": "^15.9.8",
     "eslint-plugin-mocha": "^6.1.1",
     "eslint-plugin-prettier": "^3.1.1",
     "generate-changelog": "^1.8.0",
-    "handlebars": "^4.4.0",
+    "handlebars": "^4.4.2",
     "husky": "^3.0.8",
     "lint-staged": "^9.4.1",
     "lodash.template": "^4.5.0",
@@ -110,7 +110,8 @@
     "lodash": ">=4.17.15",
     "mongoose-geojson-schemas": ">=0.10.12",
     "mongoose-locale-schema": ">=0.4.3",
-    "mongoose-rest-actions": ">=0.29.2"
+    "mongoose-rest-actions": ">=0.29.2",
+    "topojson-server": ">=3.0.1"
   },
   "engines": {
     "node": ">=12.4.0",
