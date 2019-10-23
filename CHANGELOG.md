@@ -1,3 +1,13 @@
+#### 1.0.3 (2019-10-23)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([596df8e7](https://github.com/lykmapipo/predefine/commit/596df8e7461aede9afed5b8d5f2ca58e2096d73e))
+
+##### Tests
+
+* **integration:**  fix assertions ([fcfafedb](https://github.com/lykmapipo/predefine/commit/fcfafedbfdeb4db66455ec3e784c6e455816c83c))
+
 #### 1.0.2 (2019-10-16)
 
 ##### Chores
