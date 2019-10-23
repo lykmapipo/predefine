@@ -11,7 +11,7 @@ describe('Predefine Static Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.code).to.eql(predefine.code);
+      expect(created.strings.code).to.eql(predefine.strings.code);
       done(error, created);
     });
   });
@@ -29,7 +29,7 @@ describe('Predefine Instance Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.code).to.eql(predefine.code);
+      expect(created.strings.code).to.eql(predefine.strings.code);
       done(error, created);
     });
   });
@@ -52,9 +52,9 @@ describe('Predefine Relations Static Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.code).to.eql(predefine.code);
+      expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.parent).to.exist;
-      expect(created.relations.parent).to.eql(parent);
+      expect(created.relations.parent).to.eql(parent._id);
       done(error, created);
     });
   });
@@ -65,9 +65,9 @@ describe('Predefine Relations Static Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.code).to.eql(predefine.code);
+      expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.status).to.exist;
-      expect(created.relations.status).to.eql(status);
+      expect(created.relations.status).to.eql(status._id);
       done(error, created);
     });
   });
@@ -90,9 +90,9 @@ describe('Predefine Relations Instance Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.code).to.eql(predefine.code);
+      expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.parent).to.exist;
-      expect(created.relations.parent).to.eql(parent);
+      expect(created.relations.parent).to.eql(parent._id);
       done(error, created);
     });
   });
@@ -103,9 +103,9 @@ describe('Predefine Relations Instance Post', () => {
       expect(error).to.not.exist;
       expect(created).to.exist;
       expect(created._id).to.eql(predefine._id);
-      expect(created.code).to.eql(predefine.code);
+      expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.status).to.exist;
-      expect(created.relations.status).to.eql(status);
+      expect(created.relations.status).to.eql(status._id);
       done(error, created);
     });
   });
