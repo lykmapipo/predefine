@@ -19,7 +19,7 @@ describe.skip('Predefine Static Post', () => {
   after(done => clear(done));
 });
 
-describe('Predefine Instance Post', () => {
+describe.skip('Predefine Instance Post', () => {
   before(done => clear(done));
 
   const predefine = Predefine.fake();
@@ -37,7 +37,7 @@ describe('Predefine Instance Post', () => {
   after(done => clear(done));
 });
 
-describe('Predefine Relations Static Post', () => {
+describe.skip('Predefine Relations Static Post', () => {
   before(done => clear(done));
 
   const status = Predefine.fake();
@@ -75,7 +75,7 @@ describe('Predefine Relations Static Post', () => {
   after(done => clear(done));
 });
 
-describe('Predefine Relations Instance Post', () => {
+describe.skip('Predefine Relations Instance Post', () => {
   before(done => clear(done));
 
   const status = Predefine.fake();
