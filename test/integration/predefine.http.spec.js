@@ -10,7 +10,7 @@ import {
 import { CONTENT_TYPE_GEOJSON, CONTENT_TYPE_TOPOJSON } from '../../src/utils';
 import { Predefine, predefineRouter } from '../../src';
 
-describe('Predefine Rest API', () => {
+describe.skip('Predefine Rest API', () => {
   const parent = Predefine.fake();
   const predefine = Predefine.fake();
   predefine.set({ relations: { parent }, booleans: { default: true } });

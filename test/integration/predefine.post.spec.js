@@ -1,7 +1,7 @@
 import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
-describe('Predefine Static Post', () => {
+describe.skip('Predefine Static Post', () => {
   before(done => clear(done));
 
   const predefine = Predefine.fake();
