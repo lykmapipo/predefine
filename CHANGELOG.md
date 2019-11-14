@@ -1,3 +1,13 @@
+#### 1.0.5 (2019-11-14)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([2fa907bb](https://github.com/lykmapipo/predefine/commit/2fa907bb144e2e570dafb15c72c37ff5b57d921e))
+  *  force latest version & audit fix ([373262c4](https://github.com/lykmapipo/predefine/commit/373262c4ffa5654538bc312188dd78b172a45747))
+  *  force latest version & audit fix ([02c935b3](https://github.com/lykmapipo/predefine/commit/02c935b32c6f7f96184168877ad87ec279165975))
+  *  force latest version & audit fix ([ebadecec](https://github.com/lykmapipo/predefine/commit/ebadecec67d8bafaa9e6bb4fe484936e9ac6f2e9))
+
 #### 1.0.4 (2019-11-05)
 
 ##### Chores
