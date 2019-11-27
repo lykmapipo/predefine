@@ -36,7 +36,7 @@ describe('Predefine Utils', () => {
     expect(indexes.namespace).to.exist.and.be.equal(1);
     expect(indexes.bucket).to.exist.and.be.equal(1);
     expect(indexes['strings.code']).to.exist.and.be.equal(1);
-    expect(indexes['name.en']).to.exist.and.be.equal(1);
+    expect(indexes['strings.name.en']).to.exist.and.be.equal(1);
   });
 
   it('should map namespace to relations', () => {

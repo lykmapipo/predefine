@@ -226,7 +226,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
 export const uniqueIndexes = () => {
   const indexes = mergeObjects(
     { namespace: 1, bucket: 1, 'strings.code': 1 },
-    localizedIndexesFor('name')
+    localizedIndexesFor('strings.name')
   );
   return indexes;
 };
