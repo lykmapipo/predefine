@@ -1,9 +1,9 @@
 import { sortedUniq, permissionsFor, scopesFor, mergeObjects, variableNameFor, randomColor, idOf, flat, compact, pkg } from '@lykmapipo/common';
 import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
-import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, connect } from '@lykmapipo/mongoose-common';
+import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, Mixed, connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
-import { map, zipObject, without, find, omitBy, includes, forEach, merge, get, omit, toUpper, mapValues, flatMap, trim, pick, isEmpty } from 'lodash';
+import { map, zipObject, without, find, omitBy, includes, forEach, merge, get, omit, toUpper, mapValues, flatMap, isMap, trim, pick, isEmpty } from 'lodash';
 import { topology } from 'topojson-server';
 import { localizedIndexesFor, localize, localizedValuesFor, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
@@ -856,6 +856,7 @@ const mapToGeoJSONFeature = (predefine = {}) => {
     dates,
     geos,
     relations,
+    properties: props,
   } = copyInstance(predefine);
 
   // prepare properties
@@ -867,6 +868,7 @@ const mapToGeoJSONFeature = (predefine = {}) => {
     booleans,
     dates,
     relations,
+    properties: isMap(props) ? Object.fromEntries(props) : props,
   };
 
   // derive feature(s)
@@ -1157,6 +1159,33 @@ const PredefineSchema = createSchema(
      *
      */
     relations: createRelationsSchema(),
+
+    /**
+     * @name properties
+     * @description A map of key value pairs to allow to associate
+     * other meaningful information to a predefined.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {object} fake - fake data generator options
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "population": {
+     *     "male": 1700000,
+     *     "female": 2700000
+     *    }
+     * }
+     *
+     */
+    properties: {
+      type: Map,
+      of: Mixed,
+      fake: f => f.helpers.createTransaction(),
+    },
   },
   SCHEMA_OPTIONS,
   actions,

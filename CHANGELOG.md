@@ -1,3 +1,13 @@
+#### 1.2.0 (2019-11-27)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([fc735a72](https://github.com/lykmapipo/predefine/commit/fc735a727ef09c4970411d8480e7d03d7c496dad))
+
+##### New Features
+
+* **model:**  restore properties map field ([ef52a134](https://github.com/lykmapipo/predefine/commit/ef52a134320d822aa17ffbae152a4e4590aea7d4))
+
 #### 1.1.0 (2019-11-27)
 
 ##### Chores
