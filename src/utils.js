@@ -62,18 +62,21 @@ export const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
 export const LOCALES = getStringSet('LOCALES', DEFAULT_LOCALE);
 
-export const MODEL_NAME = getString('PREDEFINE_MODEL_NAME', 'Predefine');
+export const MODEL_NAME = getString(
+  'PREDEFINE_MODEL_NAME',
+  rc.modelName || 'Predefine'
+);
 
 export const COLLECTION_NAME = getString(
   'PREDEFINE_COLLECTION_NAME',
-  'predefines'
+  rc.collectionName || 'predefines'
 );
 
 export const SCHEMA_OPTIONS = { collection: COLLECTION_NAME };
 
 export const DEFAULT_NAMESPACE = getString(
   'PREDEFINE_DEFAULT_NAMESPACE',
-  'Setting'
+  rc.defaultNamespace || 'Setting'
 );
 
 export const NAMESPACES = getStringSet(
