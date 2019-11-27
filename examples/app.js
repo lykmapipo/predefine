@@ -1,7 +1,7 @@
 import { forEach } from 'lodash';
-import { get, mount, start } from '@lykmapipo/express-common';
-import { connect, jsonSchema } from '@lykmapipo/mongoose-common';
-import { Predefine, predefineRouter, info, apiVersion } from '../src';
+import { get } from '@lykmapipo/express-common';
+import { jsonSchema } from '@lykmapipo/mongoose-common';
+import { Predefine, info, apiVersion, start } from '../src';
 
 const startHttpServer = () => {
   get('/', (request, response) => {
@@ -14,9 +14,6 @@ const startHttpServer = () => {
     response.status(200);
     response.json(schema);
   });
-
-  // mount routers
-  mount(predefineRouter);
 
   // fire http serve
   start((error, env) => {
@@ -32,9 +29,4 @@ const startHttpServer = () => {
 };
 
 // connect and start http server
-connect(error => {
-  if (error) {
-    throw error;
-  }
-  startHttpServer();
-});
+startHttpServer();

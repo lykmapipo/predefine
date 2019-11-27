@@ -31,15 +31,7 @@ npm install @lykmapipo/predefine --save
 ## Usage
 
 ```js
-import { connect } from '@lykmapipo/mongoose-common';
-import { start, mount } from '@lykmapipo/express-common';
-import { Predefine, predefineRouter } from '@lykmapipo/predefine';
-
-// connect to mongodb
-connect(process.env.MONGODB_URI, error => { ... });
-
-// mount predefine http router
-mount(predefineRouter);
+import { start } from '@lykmapipo/predefine';
 
 // fire the http server
 start(error => { ... });
@@ -47,6 +39,7 @@ start(error => { ... });
 
 ## Environment
 ```js
+MONGODB_URI=
 DEFAULT_LOCALE = 'en';
 LOCALES = 'en,sw';
 PREDEFINE_NAMESPACES =

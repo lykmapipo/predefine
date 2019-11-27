@@ -16,7 +16,9 @@
  */
 import { pkg } from '@lykmapipo/common';
 import { apiVersion as httpApiVersion } from '@lykmapipo/env';
-import { start } from '@lykmapipo/express-rest-actions';
+import { connect } from '@lykmapipo/mongoose-common';
+import { mount } from '@lykmapipo/express-common';
+import { start as startHttp } from '@lykmapipo/express-rest-actions';
 import { listPermissions, listScopes } from './utils';
 import Predefine from './predefine.model';
 import predefineRouter from './predefine.http.router';
@@ -100,9 +102,23 @@ export const apiVersion = httpApiVersion();
  * @function start
  * @name start
  * @description start http server
- *
+ * @param {Function} done callback to invoke on success or error
  * @author lally elias <lallyelias87@gmail.com>
  * @since 0.1.0
  * @version 0.1.0
  */
-export { start };
+export const start = done => {
+  // connect mongodb
+  connect(error => {
+    // back-off on connect error
+    if (error) {
+      return done(error);
+    }
+
+    // mount predefine router
+    mount(predefineRouter);
+
+    // start http server
+    return startHttp(done);
+  });
+};
