@@ -22,7 +22,13 @@ import {
   sortedUniq,
   variableNameFor,
 } from '@lykmapipo/common';
-import { getObject, getString, getStringSet, isTest } from '@lykmapipo/env';
+import {
+  getObject,
+  getString,
+  getStringSet,
+  isTest,
+  rcFor,
+} from '@lykmapipo/env';
 import {
   collectionNameOf,
   copyInstance,
@@ -41,6 +47,9 @@ import {
   Geometry,
   GeometryCollection,
 } from 'mongoose-geojson-schemas';
+
+// load rc for predefine
+const rc = rcFor('predefine');
 
 export const CONTENT_TYPE_JSON = 'json';
 
@@ -68,7 +77,7 @@ export const DEFAULT_NAMESPACE = getString(
 
 export const NAMESPACES = getStringSet(
   'PREDEFINE_NAMESPACES',
-  DEFAULT_NAMESPACE
+  [DEFAULT_NAMESPACE].concat(rc.namespaces)
 );
 
 export const NAMESPACE_MAP = map(NAMESPACES, namespace => {
@@ -329,7 +338,7 @@ export const parseNamespaceRelations = () => {
  *
  */
 export const parseGivenRelations = () => {
-  let relations = getObject('PREDEFINE_RELATIONS', {});
+  let relations = getObject('PREDEFINE_RELATIONS', mergeObjects(rc.relations));
   relations = mapValues(relations, relation => {
     return mergeObjects(relation, {
       type: ObjectId,
@@ -433,7 +442,7 @@ export const stringsDefaultValue = values => {
 export const stringSchemaPaths = () =>
   sortedUniq([
     ...map(DEFAULT_STRING_PATHS, 'name'),
-    ...getStringSet('PREDEFINE_STRINGS', []),
+    ...getStringSet('PREDEFINE_STRINGS', [].concat(rc.strings)),
   ]);
 
 /**
@@ -547,7 +556,7 @@ export const numbersDefaultValue = values => {
 export const numberSchemaPaths = () =>
   sortedUniq([
     ...map(DEFAULT_NUMBER_PATHS, 'name'),
-    ...getStringSet('PREDEFINE_NUMBERS', []),
+    ...getStringSet('PREDEFINE_NUMBERS', [].concat(rc.numbers)),
   ]);
 
 /**
@@ -612,7 +621,7 @@ export const createNumbersSchema = () => {
 export const booleanSchemaPaths = () =>
   sortedUniq([
     ...map(DEFAULT_BOOLEAN_PATHS, 'name'),
-    ...getStringSet('PREDEFINE_BOOLEANS', []),
+    ...getStringSet('PREDEFINE_BOOLEANS', [].concat(rc.booleans)),
   ]);
 
 /**
@@ -710,7 +719,9 @@ export const createBooleansSchema = () => {
  */
 export const createDatesSchema = () => {
   // obtain dates schema paths
-  const dates = sortedUniq([...getStringSet('PREDEFINE_DATES', [])]);
+  const dates = sortedUniq([
+    ...getStringSet('PREDEFINE_DATES', [].concat(rc.dates)),
+  ]);
 
   // prepare dates schema path options
   const options = {
