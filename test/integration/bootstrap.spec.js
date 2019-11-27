@@ -9,7 +9,7 @@ process.env.PREDEFINE_NUMBERS = 'steps';
 process.env.PREDEFINE_DATES = 'startedAt,endedAt';
 process.env.PREDEFINE_BOOLEANS = 'active';
 process.env.PREDEFINE_RELATIONS =
-  '{"priority":{"ref":"Predefine"},"status":{}}';
+  '{"priority":{"ref":"Predefine"},"status":{},"groups":{"array":true,"autopopulate":{"select":"name"}}}';
 process.env.PREDEFINE_RELATIONS_IGNORED = 'ItemUnit';
 
 before(done => connect(done));

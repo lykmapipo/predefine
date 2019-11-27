@@ -91,13 +91,14 @@ describe('Predefine Utils', () => {
     expect(relations).to.exist;
     expect(relations.status).to.exist;
     expect(relations.priority).to.exist;
+    expect(relations.groups).to.exist;
     _.forEach(relations, relation => {
       expect(relation).to.exist;
       expect(relation.type).to.exist;
       expect(relation.ref).to.exist;
       expect(relation.index).to.exist.and.be.true;
       expect(relation.aggregatable).to.exist.and.be.true;
-      expect(relation.autopopulate).to.exist.and.be.eql({ maxDepth: 1 });
+      expect(relation.autopopulate).to.exist.and.to.have.a.property('maxDepth');
       expect(relation.taggable).to.exist.and.be.true;
     });
   });
