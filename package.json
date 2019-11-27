@@ -105,7 +105,7 @@
     "@lykmapipo/env": ">=0.15.0",
     "@lykmapipo/express-common": ">=0.17.14",
     "@lykmapipo/express-rest-actions": ">=0.8.2",
-    "@lykmapipo/mongoose-common": ">=0.27.0",
+    "@lykmapipo/mongoose-common": ">=0.27.1",
     "@lykmapipo/mongoose-exportable": ">=0.3.14",
     "async": ">=3.1.0",
     "lodash": ">=4.17.15",
