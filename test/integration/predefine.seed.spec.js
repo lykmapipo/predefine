@@ -4,13 +4,13 @@ import { clear, expect } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Seed', () => {
-  const { SEEDS_PATH, PREDEFINE_NAMESPACES } = process.env;
+  const { SEED_PATH, PREDEFINE_NAMESPACES } = process.env;
 
   before(done => clear(done));
 
   before(() => {
     process.env.PREDEFINE_NAMESPACES = 'Setting';
-    process.env.SEEDS_PATH = path.join(__dirname, '..', 'fixtures');
+    process.env.SEED_PATH = path.join(__dirname, '..', 'fixtures');
   });
 
   it('should be able to seed', done => {
@@ -112,6 +112,6 @@ describe('Predefine Seed', () => {
 
   after(() => {
     process.env.PREDEFINE_NAMESPACES = PREDEFINE_NAMESPACES;
-    process.env.SEEDS_PATH = SEEDS_PATH;
+    process.env.SEED_PATH = SEED_PATH;
   });
 });
