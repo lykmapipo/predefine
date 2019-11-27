@@ -1,3 +1,22 @@
+#### 1.1.0 (2019-11-27)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([b82c4306](https://github.com/lykmapipo/predefine/commit/b82c430693ef76dbfe600c9e7102f7b81d550985))
+
+##### New Features
+
+*  support .predefinerc ([e6d3a909](https://github.com/lykmapipo/predefine/commit/e6d3a90912909cfef34274bd08a1ddfef0391170))
+*  add start helper ([efa67d4d](https://github.com/lykmapipo/predefine/commit/efa67d4d760677da493de621d483317fc4809d76))
+
+##### Bug Fixes
+
+*  ensure index for localize name ([9bc950d2](https://github.com/lykmapipo/predefine/commit/9bc950d2a35d6ee7822dbdbedb50f2f6db818688))
+
+##### Tests
+
+*  fix seed path ([702bb51f](https://github.com/lykmapipo/predefine/commit/702bb51fe63639b62506d5e85c8e68ee98b7e58d))
+
 #### 1.0.5 (2019-11-14)
 
 ##### Chores

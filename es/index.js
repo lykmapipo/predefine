@@ -1,15 +1,18 @@
 import { sortedUniq, permissionsFor, scopesFor, mergeObjects, variableNameFor, randomColor, idOf, flat, compact, pkg } from '@lykmapipo/common';
-import { getString, getStringSet, isTest, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
-import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor } from '@lykmapipo/express-rest-actions';
-export { start } from '@lykmapipo/express-rest-actions';
+import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
+import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, connect } from '@lykmapipo/mongoose-common';
+import { mount } from '@lykmapipo/express-common';
+import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
 import { map, zipObject, without, find, omitBy, includes, forEach, merge, get, omit, toUpper, mapValues, flatMap, trim, pick, isEmpty } from 'lodash';
 import { topology } from 'topojson-server';
-import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema } from '@lykmapipo/mongoose-common';
 import { localizedIndexesFor, localize, localizedValuesFor, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
 import { waterfall } from 'async';
 import actions from 'mongoose-rest-actions';
 import exportable from '@lykmapipo/mongoose-exportable';
+
+// load rc for predefine
+const rc = rcFor('predefine');
 
 const CONTENT_TYPE_JSON = 'json';
 
@@ -37,7 +40,7 @@ const DEFAULT_NAMESPACE = getString(
 
 const NAMESPACES = getStringSet(
   'PREDEFINE_NAMESPACES',
-  DEFAULT_NAMESPACE
+  [DEFAULT_NAMESPACE].concat(rc.namespaces)
 );
 
 const NAMESPACE_MAP = map(NAMESPACES, namespace => {
@@ -195,7 +198,7 @@ const DEFAULT_BOOLEAN_PATHS = [
 const uniqueIndexes = () => {
   const indexes = mergeObjects(
     { namespace: 1, bucket: 1, 'strings.code': 1 },
-    localizedIndexesFor('name')
+    localizedIndexesFor('strings.name')
   );
   return indexes;
 };
@@ -298,7 +301,7 @@ const parseNamespaceRelations = () => {
  *
  */
 const parseGivenRelations = () => {
-  let relations = getObject('PREDEFINE_RELATIONS', {});
+  let relations = getObject('PREDEFINE_RELATIONS', mergeObjects(rc.relations));
   relations = mapValues(relations, relation => {
     return mergeObjects(relation, {
       type: ObjectId,
@@ -402,7 +405,7 @@ const stringsDefaultValue = values => {
 const stringSchemaPaths = () =>
   sortedUniq([
     ...map(DEFAULT_STRING_PATHS, 'name'),
-    ...getStringSet('PREDEFINE_STRINGS', []),
+    ...getStringSet('PREDEFINE_STRINGS', [].concat(rc.strings)),
   ]);
 
 /**
@@ -516,7 +519,7 @@ const numbersDefaultValue = values => {
 const numberSchemaPaths = () =>
   sortedUniq([
     ...map(DEFAULT_NUMBER_PATHS, 'name'),
-    ...getStringSet('PREDEFINE_NUMBERS', []),
+    ...getStringSet('PREDEFINE_NUMBERS', [].concat(rc.numbers)),
   ]);
 
 /**
@@ -581,7 +584,7 @@ const createNumbersSchema = () => {
 const booleanSchemaPaths = () =>
   sortedUniq([
     ...map(DEFAULT_BOOLEAN_PATHS, 'name'),
-    ...getStringSet('PREDEFINE_BOOLEANS', []),
+    ...getStringSet('PREDEFINE_BOOLEANS', [].concat(rc.booleans)),
   ]);
 
 /**
@@ -679,7 +682,9 @@ const createBooleansSchema = () => {
  */
 const createDatesSchema = () => {
   // obtain dates schema paths
-  const dates = sortedUniq([...getStringSet('PREDEFINE_DATES', [])]);
+  const dates = sortedUniq([
+    ...getStringSet('PREDEFINE_DATES', [].concat(rc.dates)),
+  ]);
 
   // prepare dates schema path options
   const options = {
@@ -1831,4 +1836,29 @@ const info = pkg(
  */
 const apiVersion = apiVersion$1();
 
-export { Predefine, apiVersion, info, listPermissions, listScopes, router as predefineRouter };
+/**
+ * @function start
+ * @name start
+ * @description start http server
+ * @param {Function} done callback to invoke on success or error
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 0.1.0
+ * @version 0.1.0
+ */
+const start = done => {
+  // connect mongodb
+  connect(error => {
+    // back-off on connect error
+    if (error) {
+      return done(error);
+    }
+
+    // mount predefine router
+    mount(router);
+
+    // start http server
+    return start$1(done);
+  });
+};
+
+export { Predefine, apiVersion, info, listPermissions, listScopes, router as predefineRouter, start };
