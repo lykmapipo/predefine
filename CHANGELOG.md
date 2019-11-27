@@ -1,3 +1,13 @@
+#### 1.3.0 (2019-11-27)
+
+##### New Features
+
+*  allow array of relations ([ded6f52f](https://github.com/lykmapipo/predefine/commit/ded6f52f6c2dd868e57ae34a7c4c13d9427ae84a))
+
+##### Refactors
+
+*  improve rc use ([b92c1977](https://github.com/lykmapipo/predefine/commit/b92c19776574a91cbd299d56eef0a5e09326a9ed))
+
 #### 1.2.0 (2019-11-27)
 
 ##### Chores

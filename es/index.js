@@ -24,18 +24,21 @@ const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 
 const LOCALES = getStringSet('LOCALES', DEFAULT_LOCALE);
 
-const MODEL_NAME = getString('PREDEFINE_MODEL_NAME', 'Predefine');
+const MODEL_NAME = getString(
+  'PREDEFINE_MODEL_NAME',
+  rc.modelName || 'Predefine'
+);
 
 const COLLECTION_NAME = getString(
   'PREDEFINE_COLLECTION_NAME',
-  'predefines'
+  rc.collectionName || 'predefines'
 );
 
 const SCHEMA_OPTIONS = { collection: COLLECTION_NAME };
 
 const DEFAULT_NAMESPACE = getString(
   'PREDEFINE_DEFAULT_NAMESPACE',
-  'Setting'
+  rc.defaultNamespace || 'Setting'
 );
 
 const NAMESPACES = getStringSet(
@@ -295,7 +298,7 @@ const parseNamespaceRelations = () => {
  * @public
  * @example
  *
- * process.env.PREDEFINE_RELATIONS='{"owner":{"ref":"Party"}}'
+ * process.env.PREDEFINE_RELATIONS='{"owner":{"ref":"Party","array":true}}'
  * parseGivenRelations();
  * // => { owner: { ref: 'Party', autopopulate:true } }
  *
@@ -303,13 +306,14 @@ const parseNamespaceRelations = () => {
 const parseGivenRelations = () => {
   let relations = getObject('PREDEFINE_RELATIONS', mergeObjects(rc.relations));
   relations = mapValues(relations, relation => {
+    const { ref, array, autopopulate } = relation;
     return mergeObjects(relation, {
-      type: ObjectId,
-      ref: relation.ref || MODEL_NAME,
+      type: array ? [ObjectId] : ObjectId,
+      ref: ref || MODEL_NAME,
       index: true,
       aggregatable: true,
       taggable: true,
-      autopopulate: { maxDepth: 1 },
+      autopopulate: mergeObjects(autopopulate, { maxDepth: 1 }),
     });
   });
   return relations;
