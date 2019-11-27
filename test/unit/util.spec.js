@@ -392,6 +392,7 @@ describe('Predefine Utils', () => {
       expect(feature.id).to.exist.and.be.equal(id);
       expect(feature.type).to.exist.and.be.equal('Feature');
       expect(feature.properties).to.exist.and.be.an('object');
+      expect(feature.properties.properties).to.exist.and.be.an('object');
       expect(feature.geometry).to.exist.and.be.an('object');
     });
   });

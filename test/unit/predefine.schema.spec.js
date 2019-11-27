@@ -379,6 +379,19 @@ describe('Predefine Schema', () => {
     expect(relations.options.type).to.be.an.instanceof(Schema);
   });
 
+  it('should have properties field', () => {
+    const properties = Predefine.path('properties');
+
+    expect(properties).to.exist;
+    expect(properties).to.be.an.instanceof(SchemaTypes.Map);
+    expect(properties.options).to.exist;
+    expect(properties.options).to.be.an('object');
+    expect(properties.options.type).to.exist;
+    expect(properties.options.of).to.exist;
+    expect(properties.options.of.name).to.be.equal('Mixed');
+    expect(properties.options.fake).to.exist;
+  });
+
   it('should have tags field', () => {
     const tags = Predefine.path('tags');
 

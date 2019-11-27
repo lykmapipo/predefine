@@ -2,7 +2,7 @@ import { isEmpty, pick, trim } from 'lodash';
 import { waterfall } from 'async';
 import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
-import { createSchema, model } from '@lykmapipo/mongoose-common';
+import { createSchema, model, Mixed } from '@lykmapipo/mongoose-common';
 import {
   localizedKeysFor,
   localizedValuesFor,
@@ -260,6 +260,33 @@ const PredefineSchema = createSchema(
      *
      */
     relations: createRelationsSchema(),
+
+    /**
+     * @name properties
+     * @description A map of key value pairs to allow to associate
+     * other meaningful information to a predefined.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {object} fake - fake data generator options
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * {
+     *   "population": {
+     *     "male": 1700000,
+     *     "female": 2700000
+     *    }
+     * }
+     *
+     */
+    properties: {
+      type: Map,
+      of: Mixed,
+      fake: f => f.helpers.createTransaction(),
+    },
   },
   SCHEMA_OPTIONS,
   actions,

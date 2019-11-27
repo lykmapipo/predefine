@@ -4,6 +4,7 @@ import {
   forEach,
   get,
   includes,
+  isMap,
   map,
   mapValues,
   merge,
@@ -922,6 +923,7 @@ export const mapToGeoJSONFeature = (predefine = {}) => {
     dates,
     geos,
     relations,
+    properties: props,
   } = copyInstance(predefine);
 
   // prepare properties
@@ -933,6 +935,7 @@ export const mapToGeoJSONFeature = (predefine = {}) => {
     booleans,
     dates,
     relations,
+    properties: isMap(props) ? Object.fromEntries(props) : props,
   };
 
   // derive feature(s)
