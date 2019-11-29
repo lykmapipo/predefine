@@ -67,7 +67,7 @@
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
     "@commitlint/travis-cli": "^8.2.0",
-    "@lykmapipo/express-test-helpers": "^0.8.10",
+    "@lykmapipo/express-test-helpers": "^0.8.11",
     "@lykmapipo/mongoose-test-helpers": "^0.7.27",
     "chai": "^4.2.0",
     "commitizen": "^4.0.3",
@@ -89,7 +89,7 @@
     "lint-staged": "^9.5.0",
     "lodash.template": "^4.5.0",
     "mocha": "^6.2.2",
-    "mongoose": ">=5.7.12",
+    "mongoose": ">=5.7.13",
     "npm-check-updates": "^3.2.2",
     "nyc": "^14.1.1",
     "prettier": "^1.19.1",
@@ -98,14 +98,15 @@
     "shelljs": "^0.8.3"
   },
   "peerDependencies": {
-    "mongoose": ">=5.7.12"
+    "mongoose": ">=5.7.13"
   },
   "dependencies": {
-    "@lykmapipo/common": ">=0.28.11",
-    "@lykmapipo/env": ">=0.15.0",
-    "@lykmapipo/express-common": ">=0.17.14",
-    "@lykmapipo/express-rest-actions": ">=0.8.2",
-    "@lykmapipo/mongoose-common": ">=0.27.1",
+    "@lykmapipo/common": ">=0.28.13",
+    "@lykmapipo/env": ">=0.15.1",
+    "@lykmapipo/express-common": ">=0.17.15",
+    "@lykmapipo/express-rest-actions": ">=0.8.3",
+    "@lykmapipo/geo-tools": ">=0.1.0",
+    "@lykmapipo/mongoose-common": ">=0.28.0",
     "@lykmapipo/mongoose-exportable": ">=0.3.14",
     "async": ">=3.1.0",
     "lodash": ">=4.17.15",
