@@ -5,7 +5,7 @@
  * that does not qualify to belongs to their own domain model.
  *
  * @author lally elias <lallyelias87@gmail.com>
- * @since  0.1.0
+ * @since 0.1.0
  * @version 0.1.0
  * @license MIT
  * @example

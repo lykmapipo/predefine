@@ -316,6 +316,7 @@ export const parseNamespaceRelations = () => {
       taggable: true,
       exists: { refresh: true, select: OPTION_SELECT },
       autopopulate: { maxDepth: 1, select: OPTION_SELECT },
+      default: undefined,
     });
   });
 
@@ -352,6 +353,7 @@ export const parseGivenRelations = () => {
       aggregatable: true,
       taggable: true,
       autopopulate: mergeObjects(autopopulate, { maxDepth: 1 }),
+      default: undefined,
     });
   });
   return relations;

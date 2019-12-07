@@ -80,6 +80,7 @@ describe('Predefine Utils', () => {
         },
       });
       expect(relation.taggable).to.exist.and.be.true;
+      expect(relation.default).to.be.undefined;
     });
   });
 
@@ -100,6 +101,7 @@ describe('Predefine Utils', () => {
       expect(relation.aggregatable).to.exist.and.be.true;
       expect(relation.autopopulate).to.exist.and.to.have.a.property('maxDepth');
       expect(relation.taggable).to.exist.and.be.true;
+      expect(relation.default).to.be.undefined;
     });
   });
 

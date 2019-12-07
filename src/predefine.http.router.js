@@ -30,7 +30,7 @@ const PATH_SCHEMA = `/${COLLECTION_NAME}/:bucket/schema.:ext?`;
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
- * @since  0.1.0
+ * @since 0.1.0
  * @version 1.0.0
  * @public
  */
