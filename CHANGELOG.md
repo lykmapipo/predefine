@@ -1,3 +1,19 @@
+#### 1.4.0 (2019-12-07)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([433c9625](https://github.com/lykmapipo/predefine/commit/433c96255a6adc2153d7345f6b190d6309001315))
+  *  force latest version & audit fix ([82f4d3b2](https://github.com/lykmapipo/predefine/commit/82f4d3b2f8abf1627c7dc4f0589f8a1f677c4544))
+
+##### Bug Fixes
+
+* **relations:**  force default value to undefined ([a06b1b3d](https://github.com/lykmapipo/predefine/commit/a06b1b3ddbe4354ecca406e2d5fa62062bbe87b3))
+
+##### Refactors
+
+*  allow unwind on aggregatable relations ([4421d1ef](https://github.com/lykmapipo/predefine/commit/4421d1efae17eabf2de0a1c6e03c5d1a2ec4a9fe))
+
 #### 1.3.0 (2019-11-27)
 
 ##### New Features

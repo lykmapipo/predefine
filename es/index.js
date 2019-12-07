@@ -274,10 +274,12 @@ const parseNamespaceRelations = () => {
       type: ObjectId,
       ref: MODEL_NAME,
       index: true,
-      aggregatable: true,
-      taggable: true,
       exists: { refresh: true, select: OPTION_SELECT },
       autopopulate: { maxDepth: 1, select: OPTION_SELECT },
+      taggable: true,
+      // exportable: true,
+      aggregatable: { unwind: true },
+      default: undefined,
     });
   });
 
@@ -311,9 +313,11 @@ const parseGivenRelations = () => {
       type: array ? [ObjectId] : ObjectId,
       ref: ref || MODEL_NAME,
       index: true,
-      aggregatable: true,
-      taggable: true,
       autopopulate: mergeObjects(autopopulate, { maxDepth: 1 }),
+      taggable: true,
+      // exportable: true,
+      aggregatable: { unwind: true },
+      default: undefined,
     });
   });
   return relations;
@@ -1697,7 +1701,7 @@ const PATH_SCHEMA = `/${COLLECTION_NAME}/:bucket/schema.:ext?`;
  *
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
- * @since  0.1.0
+ * @since 0.1.0
  * @version 1.0.0
  * @public
  */
@@ -1826,7 +1830,7 @@ router.delete(
  * that does not qualify to belongs to their own domain model.
  *
  * @author lally elias <lallyelias87@gmail.com>
- * @since  0.1.0
+ * @since 0.1.0
  * @version 0.1.0
  * @license MIT
  * @example
