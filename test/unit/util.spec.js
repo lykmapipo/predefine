@@ -52,7 +52,7 @@ describe('Predefine Utils', () => {
       expect(relation.type).to.exist;
       expect(relation.ref).to.exist;
       expect(relation.index).to.exist.and.be.true;
-      expect(relation.aggregatable).to.exist.and.be.true;
+      expect(relation.aggregatable).to.exist.and.be.eql({ unwind: true });
       expect(relation.exists).to.exist.and.be.eql({
         refresh: true,
         select: {
@@ -98,7 +98,7 @@ describe('Predefine Utils', () => {
       expect(relation.type).to.exist;
       expect(relation.ref).to.exist;
       expect(relation.index).to.exist.and.be.true;
-      expect(relation.aggregatable).to.exist.and.be.true;
+      expect(relation.aggregatable).to.exist.and.be.eql({ unwind: true });
       expect(relation.autopopulate).to.exist.and.to.have.a.property('maxDepth');
       expect(relation.taggable).to.exist.and.be.true;
       expect(relation.default).to.be.undefined;

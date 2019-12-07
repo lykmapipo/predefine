@@ -312,10 +312,10 @@ export const parseNamespaceRelations = () => {
       type: ObjectId,
       ref: MODEL_NAME,
       index: true,
-      aggregatable: true,
-      taggable: true,
       exists: { refresh: true, select: OPTION_SELECT },
       autopopulate: { maxDepth: 1, select: OPTION_SELECT },
+      taggable: true,
+      aggregatable: { unwind: true },
       default: undefined,
     });
   });
@@ -350,9 +350,9 @@ export const parseGivenRelations = () => {
       type: array ? [ObjectId] : ObjectId,
       ref: ref || MODEL_NAME,
       index: true,
-      aggregatable: true,
-      taggable: true,
       autopopulate: mergeObjects(autopopulate, { maxDepth: 1 }),
+      taggable: true,
+      aggregatable: { unwind: true },
       default: undefined,
     });
   });
