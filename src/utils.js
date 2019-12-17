@@ -1064,7 +1064,7 @@ export const transformToPredefine = val => {
   const data = mergeObjects(val);
 
   // transform to predefine
-  const predefine = {
+  const predefine = mergeObjects({
     strings: mapValues(pick(data, ...stringSchemaPaths()), (value, key) => {
       if (includes(LOCALIZED_STRING_PATHS, key)) {
         return localizedValuesFor({ en: value });
@@ -1074,7 +1074,9 @@ export const transformToPredefine = val => {
     numbers: pick(data, ...numberSchemaPaths()),
     booleans: pick(data, ...booleanSchemaPaths()),
     dates: pick(data, ...dateSchemaPaths()),
-  };
+    properties: data.properties,
+    // TODO: relations: data.relations,
+  });
 
   // return
   return predefine;

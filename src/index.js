@@ -19,7 +19,7 @@ import { apiVersion as httpApiVersion } from '@lykmapipo/env';
 import { connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { start as startHttp } from '@lykmapipo/express-rest-actions';
-import { listPermissions, listScopes } from './utils';
+import { listPermissions, listScopes, transformToPredefine } from './utils';
 import Predefine from './predefine.model';
 import predefineRouter from './predefine.http.router';
 
@@ -66,6 +66,17 @@ export { listPermissions };
  * @version 0.1.0
  */
 export { listScopes };
+
+/**
+ * @function transformToPredefine
+ * @name transformToPredefine
+ * @description Map value to predefine
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 1.5.0
+ * @version 0.1.0
+ */
+export { transformToPredefine };
 
 /**
  * @name Predefine
