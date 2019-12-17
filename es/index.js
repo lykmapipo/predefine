@@ -1,11 +1,11 @@
-import { sortedUniq, permissionsFor, scopesFor, mergeObjects, variableNameFor, randomColor, idOf, flat, compact, pkg } from '@lykmapipo/common';
+import { sortedUniq, permissionsFor, scopesFor, mergeObjects, randomColor, variableNameFor, idOf, flat, compact, pkg } from '@lykmapipo/common';
 import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
 import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, Mixed, connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
-import { map, zipObject, without, find, omitBy, includes, forEach, merge, get, omit, toUpper, mapValues, flatMap, isMap, trim, pick, isEmpty } from 'lodash';
+import { map, zipObject, without, mapValues, pick, includes, toUpper, find, omitBy, forEach, merge, get, omit, flatMap, isMap, trim, isEmpty } from 'lodash';
 import { topology } from 'topojson-server';
-import { localizedIndexesFor, localize, localizedValuesFor, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
+import { localizedValuesFor, localizedIndexesFor, localize, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
 import { waterfall } from 'async';
 import actions from 'mongoose-rest-actions';
@@ -74,6 +74,8 @@ const OPTION_AUTOPOPULATE = {
   select: OPTION_SELECT,
   maxDepth: 1,
 };
+
+const LOCALIZED_STRING_PATHS = ['name', 'abbreviation', 'description'];
 
 const DEFAULT_STRING_PATHS = [
   {
@@ -672,6 +674,26 @@ const createBooleansSchema = () => {
 };
 
 /**
+ * @function dateSchemaPaths
+ * @name dateSchemaPaths
+ * @description Expose schema date paths
+ * @returns {Array} set of date paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.5.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = dateSchemaPaths();
+ * // => ['issuedAt'];
+ *
+ */
+const dateSchemaPaths = () =>
+  sortedUniq([...getStringSet('PREDEFINE_DATES', [].concat(rc.dates))]);
+
+/**
  * @function createDatesSchema
  * @name createDatesSchema
  * @description Create predefine dates schema
@@ -690,9 +712,7 @@ const createBooleansSchema = () => {
  */
 const createDatesSchema = () => {
   // obtain dates schema paths
-  const dates = sortedUniq([
-    ...getStringSet('PREDEFINE_DATES', [].concat(rc.dates)),
-  ]);
+  const dates = sortedUniq([...dateSchemaPaths()]);
 
   // prepare dates schema path options
   const options = {
@@ -947,6 +967,47 @@ const mapToTopoJSON = (...predefines) => {
 
   // return topojson
   return topojson;
+};
+
+/**
+ * @function transformToPredefine
+ * @name transformToPredefine
+ * @description Transform given plain object to predefine structure.
+ * @param {object} [val] valid plain object to transform
+ * @returns {object} valid predefine plain object
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.5.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * transformToPredefine({ name: 'John Doe' });
+ * // => { name : { en: 'John Doe' }, ... };
+ *
+ */
+const transformToPredefine = val => {
+  // ensure data
+  const data = mergeObjects(val);
+
+  // transform to predefine
+  const predefine = mergeObjects({
+    strings: mapValues(pick(data, ...stringSchemaPaths()), (value, key) => {
+      if (includes(LOCALIZED_STRING_PATHS, key)) {
+        return localizedValuesFor({ en: value });
+      }
+      return value;
+    }),
+    numbers: pick(data, ...numberSchemaPaths()),
+    booleans: pick(data, ...booleanSchemaPaths()),
+    dates: pick(data, ...dateSchemaPaths()),
+    properties: data.properties,
+    // TODO: relations: data.relations,
+  });
+
+  // return
+  return predefine;
 };
 
 /**
@@ -1898,4 +1959,4 @@ const start = done => {
   });
 };
 
-export { Predefine, apiVersion, info, listPermissions, listScopes, router as predefineRouter, start };
+export { Predefine, apiVersion, info, listPermissions, listScopes, router as predefineRouter, start, transformToPredefine };

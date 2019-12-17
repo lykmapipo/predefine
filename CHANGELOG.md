@@ -1,3 +1,16 @@
+#### 1.5.0 (2019-12-17)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([5ddd89ff](https://github.com/lykmapipo/predefine/commit/5ddd89ffeeffc03011767ee230a620e563de3bfb))
+
+##### New Features
+
+* **utils:**
+  *  finalize value to predefine convertor ([52de2b01](https://github.com/lykmapipo/predefine/commit/52de2b015ed33853891d560145a2d16ddc46e78f))
+  *  add value transformer to predefine ([46e34729](https://github.com/lykmapipo/predefine/commit/46e3472978e7d0fa6c458f1abe6ed8661052ef05))
+  *  derive date schema paths ([562f178f](https://github.com/lykmapipo/predefine/commit/562f178f770e0bbbf530cadd788b358b7565af1c))
+
 #### 1.4.1 (2019-12-13)
 
 ##### Chores
