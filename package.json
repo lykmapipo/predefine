@@ -82,7 +82,7 @@
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsdoc": "^18.4.3",
     "eslint-plugin-mocha": "^6.2.2",
-    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
     "generate-changelog": "^1.8.0",
     "handlebars": "^4.5.3",
     "husky": "^3.1.0",
@@ -94,7 +94,7 @@
     "nyc": "^14.1.1",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
-    "rollup": "^1.27.11",
+    "rollup": "^1.27.13",
     "shelljs": "^0.8.3"
   },
   "peerDependencies": {
@@ -105,12 +105,12 @@
     "@lykmapipo/env": ">=0.16.0",
     "@lykmapipo/express-common": ">=0.17.15",
     "@lykmapipo/express-rest-actions": ">=0.8.3",
-    "@lykmapipo/geo-tools": ">=0.3.0",
-    "@lykmapipo/mongoose-common": ">=0.28.1",
+    "@lykmapipo/geo-tools": ">=0.4.2",
+    "@lykmapipo/mongoose-common": ">=0.28.2",
     "@lykmapipo/mongoose-exportable": ">=0.3.15",
     "async": ">=3.1.0",
     "lodash": ">=4.17.15",
-    "mongoose-geojson-schemas": ">=0.10.18",
+    "mongoose-geojson-schemas": ">=0.11.0",
     "mongoose-locale-schema": ">=0.4.7",
     "mongoose-rest-actions": ">=0.29.8",
     "topojson-server": ">=3.0.1"
