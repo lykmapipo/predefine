@@ -10,6 +10,7 @@ import {
   merge,
   omit,
   omitBy,
+  pick,
   toUpper,
   without,
   zipObject,
@@ -37,7 +38,11 @@ import {
   createVarySubSchema,
   ObjectId,
 } from '@lykmapipo/mongoose-common';
-import { localize, localizedIndexesFor } from 'mongoose-locale-schema';
+import {
+  localize,
+  localizedIndexesFor,
+  localizedValuesFor,
+} from 'mongoose-locale-schema';
 import {
   Point,
   LineString,
@@ -112,6 +117,8 @@ export const OPTION_AUTOPOPULATE = {
   select: OPTION_SELECT,
   maxDepth: 1,
 };
+
+export const LOCALIZED_STRING_PATHS = ['name', 'abbreviation', 'description'];
 
 export const DEFAULT_STRING_PATHS = [
   {
@@ -1032,4 +1039,43 @@ export const mapToTopoJSON = (...predefines) => {
 
   // return topojson
   return topojson;
+};
+
+/**
+ * @function transformToPredefine
+ * @name transformToPredefine
+ * @description Transform given plain object to predefine structure.
+ * @param {object} [val] valid plain object to transform
+ * @returns {object} valid predefine plain object
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.5.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * transformToPredefine({ name: 'John Doe' });
+ * // => { name : { en: 'John Doe' }, ... };
+ *
+ */
+export const transformToPredefine = val => {
+  // ensure data
+  const data = mergeObjects(val);
+
+  // transform to predefine
+  const predefine = {
+    strings: mapValues(pick(data, ...stringSchemaPaths()), (value, key) => {
+      if (includes(LOCALIZED_STRING_PATHS, key)) {
+        return localizedValuesFor({ en: value });
+      }
+      return value;
+    }),
+    numbers: pick(data, ...numberSchemaPaths()),
+    booleans: pick(data, ...booleanSchemaPaths()),
+    dates: pick(data, ...dateSchemaPaths()),
+  };
+
+  // return
+  return predefine;
 };

@@ -24,6 +24,7 @@ import {
   mapToGeoJSONFeature,
   mapToGeoJSONFeatureCollection,
   mapToTopoJSON,
+  transformToPredefine,
 } from '../../src/utils';
 import Predefine from '../../src/predefine.model';
 
@@ -337,7 +338,7 @@ describe('Predefine Utils', () => {
       expect(geo).to.exist;
       expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);
       expect(geo.options.index).to.exist.and.be.equal('2dsphere');
-      expect(geo.options.fake).to.exist.and.be.an('object');
+      expect(geo.options.fake).to.exist.and.be.a('function');
     });
   });
 
@@ -449,6 +450,25 @@ describe('Predefine Utils', () => {
       expect(feature.id).to.exist.and.be.equal(id);
       expect(feature.type).to.exist;
       expect(feature.properties).to.exist.and.be.an('object');
+    });
+  });
+
+  it('should transform value to predefine', () => {
+    const val = {
+      name: faker.name.findName(),
+      description: faker.lorem.sentence(),
+      weight: 1,
+      default: false,
+      startedAt: new Date(),
+    };
+    expect(transformToPredefine(val)).to.be.eql({
+      strings: {
+        name: { en: val.name, sw: val.name },
+        description: { en: val.description, sw: val.description },
+      },
+      numbers: { weight: val.weight },
+      booleans: { default: val.default },
+      dates: { startedAt: val.startedAt },
     });
   });
 });

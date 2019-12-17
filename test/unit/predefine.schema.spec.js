@@ -368,7 +368,7 @@ describe('Predefine Schema', () => {
       expect(geo).to.exist;
       expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);
       expect(geo.options.index).to.exist.and.be.equal('2dsphere');
-      expect(geo.options.fake).to.exist.and.be.an('object');
+      expect(geo.options.fake).to.exist.and.be.a('function');
     });
   });
 
