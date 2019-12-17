@@ -710,6 +710,26 @@ export const createBooleansSchema = () => {
 };
 
 /**
+ * @function dateSchemaPaths
+ * @name dateSchemaPaths
+ * @description Expose schema date paths
+ * @returns {Array} set of date paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.5.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = dateSchemaPaths();
+ * // => ['issuedAt'];
+ *
+ */
+export const dateSchemaPaths = () =>
+  sortedUniq([...getStringSet('PREDEFINE_DATES', [].concat(rc.dates))]);
+
+/**
  * @function createDatesSchema
  * @name createDatesSchema
  * @description Create predefine dates schema
@@ -728,9 +748,7 @@ export const createBooleansSchema = () => {
  */
 export const createDatesSchema = () => {
   // obtain dates schema paths
-  const dates = sortedUniq([
-    ...getStringSet('PREDEFINE_DATES', [].concat(rc.dates)),
-  ]);
+  const dates = sortedUniq([...dateSchemaPaths()]);
 
   // prepare dates schema path options
   const options = {

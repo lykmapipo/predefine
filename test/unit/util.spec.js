@@ -14,6 +14,7 @@ import {
   booleanSchemaPaths,
   booleansDefaultValue,
   createBooleansSchema,
+  dateSchemaPaths,
   createDatesSchema,
   geoSchemaPaths,
   createGeosSchema,
@@ -259,6 +260,12 @@ describe('Predefine Utils', () => {
     expect(preset.options.exportable).to.be.true;
     expect(preset.options.fake).to.exist.and.be.a('function');
     expect(preset.options.fake(faker)).to.exist;
+  });
+
+  it('should provide dates schema paths', () => {
+    const paths = dateSchemaPaths();
+    expect(paths).to.exist.and.be.an('array');
+    expect(paths).to.include.members(['startedAt', 'endedAt']);
   });
 
   it('should create dates schema', () => {
