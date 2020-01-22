@@ -1,7 +1,7 @@
 import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
-describe.skip('Predefine Static Post', () => {
+describe('Predefine Static Post', () => {
   before(done => clear(done));
 
   const predefine = Predefine.fake();
@@ -19,7 +19,7 @@ describe.skip('Predefine Static Post', () => {
   after(done => clear(done));
 });
 
-describe.skip('Predefine Instance Post', () => {
+describe('Predefine Instance Post', () => {
   before(done => clear(done));
 
   const predefine = Predefine.fake();
@@ -37,7 +37,7 @@ describe.skip('Predefine Instance Post', () => {
   after(done => clear(done));
 });
 
-describe.skip('Predefine Relations Static Post', () => {
+describe('Predefine Relations Static Post', () => {
   before(done => clear(done));
 
   const status = Predefine.fake();
@@ -54,7 +54,7 @@ describe.skip('Predefine Relations Static Post', () => {
       expect(created._id).to.eql(predefine._id);
       expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.parent).to.exist;
-      expect(created.relations.parent).to.eql(parent._id);
+      expect(created.relations.parent._id).to.eql(parent._id);
       done(error, created);
     });
   });
@@ -67,7 +67,7 @@ describe.skip('Predefine Relations Static Post', () => {
       expect(created._id).to.eql(predefine._id);
       expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.status).to.exist;
-      expect(created.relations.status).to.eql(status._id);
+      expect(created.relations.status._id).to.eql(status._id);
       done(error, created);
     });
   });
@@ -75,7 +75,7 @@ describe.skip('Predefine Relations Static Post', () => {
   after(done => clear(done));
 });
 
-describe.skip('Predefine Relations Instance Post', () => {
+describe('Predefine Relations Instance Post', () => {
   before(done => clear(done));
 
   const status = Predefine.fake();
@@ -92,7 +92,7 @@ describe.skip('Predefine Relations Instance Post', () => {
       expect(created._id).to.eql(predefine._id);
       expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.parent).to.exist;
-      expect(created.relations.parent).to.eql(parent._id);
+      expect(created.relations.parent._id).to.eql(parent._id);
       done(error, created);
     });
   });
@@ -105,7 +105,7 @@ describe.skip('Predefine Relations Instance Post', () => {
       expect(created._id).to.eql(predefine._id);
       expect(created.strings.code).to.eql(predefine.strings.code);
       expect(created.relations.status).to.exist;
-      expect(created.relations.status).to.eql(status._id);
+      expect(created.relations.status._id).to.eql(status._id);
       done(error, created);
     });
   });

@@ -4,6 +4,7 @@ import {
   forEach,
   get,
   includes,
+  keys,
   isMap,
   map,
   mapValues,
@@ -369,6 +370,44 @@ export const parseGivenRelations = () => {
 };
 
 /**
+ * @function relationSchemaPaths
+ * @name relationSchemaPaths
+ * @description Expose schema relation paths
+ * @returns {Array} set of relation paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.6.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = relationSchemaPaths();
+ * // => ['parent', ... ];
+ *
+ */
+export const relationSchemaPaths = () => {
+  // obtain ignored relations
+  const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
+  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
+
+  // parse relations
+  const relations = mergeObjects(
+    parseGivenRelations(),
+    parseNamespaceRelations()
+  );
+
+  // remove ignored
+  const allowedRelations = omitBy(relations, ({ ref }, key) => {
+    return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
+  });
+
+  // allow relations paths
+  return sortedUniq([...keys(allowedRelations)]);
+};
+
+/**
  * @function createRelationsSchema
  * @name createRelationsSchema
  * @description Create predefine relations schema
@@ -396,7 +435,7 @@ export const createRelationsSchema = () => {
     parseNamespaceRelations()
   );
 
-  // reomve ignored
+  // remove ignored
   const allowedRelations = omitBy(relations, ({ ref }, key) => {
     return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
   });
@@ -1063,19 +1102,39 @@ export const transformToPredefine = val => {
   // ensure data
   const data = mergeObjects(val);
 
+  // obtain paths
+  const stringPaths = stringSchemaPaths();
+  const numberPaths = numberSchemaPaths();
+  const booleanPaths = booleanSchemaPaths();
+  const datePaths = dateSchemaPaths();
+  const geoPaths = geoSchemaPaths();
+  const relationPaths = relationSchemaPaths();
+  const knownPaths = [
+    ...stringPaths,
+    ...numberPaths,
+    ...booleanPaths,
+    ...datePaths,
+    ...geoPaths,
+    ...relationPaths,
+    'populate',
+  ];
+
   // transform to predefine
   const predefine = mergeObjects({
-    strings: mapValues(pick(data, ...stringSchemaPaths()), (value, key) => {
+    namespace: data.namespace,
+    bucket: data.bucket,
+    strings: mapValues(pick(data, ...stringPaths), (value, key) => {
       if (includes(LOCALIZED_STRING_PATHS, key)) {
         return localizedValuesFor({ en: value });
       }
       return value;
     }),
-    numbers: pick(data, ...numberSchemaPaths()),
-    booleans: pick(data, ...booleanSchemaPaths()),
-    dates: pick(data, ...dateSchemaPaths()),
-    properties: data.properties,
-    // TODO: relations: data.relations,
+    numbers: pick(data, ...numberPaths),
+    booleans: pick(data, ...booleanPaths),
+    dates: pick(data, ...datePaths),
+    geos: pick(data, ...geoPaths),
+    relations: pick(data, relationPaths),
+    properties: mergeObjects(data.properties, omit(data, ...knownPaths)),
   });
 
   // return

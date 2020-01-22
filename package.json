@@ -106,7 +106,7 @@
     "@lykmapipo/env": ">=0.16.5",
     "@lykmapipo/express-common": ">=0.17.19",
     "@lykmapipo/express-rest-actions": ">=0.8.6",
-    "@lykmapipo/geo-tools": ">=0.5.4",
+    "@lykmapipo/geo-tools": ">=0.6.2",
     "@lykmapipo/mongoose-common": ">=0.28.9",
     "@lykmapipo/mongoose-exportable": ">=0.3.19",
     "async": ">=3.1.0",

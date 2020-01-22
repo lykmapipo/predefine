@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import { expect, faker } from '@lykmapipo/mongoose-test-helpers';
-import { Schema, SchemaTypes } from '@lykmapipo/mongoose-common';
+import { Schema, SchemaTypes, MongooseTypes } from '@lykmapipo/mongoose-common';
+import { randomPoint } from '@lykmapipo/geo-tools';
 import {
   uniqueIndexes,
   parseNamespaceRelations,
   parseGivenRelations,
+  relationSchemaPaths,
   createRelationsSchema,
   stringSchemaPaths,
   createStringsSchema,
@@ -105,6 +107,12 @@ describe('Predefine Utils', () => {
       expect(relation.taggable).to.exist.and.be.true;
       expect(relation.default).to.be.undefined;
     });
+  });
+
+  it('should provide allowed relations schema paths', () => {
+    const paths = relationSchemaPaths();
+    expect(paths).to.exist.and.be.an('array');
+    expect(paths).to.include.members(['parent']);
   });
 
   it('should create relations schema', () => {
@@ -460,8 +468,12 @@ describe('Predefine Utils', () => {
       weight: 1,
       default: false,
       startedAt: new Date(),
+      point: randomPoint(),
+      parent: new MongooseTypes.ObjectId().toString(),
+      city: faker.address.city(),
     };
-    expect(transformToPredefine(val)).to.be.eql({
+    const predefine = transformToPredefine(val);
+    expect(predefine).to.be.eql({
       strings: {
         name: { en: val.name, sw: val.name },
         description: { en: val.description, sw: val.description },
@@ -469,6 +481,9 @@ describe('Predefine Utils', () => {
       numbers: { weight: val.weight },
       booleans: { default: val.default },
       dates: { startedAt: val.startedAt },
+      geos: { point: val.point },
+      relations: { parent: val.parent },
+      properties: { city: val.city },
     });
   });
 });
