@@ -3,7 +3,7 @@ import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVer
 import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, Mixed, connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
-import { map, zipObject, without, mapValues, pick, includes, toUpper, find, omitBy, forEach, merge, get, omit, flatMap, isMap, trim, isEmpty } from 'lodash';
+import { map, zipObject, without, keys, mapValues, pick, includes, omit, toUpper, find, omitBy, forEach, merge, get, flatMap, isMap, trim, isEmpty } from 'lodash';
 import { topology } from 'topojson-server';
 import { localizedValuesFor, localizedIndexesFor, localize, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
@@ -326,6 +326,44 @@ const parseGivenRelations = () => {
 };
 
 /**
+ * @function relationSchemaPaths
+ * @name relationSchemaPaths
+ * @description Expose schema relation paths
+ * @returns {Array} set of relation paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.6.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = relationSchemaPaths();
+ * // => ['parent', ... ];
+ *
+ */
+const relationSchemaPaths = () => {
+  // obtain ignored relations
+  const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
+  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
+
+  // parse relations
+  const relations = mergeObjects(
+    parseGivenRelations(),
+    parseNamespaceRelations()
+  );
+
+  // remove ignored
+  const allowedRelations = omitBy(relations, ({ ref }, key) => {
+    return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
+  });
+
+  // allow relations paths
+  return sortedUniq([...keys(allowedRelations)]);
+};
+
+/**
  * @function createRelationsSchema
  * @name createRelationsSchema
  * @description Create predefine relations schema
@@ -353,7 +391,7 @@ const createRelationsSchema = () => {
     parseNamespaceRelations()
   );
 
-  // reomve ignored
+  // remove ignored
   const allowedRelations = omitBy(relations, ({ ref }, key) => {
     return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
   });
@@ -730,6 +768,35 @@ const createDatesSchema = () => {
 };
 
 /**
+ * @function geoSchemaPaths
+ * @name geoSchemaPaths
+ * @description Expose schema geo paths
+ * @returns {Array} set of geo paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const paths = geoSchemaPaths();
+ * // => ['point', ... ];
+ *
+ */
+const geoSchemaPaths = () =>
+  sortedUniq([
+    'point',
+    'line',
+    'polygon',
+    'geometry',
+    'points',
+    'lines',
+    'polygons',
+    'geometries',
+  ]);
+
+/**
  * @function createGeosSchema
  * @name createGeosSchema
  * @description Create predefine geos schema
@@ -991,19 +1058,39 @@ const transformToPredefine = val => {
   // ensure data
   const data = mergeObjects(val);
 
+  // obtain paths
+  const stringPaths = stringSchemaPaths();
+  const numberPaths = numberSchemaPaths();
+  const booleanPaths = booleanSchemaPaths();
+  const datePaths = dateSchemaPaths();
+  const geoPaths = geoSchemaPaths();
+  const relationPaths = relationSchemaPaths();
+  const knownPaths = [
+    ...stringPaths,
+    ...numberPaths,
+    ...booleanPaths,
+    ...datePaths,
+    ...geoPaths,
+    ...relationPaths,
+    'populate',
+  ];
+
   // transform to predefine
   const predefine = mergeObjects({
-    strings: mapValues(pick(data, ...stringSchemaPaths()), (value, key) => {
+    namespace: data.namespace,
+    bucket: data.bucket,
+    strings: mapValues(pick(data, ...stringPaths), (value, key) => {
       if (includes(LOCALIZED_STRING_PATHS, key)) {
         return localizedValuesFor({ en: value });
       }
       return value;
     }),
-    numbers: pick(data, ...numberSchemaPaths()),
-    booleans: pick(data, ...booleanSchemaPaths()),
-    dates: pick(data, ...dateSchemaPaths()),
-    properties: data.properties,
-    // TODO: relations: data.relations,
+    numbers: pick(data, ...numberPaths),
+    booleans: pick(data, ...booleanPaths),
+    dates: pick(data, ...datePaths),
+    geos: pick(data, ...geoPaths),
+    relations: pick(data, relationPaths),
+    properties: mergeObjects(data.properties, omit(data, ...knownPaths)),
   });
 
   // return

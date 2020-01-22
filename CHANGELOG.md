@@ -1,3 +1,9 @@
+#### 1.6.0 (2020-01-22)
+
+##### New Features
+
+* **utils:**  transform plain object to predefine ([eced9732](https://github.com/lykmapipo/predefine/commit/eced9732300e269c27c57edb0f9e85bbf3a48fbd))
+
 #### 1.5.3 (2020-01-22)
 
 ##### Chores
