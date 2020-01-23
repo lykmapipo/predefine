@@ -3,7 +3,7 @@ import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVer
 import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, Mixed, connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
-import { map, zipObject, without, keys, mapValues, pick, includes, omit, toUpper, find, omitBy, forEach, merge, get, flatMap, isMap, trim, isEmpty } from 'lodash';
+import { map, zipObject, without, keys, mapValues, pick, includes, omit, omitBy, isEmpty, toUpper, find, forEach, merge, get, flatMap, isMap, trim } from 'lodash';
 import { topology } from 'topojson-server';
 import { localizedValuesFor, localizedIndexesFor, localize, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
@@ -1072,11 +1072,13 @@ const transformToPredefine = val => {
     ...datePaths,
     ...geoPaths,
     ...relationPaths,
+    'namespace',
+    'bucket',
     'populate',
   ];
 
   // transform to predefine
-  const predefine = mergeObjects({
+  let predefine = mergeObjects({
     namespace: data.namespace,
     bucket: data.bucket,
     strings: mapValues(pick(data, ...stringPaths), (value, key) => {
@@ -1092,6 +1094,9 @@ const transformToPredefine = val => {
     relations: pick(data, relationPaths),
     properties: mergeObjects(data.properties, omit(data, ...knownPaths)),
   });
+
+  // omit empty paths
+  predefine = omitBy(predefine, isEmpty);
 
   // return
   return predefine;
