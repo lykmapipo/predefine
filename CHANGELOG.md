@@ -1,3 +1,15 @@
+#### 1.6.1 (2020-01-23)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([52d37667](https://github.com/lykmapipo/predefine/commit/52d3766729a7301f85fa3b347357de2ebf94203e))
+
+##### Bug Fixes
+
+* **utils:**
+  *  remove empty on predefine transform ([d58060ff](https://github.com/lykmapipo/predefine/commit/d58060ff0f80c78440d0b983d1176d9d2d154939))
+  *  ignore namespace & bucket from properties ([bba72adb](https://github.com/lykmapipo/predefine/commit/bba72adb0c8cf7f55b93ea0f3d7842260e630a79))
+
 #### 1.6.0 (2020-01-22)
 
 ##### New Features
