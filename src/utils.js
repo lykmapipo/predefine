@@ -1116,6 +1116,8 @@ export const transformToPredefine = val => {
     ...datePaths,
     ...geoPaths,
     ...relationPaths,
+    'namespace',
+    'bucket',
     'populate',
   ];
 
