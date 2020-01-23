@@ -1,3 +1,9 @@
+#### 1.6.2 (2020-01-23)
+
+##### Chores
+
+* **release:**  compile latest source ([2197b544](https://github.com/lykmapipo/predefine/commit/2197b544f255ca9b67e6b9e9dae8f8a3909d050d))
+
 #### 1.6.1 (2020-01-23)
 
 ##### Chores
