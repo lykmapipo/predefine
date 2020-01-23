@@ -4,6 +4,7 @@ import {
   forEach,
   get,
   includes,
+  isEmpty,
   keys,
   isMap,
   map,
@@ -1122,7 +1123,7 @@ export const transformToPredefine = val => {
   ];
 
   // transform to predefine
-  const predefine = mergeObjects({
+  let predefine = mergeObjects({
     namespace: data.namespace,
     bucket: data.bucket,
     strings: mapValues(pick(data, ...stringPaths), (value, key) => {
@@ -1138,6 +1139,9 @@ export const transformToPredefine = val => {
     relations: pick(data, relationPaths),
     properties: mergeObjects(data.properties, omit(data, ...knownPaths)),
   });
+
+  // omit empty paths
+  predefine = omitBy(predefine, isEmpty);
 
   // return
   return predefine;
