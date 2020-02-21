@@ -1,3 +1,13 @@
+#### 1.7.0 (2020-02-21)
+
+##### New Features
+
+*  restrict allowed buckets ([6e0ebf31](https://github.com/lykmapipo/predefine/commit/6e0ebf313da451ead304fe898e2aef1297f24f55))
+
+##### Refactors
+
+* **utils:**  make defaults bucket constant ([95897a63](https://github.com/lykmapipo/predefine/commit/95897a632645cfc39d9fbf88b9d6bd5dcff21df9))
+
 #### 1.6.4 (2020-02-16)
 
 ##### Chores
