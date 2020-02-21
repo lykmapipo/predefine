@@ -65,6 +65,21 @@ describe('Predefine Rest API', () => {
       });
   });
 
+  it('should reject unknown buckect on HTTP GET on /predefines/:bucket', done => {
+    const { testGet } = testRouter(options, predefineRouter);
+    testGet({ bucket: 'unknown' })
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end((error, { body }) => {
+        // expect(error).to.not.exist;
+        expect(body).to.exist;
+        expect(body.code).to.be.equal(404);
+        expect(body.message).to.be.equal('Not Found');
+        expect(body.description).to.be.equal('unknown bucket does not exists');
+        done();
+      });
+  });
+
   it('should handle HTTP GET on /predefines/:bucket.geojson', done => {
     const { testGet } = testRouter(options, predefineRouter);
     testGet({ bucket, ext: CONTENT_TYPE_GEOJSON })

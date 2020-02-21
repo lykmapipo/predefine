@@ -27,6 +27,7 @@ import {
   mapToGeoJSONFeatureCollection,
   mapToTopoJSON,
   transformToPredefine,
+  checkIfBucketExists,
 } from '../../src/utils';
 import Predefine from '../../src/predefine.model';
 
@@ -484,6 +485,24 @@ describe('Predefine Utils', () => {
       geos: { point: val.point },
       relations: { parent: val.parent },
       properties: { city: val.city },
+    });
+  });
+
+  it('should return true if bucket exists', done => {
+    checkIfBucketExists('settings', (error, exists) => {
+      expect(error).to.not.exist;
+      expect(exists).to.be.true;
+      done(error, exists);
+    });
+  });
+
+  it('should return error if bucket not exists', done => {
+    checkIfBucketExists('unknown', error => {
+      expect(error).to.exist;
+      expect(error.code).to.be.equal(404);
+      expect(error.message).to.be.equal('Not Found');
+      expect(error.description).to.be.equal('unknown bucket does not exists');
+      done();
     });
   });
 });

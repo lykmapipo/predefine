@@ -1151,3 +1151,34 @@ export const transformToPredefine = val => {
   // return
   return predefine;
 };
+
+/**
+ * @function checkIfBucketExists
+ * @name checkIfBucketExists
+ * @description Check if bucket exists or allowed.
+ * @param {string} bucket valid bukcet name
+ * @param {Function} done callback to invoke on success or error
+ * @returns {Error} error if not exists else true
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.7.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * checkIfBucketExists('settings', error => { ... });
+ *
+ */
+export const checkIfBucketExists = (bucket, done) => {
+  const bucketSet = [DEFAULTS_BUCKET, ...BUCKETS];
+  const bucketExist = bucket && includes(bucketSet, bucket);
+  if (bucket && !bucketExist) {
+    const error = new Error('Not Found');
+    error.status = 404;
+    error.code = 404;
+    error.description = `${bucket} bucket does not exists`;
+    return done(error);
+  }
+  return done(null, true);
+};

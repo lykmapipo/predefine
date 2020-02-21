@@ -91,7 +91,7 @@ router.get(
 router.post(
   PATH_LIST,
   postFor({
-    post: (body, done) => Predefine.post(body, done),
+    post: (body, done) => Predefine.post(body, done), // TODO: Predefine.postByExtension
   })
 );
 

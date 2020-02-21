@@ -1,4 +1,4 @@
-import { isEmpty, pick, trim } from 'lodash';
+import { get, isEmpty, pick, trim } from 'lodash';
 import { waterfall } from 'async';
 import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
@@ -40,6 +40,7 @@ import {
   normalizeQueryFilter,
   mapToGeoJSONFeatureCollection,
   mapToTopoJSON,
+  checkIfBucketExists,
 } from './utils';
 
 /**
@@ -505,8 +506,15 @@ PredefineSchema.statics.getByExtension = (optns, done) => {
   const options = normalizeQueryFilter(optns);
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
+  // ensure bucket exists
+  const ensureBucket = next => {
+    const bucket =
+      get(options, 'params.bucket') || get(options, 'filters.bucket');
+    return checkIfBucketExists(bucket, error => next(error));
+  };
+
   // fetch data
-  const get = next => Predefine.get(options, next);
+  const getList = next => Predefine.get(options, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -527,7 +535,7 @@ PredefineSchema.statics.getByExtension = (optns, done) => {
   };
 
   // return
-  return waterfall([get, transform], done);
+  return waterfall([ensureBucket, getList, transform], done);
 };
 
 /**
@@ -556,6 +564,13 @@ PredefineSchema.statics.postByExtension = (optns, done) => {
   const options = mergeObjects(optns);
   const { body, params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
+  // ensure bucket exists
+  const ensureBucket = next => {
+    const bucket =
+      get(options, 'params.bucket') || get(options, 'filters.bucket');
+    return checkIfBucketExists(bucket, error => next(error));
+  };
+
   // post data
   const post = next => Predefine.post(body, next);
 
@@ -576,7 +591,7 @@ PredefineSchema.statics.postByExtension = (optns, done) => {
   };
 
   // return
-  return waterfall([post, transform], done);
+  return waterfall([ensureBucket, post, transform], done);
 };
 
 /**
@@ -605,6 +620,13 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
   const options = mergeObjects(optns);
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
+  // ensure bucket exists
+  const ensureBucket = next => {
+    const bucket =
+      get(options, 'params.bucket') || get(options, 'filters.bucket');
+    return checkIfBucketExists(bucket, error => next(error));
+  };
+
   // fetch data by id
   const getById = next => Predefine.getById(options, next);
 
@@ -625,7 +647,7 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
   };
 
   // return
-  return waterfall([getById, transform], done);
+  return waterfall([ensureBucket, getById, transform], done);
 };
 
 /**
@@ -654,6 +676,13 @@ PredefineSchema.statics.patchByExtension = (optns, done) => {
   const options = mergeObjects(optns);
   const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
 
+  // ensure bucket exists
+  const ensureBucket = next => {
+    const bucket =
+      get(options, 'params.bucket') || get(options, 'filters.bucket');
+    return checkIfBucketExists(bucket, error => next(error));
+  };
+
   // patch data
   const patch = next => Predefine.patch(_id, body, next);
 
@@ -674,7 +703,7 @@ PredefineSchema.statics.patchByExtension = (optns, done) => {
   };
 
   // return
-  return waterfall([patch, transform], done);
+  return waterfall([ensureBucket, patch, transform], done);
 };
 
 /**
@@ -703,6 +732,13 @@ PredefineSchema.statics.putByExtension = (optns, done) => {
   const options = mergeObjects(optns);
   const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
 
+  // ensure bucket exists
+  const ensureBucket = next => {
+    const bucket =
+      get(options, 'params.bucket') || get(options, 'filters.bucket');
+    return checkIfBucketExists(bucket, error => next(error));
+  };
+
   // put data
   const put = next => Predefine.put(_id, body, next);
 
@@ -723,7 +759,7 @@ PredefineSchema.statics.putByExtension = (optns, done) => {
   };
 
   // return
-  return waterfall([put, transform], done);
+  return waterfall([ensureBucket, put, transform], done);
 };
 
 /**
@@ -752,6 +788,13 @@ PredefineSchema.statics.deleteByExtension = (optns, done) => {
   const options = mergeObjects(optns);
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
+  // ensure bucket exists
+  const ensureBucket = next => {
+    const bucket =
+      get(options, 'params.bucket') || get(options, 'filters.bucket');
+    return checkIfBucketExists(bucket, error => next(error));
+  };
+
   // delete existing data
   const del = next => Predefine.del(options, next);
 
@@ -772,7 +815,7 @@ PredefineSchema.statics.deleteByExtension = (optns, done) => {
   };
 
   // return
-  return waterfall([del, transform], done);
+  return waterfall([ensureBucket, del, transform], done);
 };
 
 /* export predefine model */
