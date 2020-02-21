@@ -86,6 +86,11 @@ export const DEFAULT_NAMESPACE = getString(
   rc.defaultNamespace || 'Setting'
 );
 
+export const DEFAULTS_BUCKET = getString(
+  'PREDEFINE_DEFAULTS_BUCKET',
+  rc.defaultsBucket || 'defaults'
+);
+
 export const NAMESPACES = getStringSet(
   'PREDEFINE_NAMESPACES',
   [DEFAULT_NAMESPACE].concat(rc.namespaces)
@@ -956,7 +961,7 @@ export const listScopes = (...ignored) => {
  */
 export const normalizeQueryFilter = (optns = {}) => {
   let options = mergeObjects(optns);
-  const isDefaultBucket = get(options, 'filter.bucket') === 'defaults';
+  const isDefaultBucket = get(options, 'filter.bucket') === DEFAULTS_BUCKET;
   if (isDefaultBucket) {
     options = omit(options, 'filter.bucket');
     const paginate = { limit: Number.MAX_SAFE_INTEGER };
