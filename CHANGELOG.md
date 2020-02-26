@@ -1,3 +1,9 @@
+#### 1.7.2 (2020-02-26)
+
+##### Bug Fixes
+
+* **relations:**  update array schema definition for autopopulation ([d495cd49](https://github.com/lykmapipo/predefine/commit/d495cd49bdb0e0638e178fb12902651a08b71797))
+
 #### 1.7.1 (2020-02-26)
 
 ##### Chores

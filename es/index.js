@@ -316,12 +316,15 @@ const parseGivenRelations = () => {
   let relations = getObject('PREDEFINE_RELATIONS', mergeObjects(rc.relations));
   relations = mapValues(relations, relation => {
     const { ref = MODEL_NAME, array, autopopulate } = relation;
+    // prepare population options
     const autopopulateOptns =
       ref === MODEL_NAME
         ? mergeObjects(autopopulate, OPTION_AUTOPOPULATE)
         : mergeObjects(autopopulate, { maxDepth: 1 });
-    return mergeObjects(relation, {
-      type: array ? [ObjectId] : ObjectId,
+
+    // prepare relation schema
+    const relationSchema = mergeObjects(relation, {
+      type: ObjectId,
       ref,
       index: true,
       autopopulate: autopopulateOptns,
@@ -330,7 +333,12 @@ const parseGivenRelations = () => {
       aggregatable: { unwind: true },
       default: undefined,
     });
+
+    // return relation schema
+    return array ? [relationSchema] : relationSchema;
   });
+
+  // return parsed relations
   return relations;
 };
 
