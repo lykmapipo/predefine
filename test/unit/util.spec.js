@@ -104,7 +104,9 @@ describe('Predefine Utils', () => {
       expect(relation.ref).to.exist;
       expect(relation.index).to.exist.and.be.true;
       expect(relation.aggregatable).to.exist.and.be.eql({ unwind: true });
-      expect(relation.autopopulate).to.exist.and.to.have.a.property('maxDepth');
+      expect(relation.autopopulate).to.exist;
+      expect(relation.autopopulate.maxDepth).to.exist.and.be.equal(1);
+      expect(relation.autopopulate.select).to.exist;
       expect(relation.taggable).to.exist.and.be.true;
       expect(relation.default).to.be.undefined;
     });

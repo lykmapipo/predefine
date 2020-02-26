@@ -360,12 +360,16 @@ export const parseNamespaceRelations = () => {
 export const parseGivenRelations = () => {
   let relations = getObject('PREDEFINE_RELATIONS', mergeObjects(rc.relations));
   relations = mapValues(relations, relation => {
-    const { ref, array, autopopulate } = relation;
+    const { ref = MODEL_NAME, array, autopopulate } = relation;
+    const autopopulateOptns =
+      ref === MODEL_NAME
+        ? mergeObjects(autopopulate, OPTION_AUTOPOPULATE)
+        : mergeObjects(autopopulate, { maxDepth: 1 });
     return mergeObjects(relation, {
       type: array ? [ObjectId] : ObjectId,
-      ref: ref || MODEL_NAME,
+      ref,
       index: true,
-      autopopulate: mergeObjects(autopopulate, { maxDepth: 1 }),
+      autopopulate: autopopulateOptns,
       taggable: true,
       // exportable: true,
       aggregatable: { unwind: true },
