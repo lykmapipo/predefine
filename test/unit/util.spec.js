@@ -99,16 +99,17 @@ describe('Predefine Utils', () => {
     expect(relations.priority).to.exist;
     expect(relations.groups).to.exist;
     _.forEach(relations, relation => {
-      expect(relation).to.exist;
-      expect(relation.type).to.exist;
-      expect(relation.ref).to.exist;
-      expect(relation.index).to.exist.and.be.true;
-      expect(relation.aggregatable).to.exist.and.be.eql({ unwind: true });
-      expect(relation.autopopulate).to.exist;
-      expect(relation.autopopulate.maxDepth).to.exist.and.be.equal(1);
-      expect(relation.autopopulate.select).to.exist;
-      expect(relation.taggable).to.exist.and.be.true;
-      expect(relation.default).to.be.undefined;
+      const rel = _.isPlainObject(relation) ? relation : _.first(relation);
+      expect(rel).to.exist;
+      expect(rel.type).to.exist;
+      expect(rel.ref).to.exist;
+      expect(rel.index).to.exist.and.be.true;
+      expect(rel.aggregatable).to.exist.and.be.eql({ unwind: true });
+      expect(rel.autopopulate).to.exist;
+      expect(rel.autopopulate.maxDepth).to.exist.and.be.equal(1);
+      expect(rel.autopopulate.select).to.exist;
+      expect(rel.taggable).to.exist.and.be.true;
+      expect(rel.default).to.be.undefined;
     });
   });
 
