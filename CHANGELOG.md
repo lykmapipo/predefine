@@ -1,3 +1,13 @@
+#### 1.7.1 (2020-02-26)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([1981105a](https://github.com/lykmapipo/predefine/commit/1981105a904c79125054c0b563eaf1f449aa5f13))
+
+##### Bug Fixes
+
+* **relations:**  ensure autopopulate options ([940d5d08](https://github.com/lykmapipo/predefine/commit/940d5d087960621876614b061c9b1147c9413a44))
+
 #### 1.7.0 (2020-02-21)
 
 ##### New Features
