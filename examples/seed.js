@@ -19,7 +19,7 @@ let seedStart;
 let seedEnd;
 
 // seed predefines
-const seedPredefine = done => {
+const seedPredefine = (done) => {
   Predefine.seed((error, seeded) => {
     log('predefines', error, seeded);
     done(error);
@@ -27,13 +27,13 @@ const seedPredefine = done => {
 };
 
 // ensure indexes
-const ensureIndexes = done => syncIndexes(error => done(error));
+const ensureIndexes = (done) => syncIndexes((error) => done(error));
 
 // ensure connections
-const ensureConnection = done => connect(error => done(error));
+const ensureConnection = (done) => connect((error) => done(error));
 
 // do seed
-const seed = done => {
+const seed = (done) => {
   seedStart = Date.now();
   return waterfall([ensureConnection, ensureIndexes, seedPredefine], done);
 };

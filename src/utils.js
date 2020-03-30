@@ -96,13 +96,13 @@ export const NAMESPACES = getStringSet(
   [DEFAULT_NAMESPACE].concat(rc.namespaces)
 );
 
-export const NAMESPACE_MAP = map(NAMESPACES, namespace => {
+export const NAMESPACE_MAP = map(NAMESPACES, (namespace) => {
   return { namespace, bucket: collectionNameOf(namespace) };
 });
 
 export const NAMESPACE_DICTIONARY = zipObject(
   NAMESPACES,
-  map(NAMESPACES, namespace => collectionNameOf(namespace))
+  map(NAMESPACES, (namespace) => collectionNameOf(namespace))
 );
 
 export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
@@ -137,7 +137,7 @@ export const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     localize: true,
-    fake: f => f.commerce.productName(),
+    fake: (f) => f.commerce.productName(),
   },
   {
     name: 'abbreviation',
@@ -148,7 +148,7 @@ export const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     localize: true,
-    fake: f => toUpper(f.hacker.abbreviation()),
+    fake: (f) => toUpper(f.hacker.abbreviation()),
   },
   {
     name: 'description',
@@ -158,7 +158,7 @@ export const DEFAULT_STRING_PATHS = [
     searchable: true,
     exportable: true,
     localize: true,
-    fake: f => f.lorem.sentence(),
+    fake: (f) => f.lorem.sentence(),
   },
   {
     name: 'code',
@@ -169,7 +169,7 @@ export const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     default: () => undefined,
-    fake: f => f.finance.currencyCode(),
+    fake: (f) => f.finance.currencyCode(),
   },
   {
     name: 'symbol',
@@ -180,7 +180,7 @@ export const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     default: () => undefined,
-    fake: f => f.finance.currencySymbol(),
+    fake: (f) => f.finance.currencySymbol(),
   },
   {
     name: 'color',
@@ -199,7 +199,7 @@ export const DEFAULT_STRING_PATHS = [
     type: String,
     trim: true,
     default: () => undefined,
-    fake: f => f.image.image(),
+    fake: (f) => f.image.image(),
   },
 ];
 
@@ -210,7 +210,7 @@ export const DEFAULT_NUMBER_PATHS = [
     index: true,
     default: () => 0,
     exportable: true,
-    fake: f => f.random.number(),
+    fake: (f) => f.random.number(),
   },
 ];
 
@@ -221,7 +221,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
     index: true,
     exportable: true,
     default: () => false,
-    fake: f => f.random.boolean(),
+    fake: (f) => f.random.boolean(),
   },
   {
     name: 'preset',
@@ -229,7 +229,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
     index: true,
     exportable: true,
     default: () => false,
-    fake: f => f.random.boolean(),
+    fake: (f) => f.random.boolean(),
   },
 ];
 
@@ -280,7 +280,7 @@ export const uniqueIndexes = () => {
  * // => { bucket: ..., namespace: ... };
  *
  */
-export const ensureBucketAndNamespace = bucketOrNamespace => {
+export const ensureBucketAndNamespace = (bucketOrNamespace) => {
   // initialize defaults
   const defaults = isTest()
     ? {}
@@ -316,7 +316,7 @@ export const ensureBucketAndNamespace = bucketOrNamespace => {
  */
 export const parseNamespaceRelations = () => {
   // use namespace and parent
-  let paths = map(NAMESPACES, path => variableNameFor(path));
+  let paths = map(NAMESPACES, (path) => variableNameFor(path));
   paths = ['parent', ...paths];
 
   // map relations to valid schema definitions
@@ -359,7 +359,7 @@ export const parseNamespaceRelations = () => {
  */
 export const parseGivenRelations = () => {
   let relations = getObject('PREDEFINE_RELATIONS', mergeObjects(rc.relations));
-  relations = mapValues(relations, relation => {
+  relations = mapValues(relations, (relation) => {
     const { ref = MODEL_NAME, array, autopopulate } = relation;
     // prepare population options
     const autopopulateOptns =
@@ -407,7 +407,7 @@ export const parseGivenRelations = () => {
 export const relationSchemaPaths = () => {
   // obtain ignored relations
   const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
-  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredPaths = map(ignoredNamespaces, (path) => variableNameFor(path));
   const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
 
   // parse relations
@@ -444,7 +444,7 @@ export const relationSchemaPaths = () => {
 export const createRelationsSchema = () => {
   // obtain ignored relations
   const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
-  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredPaths = map(ignoredNamespaces, (path) => variableNameFor(path));
   const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
 
   // derive relations
@@ -479,12 +479,12 @@ export const createRelationsSchema = () => {
  * // => { code: 'UA', color: '#CCCCCC', ... };
  *
  */
-export const stringsDefaultValue = values => {
+export const stringsDefaultValue = (values) => {
   // initialize defaults
   let defaults = {};
 
   // compute string defaults
-  forEach(DEFAULT_STRING_PATHS, path => {
+  forEach(DEFAULT_STRING_PATHS, (path) => {
     defaults[path.name] = path.default && path.default();
   });
 
@@ -544,7 +544,7 @@ export const createStringsSchema = () => {
     searchable: true,
     taggable: true,
     exportable: true,
-    fake: f => f.commerce.productName(),
+    fake: (f) => f.commerce.productName(),
   };
 
   // obtain given strings schema paths
@@ -554,7 +554,7 @@ export const createStringsSchema = () => {
   );
 
   // convert given paths to schema definition
-  givenPaths = map(givenPaths, givenPath => {
+  givenPaths = map(givenPaths, (givenPath) => {
     return mergeObjects(options, { name: givenPath });
   });
 
@@ -563,7 +563,7 @@ export const createStringsSchema = () => {
 
   // build stings schema definition
   const definition = {};
-  forEach(paths, path => {
+  forEach(paths, (path) => {
     const { name, ...optns } = path;
     definition[path.name] = optns.localize ? localize(optns) : optns;
   });
@@ -593,12 +593,12 @@ export const createStringsSchema = () => {
  * // => { default: false, preset: false, ... };
  *
  */
-export const numbersDefaultValue = values => {
+export const numbersDefaultValue = (values) => {
   // initialize defaults
   let defaults = {};
 
   // compute number defaults
-  forEach(DEFAULT_NUMBER_PATHS, path => {
+  forEach(DEFAULT_NUMBER_PATHS, (path) => {
     defaults[path.name] = path.default();
   });
 
@@ -664,7 +664,7 @@ export const createNumbersSchema = () => {
     type: Number,
     index: true,
     exportable: true,
-    fake: f => f.random.number(),
+    fake: (f) => f.random.number(),
   };
 
   // create numbers sub schema
@@ -715,12 +715,12 @@ export const booleanSchemaPaths = () =>
  * // => { default: false, preset: false, ... };
  *
  */
-export const booleansDefaultValue = values => {
+export const booleansDefaultValue = (values) => {
   // initialize defaults
   let defaults = {};
 
   // compute boolean defaults
-  forEach(DEFAULT_BOOLEAN_PATHS, path => {
+  forEach(DEFAULT_BOOLEAN_PATHS, (path) => {
     defaults[path.name] = path.default();
   });
 
@@ -763,7 +763,7 @@ export const createBooleansSchema = () => {
     type: Boolean,
     index: true,
     exportable: true,
-    fake: f => f.random.boolean(),
+    fake: (f) => f.random.boolean(),
   };
 
   // create booleans sub schema
@@ -819,7 +819,7 @@ export const createDatesSchema = () => {
     type: Date,
     index: true,
     exportable: true,
-    fake: f => f.date.recent(),
+    fake: (f) => f.date.recent(),
   };
 
   // create dates sub schema
@@ -1116,7 +1116,7 @@ export const mapToTopoJSON = (...predefines) => {
  * // => { name : { en: 'John Doe' }, ... };
  *
  */
-export const transformToPredefine = val => {
+export const transformToPredefine = (val) => {
   // ensure data
   const data = mergeObjects(val);
 

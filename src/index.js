@@ -118,9 +118,9 @@ export const apiVersion = httpApiVersion();
  * @since 0.1.0
  * @version 0.1.0
  */
-export const start = done => {
+export const start = (done) => {
   // connect mongodb
-  connect(error => {
+  connect((error) => {
     // back-off on connect error
     if (error) {
       return done(error);

@@ -5,11 +5,11 @@ import { Predefine } from '../../src';
 describe('Predefine PutByExtension', () => {
   const predefine = Predefine.fake();
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to patch and get json instance', done => {
+  it('should be able to patch and get json instance', (done) => {
     const { strings } = Predefine.fake().toObject();
     const optns = {
       _id: predefine._id,
@@ -25,7 +25,7 @@ describe('Predefine PutByExtension', () => {
     });
   });
 
-  it('should be able to patch and get geojson instance', done => {
+  it('should be able to patch and get geojson instance', (done) => {
     const { strings } = Predefine.fake().toObject();
     const optns = {
       _id: predefine._id,
@@ -42,7 +42,7 @@ describe('Predefine PutByExtension', () => {
     });
   });
 
-  it('should be able to patch and get topojson instance', done => {
+  it('should be able to patch and get topojson instance', (done) => {
     const { strings } = Predefine.fake().toObject();
     const optns = {
       _id: predefine._id,
@@ -67,5 +67,5 @@ describe('Predefine PutByExtension', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

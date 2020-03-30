@@ -3,9 +3,9 @@ import { CONTENT_TYPE_GEOJSON, CONTENT_TYPE_TOPOJSON } from '../../src/utils';
 import { Predefine } from '../../src';
 
 describe('Predefine PostByExtension', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  it('should be able to post and get json instance', done => {
+  it('should be able to post and get json instance', (done) => {
     const predefine = Predefine.fake();
     const optns = { body: predefine };
     Predefine.postByExtension(optns, (error, created) => {
@@ -17,7 +17,7 @@ describe('Predefine PostByExtension', () => {
     });
   });
 
-  it('should be able to post and get geojson instance', done => {
+  it('should be able to post and get geojson instance', (done) => {
     const predefine = Predefine.fake();
     const optns = {
       body: predefine,
@@ -35,7 +35,7 @@ describe('Predefine PostByExtension', () => {
     });
   });
 
-  it('should be able to post and get topojson instance', done => {
+  it('should be able to post and get topojson instance', (done) => {
     const predefine = Predefine.fake();
     const optns = {
       body: predefine,
@@ -59,5 +59,5 @@ describe('Predefine PostByExtension', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

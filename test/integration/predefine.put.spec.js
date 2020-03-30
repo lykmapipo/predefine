@@ -5,11 +5,11 @@ import { Predefine } from '../../src';
 describe('Predefine Static Put', () => {
   const predefine = Predefine.fake();
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to put', done => {
+  it('should be able to put', (done) => {
     const { strings } = Predefine.fakeOnly('strings.description.en');
     Predefine.put(predefine._id, { strings }, (error, updated) => {
       expect(error).to.not.exist;
@@ -20,7 +20,7 @@ describe('Predefine Static Put', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     const fake = Predefine.fake().toObject();
     Predefine.put(fake._id, _.omit(fake, '_id'), (error, updated) => {
       expect(error).to.exist;
@@ -31,17 +31,17 @@ describe('Predefine Static Put', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });
 
 describe('Predefine Instance Put', () => {
   const predefine = Predefine.fake();
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to put', done => {
+  it('should be able to put', (done) => {
     const { strings } = Predefine.fakeOnly('strings.description.en');
     predefine.put({ strings }, (error, updated) => {
       expect(error).to.not.exist;
@@ -54,7 +54,7 @@ describe('Predefine Instance Put', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     predefine.put((error, updated) => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
@@ -63,5 +63,5 @@ describe('Predefine Instance Put', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

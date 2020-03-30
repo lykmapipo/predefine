@@ -2,11 +2,11 @@ import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Static Post', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   const predefine = Predefine.fake();
 
-  it('should be able to post', done => {
+  it('should be able to post', (done) => {
     Predefine.post(predefine, (error, created) => {
       expect(error).to.not.exist;
       expect(created).to.exist;
@@ -16,15 +16,15 @@ describe('Predefine Static Post', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });
 
 describe('Predefine Instance Post', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   const predefine = Predefine.fake();
 
-  it('should be able to post', done => {
+  it('should be able to post', (done) => {
     predefine.post((error, created) => {
       expect(error).to.not.exist;
       expect(created).to.exist;
@@ -34,19 +34,19 @@ describe('Predefine Instance Post', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });
 
 describe('Predefine Relations Static Post', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   const status = Predefine.fake();
   const parent = Predefine.fake();
   const predefine = Predefine.fake();
 
-  before(done => create(parent, status, done));
+  before((done) => create(parent, status, done));
 
-  it('should be able to post with parent', done => {
+  it('should be able to post with parent', (done) => {
     predefine.set({ relations: { parent } });
     Predefine.post(predefine, (error, created) => {
       expect(error).to.not.exist;
@@ -59,7 +59,7 @@ describe('Predefine Relations Static Post', () => {
     });
   });
 
-  it('should be able to post with custom relation', done => {
+  it('should be able to post with custom relation', (done) => {
     predefine.set({ relations: { status } });
     Predefine.post(predefine, (error, created) => {
       expect(error).to.not.exist;
@@ -72,19 +72,19 @@ describe('Predefine Relations Static Post', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });
 
 describe('Predefine Relations Instance Post', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   const status = Predefine.fake();
   const parent = Predefine.fake();
   const predefine = Predefine.fake();
 
-  before(done => create(parent, status, done));
+  before((done) => create(parent, status, done));
 
-  it('should be able to post with parent', done => {
+  it('should be able to post with parent', (done) => {
     predefine.set({ relations: { parent } });
     predefine.post((error, created) => {
       expect(error).to.not.exist;
@@ -97,7 +97,7 @@ describe('Predefine Relations Instance Post', () => {
     });
   });
 
-  it('should be able to post with custom relation', done => {
+  it('should be able to post with custom relation', (done) => {
     predefine.set({ relations: { status } });
     predefine.post((error, created) => {
       expect(error).to.not.exist;
@@ -110,5 +110,5 @@ describe('Predefine Relations Instance Post', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

@@ -52,7 +52,7 @@ describe('Predefine Utils', () => {
     expect(relations).to.exist;
     expect(relations.parent).to.exist;
     expect(relations.setting).to.exist;
-    _.forEach(relations, relation => {
+    _.forEach(relations, (relation) => {
       expect(relation).to.exist;
       expect(relation.type).to.exist;
       expect(relation.ref).to.exist;
@@ -98,7 +98,7 @@ describe('Predefine Utils', () => {
     expect(relations.status).to.exist;
     expect(relations.priority).to.exist;
     expect(relations.groups).to.exist;
-    _.forEach(relations, relation => {
+    _.forEach(relations, (relation) => {
       const rel = _.isPlainObject(relation) ? relation : _.first(relation);
       expect(rel).to.exist;
       expect(rel.type).to.exist;
@@ -345,7 +345,7 @@ describe('Predefine Utils', () => {
       'polygons',
       'geometries',
     ];
-    _.forEach(paths, path => {
+    _.forEach(paths, (path) => {
       const geo = geos.path(path);
       expect(geo).to.exist;
       expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);
@@ -408,7 +408,7 @@ describe('Predefine Utils', () => {
     expect(features).to.exist.and.be.an('array');
 
     const paths = geoSchemaPaths();
-    _.forEach(paths, path => {
+    _.forEach(paths, (path) => {
       const id = `${path}:${predefine._id}`;
       const feature = _.find(features, { id });
       expect(feature).to.exist.and.be.an('object');
@@ -428,7 +428,7 @@ describe('Predefine Utils', () => {
     expect(collection.features).to.exist.and.be.an('array');
 
     const paths = geoSchemaPaths();
-    _.forEach(paths, path => {
+    _.forEach(paths, (path) => {
       const id = `${path}:${predefine._id}`;
       const feature = _.find(collection.features, { id });
       expect(feature).to.exist.and.be.an('object');
@@ -455,7 +455,7 @@ describe('Predefine Utils', () => {
 
     const paths = geoSchemaPaths();
     const features = topojson.objects.collection.geometries;
-    _.forEach(paths, path => {
+    _.forEach(paths, (path) => {
       const id = `${path}:${predefine._id}`;
       const feature = _.find(features, { id });
       expect(feature).to.exist.and.be.an('object');
@@ -491,7 +491,7 @@ describe('Predefine Utils', () => {
     });
   });
 
-  it('should return true if bucket exists', done => {
+  it('should return true if bucket exists', (done) => {
     checkIfBucketExists('settings', (error, exists) => {
       expect(error).to.not.exist;
       expect(exists).to.be.true;
@@ -499,8 +499,8 @@ describe('Predefine Utils', () => {
     });
   });
 
-  it('should return error if bucket not exists', done => {
-    checkIfBucketExists('unknown', error => {
+  it('should return error if bucket not exists', (done) => {
+    checkIfBucketExists('unknown', (error) => {
       expect(error).to.exist;
       expect(error.code).to.be.equal(404);
       expect(error.message).to.be.equal('Not Found');

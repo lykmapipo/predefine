@@ -363,7 +363,7 @@ describe('Predefine Schema', () => {
       'polygons',
       'geometries',
     ];
-    _.forEach(paths, path => {
+    _.forEach(paths, (path) => {
       const geo = Predefine.path(`geos.${path}`);
       expect(geo).to.exist;
       expect(geo).to.be.an.instanceof(SchemaTypes.Embedded);

@@ -6,7 +6,7 @@ describe('Predefine DeleteByExtension', () => {
   let parent;
   let predefine;
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
   beforeEach(() => {
     parent = Predefine.fake();
@@ -14,11 +14,11 @@ describe('Predefine DeleteByExtension', () => {
     predefine.set({ relations: { parent } });
   });
 
-  beforeEach(done => create(parent, done));
+  beforeEach((done) => create(parent, done));
 
-  beforeEach(done => create(predefine, done));
+  beforeEach((done) => create(predefine, done));
 
-  it('should be able to delete and get json instance', done => {
+  it('should be able to delete and get json instance', (done) => {
     const optns = { _id: predefine._id };
     Predefine.deleteByExtension(optns, (error, found) => {
       expect(error).to.not.exist;
@@ -29,7 +29,7 @@ describe('Predefine DeleteByExtension', () => {
     });
   });
 
-  it('should be able to delete and get geojson instance', done => {
+  it('should be able to delete and get geojson instance', (done) => {
     const optns = {
       _id: predefine._id,
       params: { ext: CONTENT_TYPE_GEOJSON },
@@ -42,7 +42,7 @@ describe('Predefine DeleteByExtension', () => {
     });
   });
 
-  it('should be able to delete and get topojson instance', done => {
+  it('should be able to delete and get topojson instance', (done) => {
     const optns = {
       _id: predefine._id,
       params: { ext: CONTENT_TYPE_TOPOJSON },
@@ -63,5 +63,5 @@ describe('Predefine DeleteByExtension', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

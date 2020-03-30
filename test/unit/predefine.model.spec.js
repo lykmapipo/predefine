@@ -11,94 +11,94 @@ describe('Predefine Instance', () => {
     expect(predefine.preValidate.name).to.be.equal('preValidate');
   });
 
-  it('should set abbreviation on pre validate', done => {
+  it('should set abbreviation on pre validate', (done) => {
     const predefine = Predefine.fakeExcept(
       'strings.abbreviation.en',
       'strings.abbreviation.sw'
     );
 
     expect(predefine.strings.abbreviation).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.abbreviation).to.exist;
       done(error);
     });
   });
 
-  it('should set correct namespace on pre validate', done => {
+  it('should set correct namespace on pre validate', (done) => {
     const predefine = Predefine.fake();
     predefine.set({ bucket: 'settings', namespace: null });
 
     expect(predefine.namespace).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.namespace).to.exist;
       expect(predefine.namespace).to.be.equal('Setting');
       done(error);
     });
   });
 
-  it('should set correct bucket on pre validate', done => {
+  it('should set correct bucket on pre validate', (done) => {
     const predefine = Predefine.fake();
     predefine.set({ namespace: 'Setting', bucket: null });
 
     expect(predefine.bucket).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.bucket).to.exist;
       expect(predefine.bucket).to.be.equal('settings');
       done(error);
     });
   });
 
-  it('should set correct namespace on pre validate', done => {
+  it('should set correct namespace on pre validate', (done) => {
     const predefine = Predefine.fake();
     predefine.set({ bucket: 'items', namespace: null });
 
     expect(predefine.namespace).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.namespace).to.exist;
       expect(predefine.namespace).to.be.equal('Item');
       done(error);
     });
   });
 
-  it('should set correct bucket on pre validate', done => {
+  it('should set correct bucket on pre validate', (done) => {
     const predefine = Predefine.fake();
     predefine.set({ namespace: 'Item', bucket: null });
 
     expect(predefine.bucket).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.bucket).to.exist;
       expect(predefine.bucket).to.be.equal('items');
       done(error);
     });
   });
 
-  it('should set localized name values', done => {
+  it('should set localized name values', (done) => {
     const predefine = Predefine.fakeExcept('strings.name.sw');
 
     expect(predefine.strings.name.sw).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.name.sw).to.exist;
       expect(predefine.strings.name.sw).to.be.equal(predefine.strings.name.en);
       done(error);
     });
   });
 
-  it('should set localized name values', done => {
+  it('should set localized name values', (done) => {
     const predefine = Predefine.fakeExcept('strings.name.en');
 
     expect(predefine.strings.name.en).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.name.en).to.exist;
       expect(predefine.strings.name.en).to.be.equal(predefine.strings.name.sw);
       done(error);
     });
   });
 
-  it('should set localized description values', done => {
+  it('should set localized description values', (done) => {
     const predefine = Predefine.fakeExcept('strings.description.sw');
 
     expect(predefine.strings.description.sw).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.description.sw).to.exist;
       expect(predefine.strings.description.sw).to.be.equal(
         predefine.strings.description.en
@@ -107,11 +107,11 @@ describe('Predefine Instance', () => {
     });
   });
 
-  it('should set localized description values', done => {
+  it('should set localized description values', (done) => {
     const predefine = Predefine.fakeExcept('strings.description.en');
 
     expect(predefine.strings.description.en).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.description.en).to.exist;
       expect(predefine.strings.description.en).to.be.equal(
         predefine.strings.description.sw
@@ -120,14 +120,14 @@ describe('Predefine Instance', () => {
     });
   });
 
-  it('should set localized description values from name', done => {
+  it('should set localized description values from name', (done) => {
     const predefine = Predefine.fakeExcept(
       'strings.description.en',
       'strings.description.sw'
     );
 
     expect(predefine.description).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.description.sw).to.exist;
       expect(predefine.strings.description.en).to.exist;
       expect(predefine.strings.description.en).to.be.equal(
@@ -140,11 +140,11 @@ describe('Predefine Instance', () => {
     });
   });
 
-  it('should set localized abbreviation values', done => {
+  it('should set localized abbreviation values', (done) => {
     const predefine = Predefine.fakeExcept('strings.abbreviation.sw');
 
     expect(predefine.strings.abbreviation.sw).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.abbreviation.sw).to.exist;
       expect(predefine.strings.abbreviation.sw).to.be.equal(
         predefine.strings.abbreviation.en
@@ -153,11 +153,11 @@ describe('Predefine Instance', () => {
     });
   });
 
-  it('should set localized abbreviation values', done => {
+  it('should set localized abbreviation values', (done) => {
     const predefine = Predefine.fakeExcept('strings.abbreviation.en');
 
     expect(predefine.strings.abbreviation.en).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.abbreviation.en).to.exist;
       expect(predefine.strings.abbreviation.en).to.be.equal(
         predefine.strings.abbreviation.sw
@@ -166,14 +166,14 @@ describe('Predefine Instance', () => {
     });
   });
 
-  it('should set localized abbreviation values from name', done => {
+  it('should set localized abbreviation values from name', (done) => {
     const predefine = Predefine.fakeExcept(
       'strings.abbreviation.en',
       'strings.abbreviation.sw'
     );
 
     expect(predefine.strings.abbreviation).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.abbreviation).to.exist;
       expect(predefine.strings.abbreviation.en).to.exist;
       expect(predefine.strings.abbreviation.sw).to.exist;
@@ -181,11 +181,11 @@ describe('Predefine Instance', () => {
     });
   });
 
-  it('should set code from default abbreviation value', done => {
+  it('should set code from default abbreviation value', (done) => {
     const predefine = Predefine.fakeExcept('strings.code');
 
     expect(predefine.code).to.not.exist;
-    predefine.preValidate(error => {
+    predefine.preValidate((error) => {
       expect(predefine.strings.code).to.exist;
       expect(predefine.strings.code).to.be.equal(
         predefine.strings.abbreviation.en
@@ -196,9 +196,9 @@ describe('Predefine Instance', () => {
 });
 
 describe('Predefine Validations', () => {
-  it('should throw if no namespace', done => {
+  it('should throw if no namespace', (done) => {
     const predefine = Predefine.fakeExcept('namespace', 'bucket');
-    predefine.validate(error => {
+    predefine.validate((error) => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
       expect(error.errors.namespace).to.exist;
@@ -208,10 +208,10 @@ describe('Predefine Validations', () => {
     });
   });
 
-  it('should throw if namespace is not allowed', done => {
+  it('should throw if namespace is not allowed', (done) => {
     const predefine = Predefine.fakeExcept('namespace', 'bucket');
     predefine.set({ namespace: faker.lorem.word() });
-    predefine.validate(error => {
+    predefine.validate((error) => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
       expect(error.errors.namespace).to.exist;
@@ -221,9 +221,9 @@ describe('Predefine Validations', () => {
     });
   });
 
-  it('should throw if no bucket', done => {
+  it('should throw if no bucket', (done) => {
     const predefine = Predefine.fakeExcept('namespace', 'bucket');
-    predefine.validate(error => {
+    predefine.validate((error) => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
       expect(error.errors.bucket).to.exist;
@@ -233,10 +233,10 @@ describe('Predefine Validations', () => {
     });
   });
 
-  it('should throw if bucket is not allowed', done => {
+  it('should throw if bucket is not allowed', (done) => {
     const predefine = Predefine.fakeExcept('namespace', 'bucket');
     predefine.set({ bucket: faker.lorem.word() });
-    predefine.validate(error => {
+    predefine.validate((error) => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
       expect(error.errors.bucket).to.exist;
@@ -246,9 +246,9 @@ describe('Predefine Validations', () => {
     });
   });
 
-  it('should throw if no name', done => {
+  it('should throw if no name', (done) => {
     const predefine = Predefine.fakeOnly('strings.description');
-    predefine.validate(error => {
+    predefine.validate((error) => {
       expect(error).to.exist;
       expect(error.name).to.equal('ValidationError');
       expect(error.errors.strings.name).to.exist;
@@ -358,7 +358,7 @@ describe('Predefine Faker', () => {
       'polygons',
       'geometries',
     ];
-    _.forEach(paths, path => {
+    _.forEach(paths, (path) => {
       expect(predefine.geos[path]).to.exist.and.be.an.instanceof(Object);
     });
   });

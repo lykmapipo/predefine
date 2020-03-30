@@ -6,14 +6,14 @@ import { Predefine } from '../../src';
 describe('Predefine Seed', () => {
   const { SEED_PATH, PREDEFINE_NAMESPACES } = process.env;
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
   before(() => {
     process.env.PREDEFINE_NAMESPACES = 'Setting';
     process.env.SEED_PATH = path.join(__dirname, '..', 'fixtures');
   });
 
-  it('should be able to seed', done => {
+  it('should be able to seed', (done) => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -22,7 +22,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should not throw if seed exist', done => {
+  it('should not throw if seed exist', (done) => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -31,7 +31,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should seed provided', done => {
+  it('should seed provided', (done) => {
     const seed = {
       namespace: 'Setting',
       strings: {
@@ -50,7 +50,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should seed provided', done => {
+  it('should seed provided', (done) => {
     const seed = {
       namespace: 'Setting',
       strings: {
@@ -69,7 +69,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should not throw if provided exist', done => {
+  it('should not throw if provided exist', (done) => {
     const seed = {
       namespace: 'Setting',
       strings: {
@@ -88,7 +88,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should be able to seed from environment', done => {
+  it('should be able to seed from environment', (done) => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -98,7 +98,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  it('should not throw if seed from environment exist', done => {
+  it('should not throw if seed from environment exist', (done) => {
     Predefine.seed((error, seeded) => {
       expect(error).to.not.exist;
       expect(seeded).to.exist;
@@ -108,7 +108,7 @@ describe('Predefine Seed', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 
   after(() => {
     process.env.PREDEFINE_NAMESPACES = PREDEFINE_NAMESPACES;

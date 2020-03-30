@@ -21,7 +21,7 @@ const startHttpServer = () => {
       throw error;
     }
     // start http server
-    forEach(Predefine.BUCKETS, bucket => {
+    forEach(Predefine.BUCKETS, (bucket) => {
       const path = `predefines/${bucket}`;
       console.log(`visit http://0.0.0.0:${env.PORT}/${apiVersion}/${path}`);
     });

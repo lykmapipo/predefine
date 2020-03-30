@@ -7,7 +7,7 @@ import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 const csvPath = resolvePath(`${__dirname}/../fixtures/out.csv`);
-const readCsv = done => csv2array({ file: csvPath, columns: true }, done);
+const readCsv = (done) => csv2array({ file: csvPath, columns: true }, done);
 
 describe('Predefine Export', () => {
   const predefine = Predefine.fake();
@@ -16,7 +16,7 @@ describe('Predefine Export', () => {
   const assertExport = (error, records) => {
     expect(error).to.not.exist;
     expect(records).to.exist;
-    const results = _.map(autoParse(records), v => {
+    const results = _.map(autoParse(records), (v) => {
       assign(v, { 'Booleans Default': Boolean(v['Booleans Default']) });
       return v;
     });
@@ -30,9 +30,9 @@ describe('Predefine Export', () => {
     expect(weights).to.include.members(_.map(results, 'Numbers Weight'));
   };
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
   it('should have exportable fields', () => {
     expect(Predefine.EXPORTABLE_FIELDS).to.exist;
@@ -59,7 +59,7 @@ describe('Predefine Export', () => {
     expect(Predefine.EXPORTABLE_FIELDS).to.have.property('booleans.preset');
   });
 
-  it('should be able to export to csv', done => {
+  it('should be able to export to csv', (done) => {
     const out = createWriteStream(csvPath);
     const options = { sort: { updatedAt: -1 } };
     Predefine.exportCsv(options, out, (/* error */) => {
@@ -70,7 +70,7 @@ describe('Predefine Export', () => {
     });
   });
 
-  it('should be able to export to csv', done => {
+  it('should be able to export to csv', (done) => {
     const out = createWriteStream(csvPath);
     const options = {
       filter: { 'numbers.weight': predefine.numbers.weight },
@@ -84,5 +84,5 @@ describe('Predefine Export', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

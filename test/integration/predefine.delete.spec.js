@@ -2,18 +2,18 @@ import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Static Delete', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   let predefine = Predefine.fake();
 
-  before(done => {
+  before((done) => {
     predefine.post((error, created) => {
       predefine = created;
       done(error, created);
     });
   });
 
-  it('should be able to delete', done => {
+  it('should be able to delete', (done) => {
     Predefine.del(predefine._id, (error, deleted) => {
       expect(error).to.not.exist;
       expect(deleted).to.exist;
@@ -22,7 +22,7 @@ describe('Predefine Static Delete', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     Predefine.del(predefine._id, (error, deleted) => {
       expect(error).to.exist;
       // expect(error.status).to.exist;
@@ -32,22 +32,22 @@ describe('Predefine Static Delete', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });
 
 describe('Predefine Instance Delete', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   let predefine = Predefine.fake();
 
-  before(done => {
+  before((done) => {
     predefine.post((error, created) => {
       predefine = created;
       done(error, created);
     });
   });
 
-  it('should be able to delete', done => {
+  it('should be able to delete', (done) => {
     predefine.del((error, deleted) => {
       expect(error).to.not.exist;
       expect(deleted).to.exist;
@@ -56,7 +56,7 @@ describe('Predefine Instance Delete', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     predefine.del((error, deleted) => {
       expect(error).to.not.exist;
       expect(deleted).to.exist;
@@ -65,5 +65,5 @@ describe('Predefine Instance Delete', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

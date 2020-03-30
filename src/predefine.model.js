@@ -286,7 +286,7 @@ const PredefineSchema = createSchema(
     properties: {
       type: Map,
       of: Mixed,
-      fake: f => f.helpers.createTransaction(),
+      fake: (f) => f.helpers.createTransaction(),
     },
   },
   SCHEMA_OPTIONS,
@@ -418,7 +418,7 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @version 0.1.0
  * @static
  */
-PredefineSchema.statics.prepareSeedCriteria = seed => {
+PredefineSchema.statics.prepareSeedCriteria = (seed) => {
   const names = localizedKeysFor('strings.name');
 
   const copyOfSeed = seed;
@@ -475,9 +475,7 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   const Predefine = model(MODEL_NAME);
 
   // query
-  return Predefine.findOne(filter)
-    .orFail()
-    .exec(done);
+  return Predefine.findOne(filter).orFail().exec(done);
 };
 
 /**
@@ -507,14 +505,14 @@ PredefineSchema.statics.getByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // fetch data
-  const getList = next => Predefine.get(options, next);
+  const getList = (next) => Predefine.get(options, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -565,14 +563,14 @@ PredefineSchema.statics.postByExtension = (optns, done) => {
   const { body, params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // post data
-  const post = next => Predefine.post(body, next);
+  const post = (next) => Predefine.post(body, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -621,14 +619,14 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // fetch data by id
-  const getById = next => Predefine.getById(options, next);
+  const getById = (next) => Predefine.getById(options, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -677,14 +675,14 @@ PredefineSchema.statics.patchByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // patch data
-  const patch = next => Predefine.patch(_id, body, next);
+  const patch = (next) => Predefine.patch(_id, body, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -733,14 +731,14 @@ PredefineSchema.statics.putByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // put data
-  const put = next => Predefine.put(_id, body, next);
+  const put = (next) => Predefine.put(_id, body, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -789,14 +787,14 @@ PredefineSchema.statics.deleteByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // delete existing data
-  const del = next => Predefine.del(options, next);
+  const del = (next) => Predefine.del(options, next);
 
   // transform by extension
   const transform = (result, next) => {

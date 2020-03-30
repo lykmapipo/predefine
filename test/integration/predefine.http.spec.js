@@ -25,11 +25,11 @@ describe('Predefine Rest API', () => {
 
   before(() => clearHttp());
 
-  before(done => clearDb(done));
+  before((done) => clearDb(done));
 
-  before(done => create(parent, done));
+  before((done) => create(parent, done));
 
-  it('should handle HTTP POST on /predefines/:bucket', done => {
+  it('should handle HTTP POST on /predefines/:bucket', (done) => {
     const { testPost } = testRouter(options, predefineRouter);
     testPost({ bucket, ...predefine.toObject() })
       .expect(201)
@@ -46,7 +46,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines/:bucket', done => {
+  it('should handle HTTP GET on /predefines/:bucket', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     testGet({ bucket })
       .expect(200)
@@ -65,7 +65,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should reject unknown buckect on HTTP GET on /predefines/:bucket', done => {
+  it('should reject unknown buckect on HTTP GET on /predefines/:bucket', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     testGet({ bucket: 'unknown' })
       .expect(404)
@@ -80,7 +80,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines/:bucket.geojson', done => {
+  it('should handle HTTP GET on /predefines/:bucket.geojson', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     testGet({ bucket, ext: CONTENT_TYPE_GEOJSON })
       .expect(200)
@@ -94,7 +94,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines/:bucket.topojson', done => {
+  it('should handle HTTP GET on /predefines/:bucket.topojson', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     testGet({ bucket, ext: CONTENT_TYPE_TOPOJSON })
       .expect(200)
@@ -115,7 +115,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines/defaults', done => {
+  it('should handle HTTP GET on /predefines/defaults', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     testGet({ bucket: 'defaults' })
       .expect(200)
@@ -134,12 +134,12 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle GET /predefines/:bucket/schema', done => {
+  it('should handle GET /predefines/:bucket/schema', (done) => {
     const { testGetSchema } = testRouter(options, predefineRouter);
     testGetSchema({ bucket }).expect(200, done);
   });
 
-  it('should handle GET /predefines/:bucket/export', done => {
+  it('should handle GET /predefines/:bucket/export', (done) => {
     const { testGetExport } = testRouter(options, predefineRouter);
     testGetExport({ bucket })
       .expect('Content-Type', 'text/csv; charset=utf-8')
@@ -149,7 +149,7 @@ describe('Predefine Rest API', () => {
       .expect(200, done);
   });
 
-  it('should handle GET /predefines/defaults/export', done => {
+  it('should handle GET /predefines/defaults/export', (done) => {
     const { testGetExport } = testRouter(options, predefineRouter);
     testGetExport({ bucket: 'defaults' })
       .expect('Content-Type', 'text/csv; charset=utf-8')
@@ -159,7 +159,7 @@ describe('Predefine Rest API', () => {
       .expect(200, done);
   });
 
-  it('should handle HTTP GET on /predefines/:bucket/:id', done => {
+  it('should handle HTTP GET on /predefines/:bucket/:id', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     const params = { bucket, id: predefine._id.toString() };
     testGet(params)
@@ -176,7 +176,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines/:bucket/:id.geojson', done => {
+  it('should handle HTTP GET on /predefines/:bucket/:id.geojson', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     const params = {
       bucket,
@@ -195,7 +195,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP GET on /predefines/:bucket/:id.topojson', done => {
+  it('should handle HTTP GET on /predefines/:bucket/:id.topojson', (done) => {
     const { testGet } = testRouter(options, predefineRouter);
     const params = {
       bucket,
@@ -222,7 +222,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PATCH on /predefines/:bucket/:id', done => {
+  it('should handle HTTP PATCH on /predefines/:bucket/:id', (done) => {
     const { testPatch } = testRouter(options, predefineRouter);
     const { strings } = Predefine.fake().toObject();
     const params = { bucket, id: predefine._id.toString() };
@@ -242,7 +242,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PATCH on /predefines/:bucket/:id.geojson', done => {
+  it('should handle HTTP PATCH on /predefines/:bucket/:id.geojson', (done) => {
     const { testPatch } = testRouter(options, predefineRouter);
     const { strings } = Predefine.fake().toObject();
     const params = {
@@ -262,7 +262,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PATCH on /predefines/:bucket/:id.topojson', done => {
+  it('should handle HTTP PATCH on /predefines/:bucket/:id.topojson', (done) => {
     const { testPatch } = testRouter(options, predefineRouter);
     const { strings } = Predefine.fake().toObject();
     const params = {
@@ -290,7 +290,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PUT on /predefines/:bucket/:id', done => {
+  it('should handle HTTP PUT on /predefines/:bucket/:id', (done) => {
     const { testPut } = testRouter(options, predefineRouter);
     const { strings } = Predefine.fake().toObject();
     const params = { bucket, id: predefine._id.toString() };
@@ -310,7 +310,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PUT on /predefines/:bucket/:id.geojson', done => {
+  it('should handle HTTP PUT on /predefines/:bucket/:id.geojson', (done) => {
     const { testPut } = testRouter(options, predefineRouter);
     const { strings } = Predefine.fake().toObject();
     const params = {
@@ -330,7 +330,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP PUT on /predefines/:bucket/:id.topojson', done => {
+  it('should handle HTTP PUT on /predefines/:bucket/:id.topojson', (done) => {
     const { testPut } = testRouter(options, predefineRouter);
     const { strings } = Predefine.fake().toObject();
     const params = {
@@ -358,7 +358,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP DELETE on /predefines/:bucket/:id', done => {
+  it('should handle HTTP DELETE on /predefines/:bucket/:id', (done) => {
     const { testDelete } = testRouter(options, predefineRouter);
     const params = { bucket, id: predefine._id.toString() };
     testDelete(params)
@@ -373,7 +373,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP DELETE on /predefines/:bucket/:id.geojson', done => {
+  it('should handle HTTP DELETE on /predefines/:bucket/:id.geojson', (done) => {
     const { testDelete } = testRouter(options, predefineRouter);
     const params = {
       bucket,
@@ -392,7 +392,7 @@ describe('Predefine Rest API', () => {
       });
   });
 
-  it('should handle HTTP DELETE on /predefines/:bucket/:id.topojson', done => {
+  it('should handle HTTP DELETE on /predefines/:bucket/:id.topojson', (done) => {
     const { testDelete } = testRouter(options, predefineRouter);
     const params = {
       bucket,
@@ -421,5 +421,5 @@ describe('Predefine Rest API', () => {
 
   after(() => clearHttp());
 
-  after(done => clearDb(done));
+  after((done) => clearDb(done));
 });

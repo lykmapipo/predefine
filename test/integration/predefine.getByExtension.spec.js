@@ -3,18 +3,18 @@ import { CONTENT_TYPE_GEOJSON, CONTENT_TYPE_TOPOJSON } from '../../src/utils';
 import { Predefine } from '../../src';
 
 describe('Predefine GetByExtension', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   let predefines = [Predefine.fake()];
 
-  before(done => {
+  before((done) => {
     Predefine.insertMany(predefines, (error, created) => {
       predefines = created;
       done(error, created);
     });
   });
 
-  it('should be able to provide json results', done => {
+  it('should be able to provide json results', (done) => {
     const optns = {};
     Predefine.getByExtension(optns, (error, results) => {
       expect(error).to.not.exist;
@@ -30,7 +30,7 @@ describe('Predefine GetByExtension', () => {
     });
   });
 
-  it('should be able to provide geojson results', done => {
+  it('should be able to provide geojson results', (done) => {
     const optns = { params: { ext: CONTENT_TYPE_GEOJSON } };
     Predefine.getByExtension(optns, (error, results) => {
       expect(error).to.not.exist;
@@ -40,7 +40,7 @@ describe('Predefine GetByExtension', () => {
     });
   });
 
-  it('should be able to provide topojson results', done => {
+  it('should be able to provide topojson results', (done) => {
     const optns = { params: { ext: CONTENT_TYPE_TOPOJSON } };
     Predefine.getByExtension(optns, (error, results) => {
       expect(error).to.not.exist;
@@ -58,5 +58,5 @@ describe('Predefine GetByExtension', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

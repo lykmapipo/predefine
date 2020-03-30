@@ -3,18 +3,18 @@ import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Get', () => {
-  before(done => clear(done));
+  before((done) => clear(done));
 
   let predefines = Predefine.fake(32);
 
-  before(done => {
+  before((done) => {
     Predefine.insertMany(predefines, (error, created) => {
       predefines = created;
       done(error, created);
     });
   });
 
-  it('should be able to get without options', done => {
+  it('should be able to get without options', (done) => {
     Predefine.get((error, results) => {
       expect(error).to.not.exist;
       expect(results).to.exist;
@@ -38,7 +38,7 @@ describe('Predefine Get', () => {
     });
   });
 
-  it('should be able to get with options', done => {
+  it('should be able to get with options', (done) => {
     const options = { page: 1, limit: 20 };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
@@ -63,7 +63,7 @@ describe('Predefine Get', () => {
     });
   });
 
-  it('should be able to search with options', done => {
+  it('should be able to search with options', (done) => {
     const options = { filter: { q: predefines[0].strings.code } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
@@ -88,7 +88,7 @@ describe('Predefine Get', () => {
     });
   });
 
-  it('should parse filter options', done => {
+  it('should parse filter options', (done) => {
     const options = { filter: { 'strings.code': predefines[0].strings.code } };
     Predefine.get(options, (error, results) => {
       expect(error).to.not.exist;
@@ -113,5 +113,5 @@ describe('Predefine Get', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

@@ -7,11 +7,11 @@ describe('Predefine getOneOrDefault', () => {
   const predefine = Predefine.fake();
   predefine.set({ booleans: { default: true } });
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to get existing by id', done => {
+  it('should be able to get existing by id', (done) => {
     const { _id } = predefine;
     Predefine.getOneOrDefault({ _id }, (error, found) => {
       expect(error).to.not.exist;
@@ -21,7 +21,7 @@ describe('Predefine getOneOrDefault', () => {
     });
   });
 
-  it('should be able to get existing with criteria', done => {
+  it('should be able to get existing with criteria', (done) => {
     const { code, bucket } = predefine;
     Predefine.getOneOrDefault({ code, bucket }, (error, found) => {
       expect(error).to.not.exist;
@@ -31,7 +31,7 @@ describe('Predefine getOneOrDefault', () => {
     });
   });
 
-  it('should be able to get default with criteria', done => {
+  it('should be able to get default with criteria', (done) => {
     const { bucket } = predefine;
     Predefine.getOneOrDefault({ bucket }, (error, found) => {
       expect(error).to.not.exist;
@@ -41,7 +41,7 @@ describe('Predefine getOneOrDefault', () => {
     });
   });
 
-  it('should be able to get default with criteria filter', done => {
+  it('should be able to get default with criteria filter', (done) => {
     const { code } = flat(copyInstance(predefine.strings));
     Predefine.getOneOrDefault({ 'strings.code': code }, (error, found) => {
       expect(error).to.not.exist;
@@ -51,7 +51,7 @@ describe('Predefine getOneOrDefault', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     const { _id } = Predefine.fake();
     Predefine.getOneOrDefault({ _id }, (error, found) => {
       expect(error).to.exist;
@@ -62,5 +62,5 @@ describe('Predefine getOneOrDefault', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

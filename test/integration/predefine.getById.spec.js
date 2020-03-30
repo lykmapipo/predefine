@@ -7,13 +7,13 @@ describe('Predefine getById', () => {
   const predefine = Predefine.fake();
   predefine.set({ relations: { parent } });
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(parent, done));
+  before((done) => create(parent, done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to get an instance', done => {
+  it('should be able to get an instance', (done) => {
     Predefine.getById(predefine._id, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist;
@@ -23,7 +23,7 @@ describe('Predefine getById', () => {
     });
   });
 
-  it('should be able to get with options', done => {
+  it('should be able to get with options', (done) => {
     const options = {
       _id: predefine._id,
       select: 'strings.name',
@@ -40,7 +40,7 @@ describe('Predefine getById', () => {
       expect(fields).to.have.length(3);
       _.map(
         ['namespace', 'strings.description', 'createdAt', 'updatedAt'],
-        field => {
+        (field) => {
           expect(fields).to.not.include(field);
         }
       );
@@ -48,7 +48,7 @@ describe('Predefine getById', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     const fake = Predefine.fake();
     Predefine.getById(fake._id, (error, found) => {
       expect(error).to.exist;
@@ -59,5 +59,5 @@ describe('Predefine getById', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

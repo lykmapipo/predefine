@@ -7,13 +7,13 @@ describe('Predefine GetByIdByExtension', () => {
   const predefine = Predefine.fake();
   predefine.set({ relations: { parent } });
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(parent, done));
+  before((done) => create(parent, done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to provide json instance', done => {
+  it('should be able to provide json instance', (done) => {
     const optns = { _id: predefine._id };
     Predefine.getByIdByExtension(optns, (error, found) => {
       expect(error).to.not.exist;
@@ -24,7 +24,7 @@ describe('Predefine GetByIdByExtension', () => {
     });
   });
 
-  it('should be able to provide geojson instance', done => {
+  it('should be able to provide geojson instance', (done) => {
     const optns = {
       _id: predefine._id,
       params: { ext: CONTENT_TYPE_GEOJSON },
@@ -37,7 +37,7 @@ describe('Predefine GetByIdByExtension', () => {
     });
   });
 
-  it('should be able to provide topojson instance', done => {
+  it('should be able to provide topojson instance', (done) => {
     const optns = {
       _id: predefine._id,
       params: { ext: CONTENT_TYPE_TOPOJSON },
@@ -58,5 +58,5 @@ describe('Predefine GetByIdByExtension', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });

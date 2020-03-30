@@ -5,11 +5,11 @@ import { Predefine } from '../../src';
 describe('Predefine Static Patch', () => {
   const predefine = Predefine.fake();
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to patch', done => {
+  it('should be able to patch', (done) => {
     const { strings } = Predefine.fakeOnly('strings.description.en');
     Predefine.patch(predefine._id, { strings }, (error, updated) => {
       expect(error).to.not.exist;
@@ -20,7 +20,7 @@ describe('Predefine Static Patch', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     const fake = Predefine.fake().toObject();
     Predefine.patch(fake._id, _.omit(fake, '_id'), (error, updated) => {
       expect(error).to.exist;
@@ -31,17 +31,17 @@ describe('Predefine Static Patch', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });
 
 describe('Predefine Instance Patch', () => {
   const predefine = Predefine.fake();
 
-  before(done => clear(done));
+  before((done) => clear(done));
 
-  before(done => create(predefine, done));
+  before((done) => create(predefine, done));
 
-  it('should be able to patch', done => {
+  it('should be able to patch', (done) => {
     const { strings } = Predefine.fakeOnly('strings.description.en');
     predefine.patch({ strings }, (error, updated) => {
       expect(error).to.not.exist;
@@ -52,7 +52,7 @@ describe('Predefine Instance Patch', () => {
     });
   });
 
-  it('should throw if not exists', done => {
+  it('should throw if not exists', (done) => {
     predefine.patch((error, updated) => {
       expect(error).to.not.exist;
       expect(updated).to.exist;
@@ -61,5 +61,5 @@ describe('Predefine Instance Patch', () => {
     });
   });
 
-  after(done => clear(done));
+  after((done) => clear(done));
 });
