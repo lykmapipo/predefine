@@ -3,7 +3,7 @@ import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVer
 import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, Mixed, connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
-import { map, zipObject, without, keys, mapValues, pick, includes, omit, omitBy, isEmpty, toUpper, find, forEach, merge, get, flatMap, isMap, trim } from 'lodash';
+import { map, zipObject, without, keys, mapValues, pick, includes, omit, omitBy, isEmpty, toUpper, find, forEach, merge, get, flatMap, isMap, trim, isArray } from 'lodash';
 import { topology } from 'topojson-server';
 import { localizedValuesFor, localizedIndexesFor, localize, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
@@ -51,13 +51,13 @@ const NAMESPACES = getStringSet(
   [DEFAULT_NAMESPACE].concat(rc.namespaces)
 );
 
-const NAMESPACE_MAP = map(NAMESPACES, namespace => {
+const NAMESPACE_MAP = map(NAMESPACES, (namespace) => {
   return { namespace, bucket: collectionNameOf(namespace) };
 });
 
 const NAMESPACE_DICTIONARY = zipObject(
   NAMESPACES,
-  map(NAMESPACES, namespace => collectionNameOf(namespace))
+  map(NAMESPACES, (namespace) => collectionNameOf(namespace))
 );
 
 const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
@@ -92,7 +92,7 @@ const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     localize: true,
-    fake: f => f.commerce.productName(),
+    fake: (f) => f.commerce.productName(),
   },
   {
     name: 'abbreviation',
@@ -103,7 +103,7 @@ const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     localize: true,
-    fake: f => toUpper(f.hacker.abbreviation()),
+    fake: (f) => toUpper(f.hacker.abbreviation()),
   },
   {
     name: 'description',
@@ -113,7 +113,7 @@ const DEFAULT_STRING_PATHS = [
     searchable: true,
     exportable: true,
     localize: true,
-    fake: f => f.lorem.sentence(),
+    fake: (f) => f.lorem.sentence(),
   },
   {
     name: 'code',
@@ -124,7 +124,7 @@ const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     default: () => undefined,
-    fake: f => f.finance.currencyCode(),
+    fake: (f) => f.finance.currencyCode(),
   },
   {
     name: 'symbol',
@@ -135,7 +135,7 @@ const DEFAULT_STRING_PATHS = [
     taggable: true,
     exportable: true,
     default: () => undefined,
-    fake: f => f.finance.currencySymbol(),
+    fake: (f) => f.finance.currencySymbol(),
   },
   {
     name: 'color',
@@ -154,7 +154,7 @@ const DEFAULT_STRING_PATHS = [
     type: String,
     trim: true,
     default: () => undefined,
-    fake: f => f.image.image(),
+    fake: (f) => f.image.image(),
   },
 ];
 
@@ -165,7 +165,7 @@ const DEFAULT_NUMBER_PATHS = [
     index: true,
     default: () => 0,
     exportable: true,
-    fake: f => f.random.number(),
+    fake: (f) => f.random.number(),
   },
 ];
 
@@ -176,7 +176,7 @@ const DEFAULT_BOOLEAN_PATHS = [
     index: true,
     exportable: true,
     default: () => false,
-    fake: f => f.random.boolean(),
+    fake: (f) => f.random.boolean(),
   },
   {
     name: 'preset',
@@ -184,7 +184,7 @@ const DEFAULT_BOOLEAN_PATHS = [
     index: true,
     exportable: true,
     default: () => false,
-    fake: f => f.random.boolean(),
+    fake: (f) => f.random.boolean(),
   },
 ];
 
@@ -235,7 +235,7 @@ const uniqueIndexes = () => {
  * // => { bucket: ..., namespace: ... };
  *
  */
-const ensureBucketAndNamespace = bucketOrNamespace => {
+const ensureBucketAndNamespace = (bucketOrNamespace) => {
   // initialize defaults
   const defaults = isTest()
     ? {}
@@ -271,7 +271,7 @@ const ensureBucketAndNamespace = bucketOrNamespace => {
  */
 const parseNamespaceRelations = () => {
   // use namespace and parent
-  let paths = map(NAMESPACES, path => variableNameFor(path));
+  let paths = map(NAMESPACES, (path) => variableNameFor(path));
   paths = ['parent', ...paths];
 
   // map relations to valid schema definitions
@@ -314,7 +314,7 @@ const parseNamespaceRelations = () => {
  */
 const parseGivenRelations = () => {
   let relations = getObject('PREDEFINE_RELATIONS', mergeObjects(rc.relations));
-  relations = mapValues(relations, relation => {
+  relations = mapValues(relations, (relation) => {
     const { ref = MODEL_NAME, array, autopopulate } = relation;
     // prepare population options
     const autopopulateOptns =
@@ -362,7 +362,7 @@ const parseGivenRelations = () => {
 const relationSchemaPaths = () => {
   // obtain ignored relations
   const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
-  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredPaths = map(ignoredNamespaces, (path) => variableNameFor(path));
   const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
 
   // parse relations
@@ -399,7 +399,7 @@ const relationSchemaPaths = () => {
 const createRelationsSchema = () => {
   // obtain ignored relations
   const ignoredNamespaces = getStringSet('PREDEFINE_RELATIONS_IGNORED', []);
-  const ignoredPaths = map(ignoredNamespaces, path => variableNameFor(path));
+  const ignoredPaths = map(ignoredNamespaces, (path) => variableNameFor(path));
   const ignoredRelations = [...ignoredNamespaces, ...ignoredPaths];
 
   // derive relations
@@ -434,12 +434,12 @@ const createRelationsSchema = () => {
  * // => { code: 'UA', color: '#CCCCCC', ... };
  *
  */
-const stringsDefaultValue = values => {
+const stringsDefaultValue = (values) => {
   // initialize defaults
   let defaults = {};
 
   // compute string defaults
-  forEach(DEFAULT_STRING_PATHS, path => {
+  forEach(DEFAULT_STRING_PATHS, (path) => {
     defaults[path.name] = path.default && path.default();
   });
 
@@ -499,7 +499,7 @@ const createStringsSchema = () => {
     searchable: true,
     taggable: true,
     exportable: true,
-    fake: f => f.commerce.productName(),
+    fake: (f) => f.commerce.productName(),
   };
 
   // obtain given strings schema paths
@@ -509,7 +509,7 @@ const createStringsSchema = () => {
   );
 
   // convert given paths to schema definition
-  givenPaths = map(givenPaths, givenPath => {
+  givenPaths = map(givenPaths, (givenPath) => {
     return mergeObjects(options, { name: givenPath });
   });
 
@@ -518,7 +518,7 @@ const createStringsSchema = () => {
 
   // build stings schema definition
   const definition = {};
-  forEach(paths, path => {
+  forEach(paths, (path) => {
     const { name, ...optns } = path;
     definition[path.name] = optns.localize ? localize(optns) : optns;
   });
@@ -548,12 +548,12 @@ const createStringsSchema = () => {
  * // => { default: false, preset: false, ... };
  *
  */
-const numbersDefaultValue = values => {
+const numbersDefaultValue = (values) => {
   // initialize defaults
   let defaults = {};
 
   // compute number defaults
-  forEach(DEFAULT_NUMBER_PATHS, path => {
+  forEach(DEFAULT_NUMBER_PATHS, (path) => {
     defaults[path.name] = path.default();
   });
 
@@ -619,7 +619,7 @@ const createNumbersSchema = () => {
     type: Number,
     index: true,
     exportable: true,
-    fake: f => f.random.number(),
+    fake: (f) => f.random.number(),
   };
 
   // create numbers sub schema
@@ -670,12 +670,12 @@ const booleanSchemaPaths = () =>
  * // => { default: false, preset: false, ... };
  *
  */
-const booleansDefaultValue = values => {
+const booleansDefaultValue = (values) => {
   // initialize defaults
   let defaults = {};
 
   // compute boolean defaults
-  forEach(DEFAULT_BOOLEAN_PATHS, path => {
+  forEach(DEFAULT_BOOLEAN_PATHS, (path) => {
     defaults[path.name] = path.default();
   });
 
@@ -718,7 +718,7 @@ const createBooleansSchema = () => {
     type: Boolean,
     index: true,
     exportable: true,
-    fake: f => f.random.boolean(),
+    fake: (f) => f.random.boolean(),
   };
 
   // create booleans sub schema
@@ -774,7 +774,7 @@ const createDatesSchema = () => {
     type: Date,
     index: true,
     exportable: true,
-    fake: f => f.date.recent(),
+    fake: (f) => f.date.recent(),
   };
 
   // create dates sub schema
@@ -1071,7 +1071,7 @@ const mapToTopoJSON = (...predefines) => {
  * // => { name : { en: 'John Doe' }, ... };
  *
  */
-const transformToPredefine = val => {
+const transformToPredefine = (val) => {
   // ensure data
   const data = mergeObjects(val);
 
@@ -1393,7 +1393,7 @@ const PredefineSchema = createSchema(
     properties: {
       type: Map,
       of: Mixed,
-      fake: f => f.helpers.createTransaction(),
+      fake: (f) => f.helpers.createTransaction(),
     },
   },
   SCHEMA_OPTIONS,
@@ -1525,15 +1525,46 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @version 0.1.0
  * @static
  */
-PredefineSchema.statics.prepareSeedCriteria = seed => {
-  const names = localizedKeysFor('strings.name');
+PredefineSchema.statics.prepareSeedCriteria = (seed) => {
+  // TODO: convert seed to object if is instance
 
+  // try use seed id as criteria if exists
+  const id = idOf(seed);
+  if (!isEmpty(id)) {
+    return { _id: id };
+  }
+
+  // otherwise use fields and releations for criteria
+  let criteria = {};
   const copyOfSeed = seed;
-  copyOfSeed.name = localizedValuesFor(seed.strings.name);
+  copyOfSeed.name = localizedValuesFor(get(seed, 'strings.name'));
 
-  const criteria = idOf(copyOfSeed)
-    ? pick(copyOfSeed, '_id')
-    : flat(pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names));
+  // use fields to criteria
+  const names = localizedKeysFor('strings.name');
+  const fieldsCriteria = flat(
+    pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names)
+  );
+  criteria = mergeObjects(criteria, fieldsCriteria);
+
+  // use non-empty relations to criteria
+  const relationPaths = relationSchemaPaths();
+  const relationsCriteria = {};
+  forEach(relationPaths, (relationPath) => {
+    // derive actual relation schema path
+    const actualRelationPath = `relations.${relationPath}`;
+
+    // collect relation value & convert to _id
+    let relationValue = get(seed, actualRelationPath);
+    relationValue = isArray(relationValue)
+      ? map(relationValue, (val) => idOf(val))
+      : idOf(relationValue);
+
+    // set relation
+    relationsCriteria[actualRelationPath] = relationValue;
+  });
+  criteria = mergeObjects(criteria, relationsCriteria);
+
+  // return merged criteria
   return criteria;
 };
 
@@ -1582,9 +1613,7 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   const Predefine = model(MODEL_NAME);
 
   // query
-  return Predefine.findOne(filter)
-    .orFail()
-    .exec(done);
+  return Predefine.findOne(filter).orFail().exec(done);
 };
 
 /**
@@ -1614,14 +1643,14 @@ PredefineSchema.statics.getByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // fetch data
-  const getList = next => Predefine.get(options, next);
+  const getList = (next) => Predefine.get(options, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -1672,14 +1701,14 @@ PredefineSchema.statics.postByExtension = (optns, done) => {
   const { body, params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // post data
-  const post = next => Predefine.post(body, next);
+  const post = (next) => Predefine.post(body, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -1728,14 +1757,14 @@ PredefineSchema.statics.getByIdByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // fetch data by id
-  const getById = next => Predefine.getById(options, next);
+  const getById = (next) => Predefine.getById(options, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -1784,14 +1813,14 @@ PredefineSchema.statics.patchByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // patch data
-  const patch = next => Predefine.patch(_id, body, next);
+  const patch = (next) => Predefine.patch(_id, body, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -1840,14 +1869,14 @@ PredefineSchema.statics.putByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {}, _id, body } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // put data
-  const put = next => Predefine.put(_id, body, next);
+  const put = (next) => Predefine.put(_id, body, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -1896,14 +1925,14 @@ PredefineSchema.statics.deleteByExtension = (optns, done) => {
   const { params: { ext = CONTENT_TYPE_JSON } = {} } = options;
 
   // ensure bucket exists
-  const ensureBucket = next => {
+  const ensureBucket = (next) => {
     const bucket =
       get(options, 'params.bucket') || get(options, 'filters.bucket');
-    return checkIfBucketExists(bucket, error => next(error));
+    return checkIfBucketExists(bucket, (error) => next(error));
   };
 
   // delete existing data
-  const del = next => Predefine.del(options, next);
+  const del = (next) => Predefine.del(options, next);
 
   // transform by extension
   const transform = (result, next) => {
@@ -2125,9 +2154,9 @@ const apiVersion = apiVersion$1();
  * @since 0.1.0
  * @version 0.1.0
  */
-const start = done => {
+const start = (done) => {
   // connect mongodb
-  connect(error => {
+  connect((error) => {
     // back-off on connect error
     if (error) {
       return done(error);
