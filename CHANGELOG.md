@@ -1,3 +1,15 @@
+#### 1.8.0 (2020-04-08)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([fc7dee96](https://github.com/lykmapipo/predefine/commit/fc7dee96570c30beb38d3605d6a833029dd5316d))
+  *  force latest version & audit fix ([28dcfbbf](https://github.com/lykmapipo/predefine/commit/28dcfbbf0eb41589aac76c8890b5088c1f58e91d))
+
+##### New Features
+
+* **seed:**  use non-empty relations on seed criteria ([0756c19e](https://github.com/lykmapipo/predefine/commit/0756c19e6d4e5e03c9129782a275bee035ddd020))
+
 #### 1.7.5 (2020-03-30)
 
 ##### Chores
