@@ -258,7 +258,7 @@ describe('Predefine Validations', () => {
   });
 });
 
-describe.only('Predefine Statics', () => {
+describe('Predefine Statics', () => {
   it('should expose model name', () => {
     expect(Predefine.MODEL_NAME).to.exist;
     expect(Predefine.MODEL_NAME).to.be.equal('Predefine');
@@ -300,28 +300,41 @@ describe.only('Predefine Statics', () => {
     });
   });
 
-  it.only('should prepare seed criteria', () => {
+  it('should prepare seed criteria', () => {
     const { _id, ...rest } = Predefine.fake().toObject();
-    const seed = Predefine.prepareSeedCriteria(rest);
-    expect(seed).to.exist;
-    expect(seed.namespace).to.exist;
-    expect(seed.bucket).to.exist;
-    expect(seed['strings.code']).to.exist;
-    expect(seed['strings.name.en']).to.exist;
+    const criteria = Predefine.prepareSeedCriteria(rest);
+    expect(criteria).to.exist;
+    expect(criteria.namespace).to.exist;
+    expect(criteria.bucket).to.exist;
+    expect(criteria['strings.code']).to.exist;
+    expect(criteria['strings.name.en']).to.exist;
   });
 
   it('should prepare seed criteria from object id', () => {
     const predefine = Predefine.fake().toObject();
-    const seed = Predefine.prepareSeedCriteria(predefine);
-    expect(seed).to.exist;
-    expect(seed._id).to.exist;
+    const criteria = Predefine.prepareSeedCriteria(predefine);
+    expect(criteria).to.exist;
+    expect(criteria._id).to.exist;
   });
 
   it('should prepare seed criteria from object id', () => {
     const predefine = _.omit(Predefine.fake().toObject(), '_id');
-    const seed = Predefine.prepareSeedCriteria(predefine);
-    expect(seed).to.exist;
-    expect(seed._id).to.not.exist;
+    const criteria = Predefine.prepareSeedCriteria(predefine);
+    expect(criteria).to.exist;
+    expect(criteria._id).to.not.exist;
+  });
+
+  it('should use non-empty relations in prepared seed criteria', () => {
+    const parent = Predefine.fake().toObject();
+    const groups = [Predefine.fake().toObject(), Predefine.fake().toObject()];
+    const relations = { parent, groups };
+    const predefine = _.omit(Predefine.fake().toObject(), '_id');
+    const seed = _.merge(predefine, { relations });
+
+    const criteria = Predefine.prepareSeedCriteria(seed);
+    expect(criteria).to.exist;
+    expect(criteria['relations.parent']).to.exist;
+    expect(criteria['relations.groups']).to.exist.and.be.an('array');
   });
 });
 

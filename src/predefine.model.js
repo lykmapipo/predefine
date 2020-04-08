@@ -1,4 +1,4 @@
-import { get, isEmpty, pick, trim } from 'lodash';
+import { forEach, get, isArray, isEmpty, map, pick, trim } from 'lodash';
 import { waterfall } from 'async';
 import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
@@ -41,6 +41,7 @@ import {
   mapToGeoJSONFeatureCollection,
   mapToTopoJSON,
   checkIfBucketExists,
+  relationSchemaPaths,
 } from './utils';
 
 /**
@@ -419,16 +420,45 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = (seed) => {
-  // TODO: use non-empty relations to prepare seed criteria
+  // TODO: convert seed to object if is instance
 
-  const names = localizedKeysFor('strings.name');
+  // try use seed id as criteria if exists
+  const id = idOf(seed);
+  if (!isEmpty(id)) {
+    return { _id: id };
+  }
 
+  // otherwise use fields and releations for criteria
+  let criteria = {};
   const copyOfSeed = seed;
-  copyOfSeed.name = localizedValuesFor(seed.strings.name);
+  copyOfSeed.name = localizedValuesFor(get(seed, 'strings.name'));
 
-  const criteria = idOf(copyOfSeed)
-    ? pick(copyOfSeed, '_id')
-    : flat(pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names));
+  // use fields to criteria
+  const names = localizedKeysFor('strings.name');
+  const fieldsCriteria = flat(
+    pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names)
+  );
+  criteria = mergeObjects(criteria, fieldsCriteria);
+
+  // use non-empty relations to criteria
+  const relationPaths = relationSchemaPaths();
+  const relationsCriteria = {};
+  forEach(relationPaths, (relationPath) => {
+    // derive actual relation schema path
+    const actualRelationPath = `relations.${relationPath}`;
+
+    // collect relation value & convert to _id
+    let relationValue = get(seed, actualRelationPath);
+    relationValue = isArray(relationValue)
+      ? map(relationValue, (val) => idOf(val))
+      : idOf(relationValue);
+
+    // set relation
+    relationsCriteria[actualRelationPath] = relationValue;
+  });
+  criteria = mergeObjects(criteria, relationsCriteria);
+
+  // return merged criteria
   return criteria;
 };
 

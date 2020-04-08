@@ -1,5 +1,6 @@
 import path from 'path';
 import _ from 'lodash';
+import { waterfall } from 'async';
 import { clear, expect } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
@@ -106,6 +107,61 @@ describe('Predefine Seed', () => {
       expect(_.find(seeded, { namespace: 'Setting' })).to.exist;
       done(error, seeded);
     });
+  });
+
+  it('should seed with relations', (done) => {
+    const parent = Predefine.fake().toObject();
+    const groups = [Predefine.fake().toObject(), Predefine.fake().toObject()];
+    const relations = { parent, groups };
+    const child = _.merge(_.omit(Predefine.fake().toObject(), '_id'), {
+      relations,
+    });
+
+    waterfall(
+      [
+        (next) => Predefine.seed(parent, next),
+        (seeded, next) => Predefine.seed(child, next),
+      ],
+      (error, seeded) => {
+        expect(error).to.not.exist;
+        expect(seeded).to.exist;
+        expect(_.first(seeded).relations.parent).to.exist;
+        expect(_.first(seeded).relations.groups).to.exist.and.be.an('array');
+        done(error, seeded);
+      }
+    );
+  });
+
+  it('should seed with relations populate', (done) => {
+    const parent = Predefine.fake().toObject();
+    const groups = [Predefine.fake().toObject(), Predefine.fake().toObject()];
+    const child = _.merge(_.omit(Predefine.fake().toObject(), '_id'), {
+      populate: {
+        'relations.parent': {
+          model: Predefine.modelName,
+          match: _.pick(parent, '_id'),
+        },
+        'relations.groups': {
+          model: Predefine.modelName,
+          match: { _id: { $in: _.map(groups, '_id') } },
+          array: true,
+        },
+      },
+    });
+
+    waterfall(
+      [
+        (next) => Predefine.seed([parent, ...groups], next),
+        (seeded, next) => Predefine.seed(child, next),
+      ],
+      (error, seeded) => {
+        expect(error).to.not.exist;
+        expect(seeded).to.exist;
+        expect(_.first(seeded).relations.parent).to.exist;
+        expect(_.first(seeded).relations.groups).to.exist.and.be.an('array');
+        done(error, seeded);
+      }
+    );
   });
 
   after((done) => clear(done));
