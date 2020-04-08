@@ -258,7 +258,7 @@ describe('Predefine Validations', () => {
   });
 });
 
-describe('Predefine Statics', () => {
+describe.only('Predefine Statics', () => {
   it('should expose model name', () => {
     expect(Predefine.MODEL_NAME).to.exist;
     expect(Predefine.MODEL_NAME).to.be.equal('Predefine');
@@ -300,7 +300,7 @@ describe('Predefine Statics', () => {
     });
   });
 
-  it('should prepare seed criteria', () => {
+  it.only('should prepare seed criteria', () => {
     const { _id, ...rest } = Predefine.fake().toObject();
     const seed = Predefine.prepareSeedCriteria(rest);
     expect(seed).to.exist;

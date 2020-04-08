@@ -419,6 +419,8 @@ PredefineSchema.statics.BUCKETS = BUCKETS;
  * @static
  */
 PredefineSchema.statics.prepareSeedCriteria = (seed) => {
+  // TODO: use non-empty relations to prepare seed criteria
+
   const names = localizedKeysFor('strings.name');
 
   const copyOfSeed = seed;
