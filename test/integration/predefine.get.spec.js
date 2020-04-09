@@ -39,7 +39,7 @@ describe('Predefine Get', () => {
       expect(results.page).to.exist;
       expect(results.page).to.be.equal(1);
       expect(results.pages).to.exist;
-      expect(results.pages).to.be.equal(4);
+      expect(results.pages).to.be.at.least(4);
       expect(results.lastModified).to.exist;
       expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
         results.lastModified
@@ -64,7 +64,7 @@ describe('Predefine Get', () => {
       expect(results.page).to.exist;
       expect(results.page).to.be.equal(1);
       expect(results.pages).to.exist;
-      expect(results.pages).to.be.equal(2);
+      expect(results.pages).to.be.at.least(2);
       expect(results.lastModified).to.exist;
       expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
         results.lastModified
@@ -89,7 +89,7 @@ describe('Predefine Get', () => {
       expect(results.page).to.exist;
       expect(results.page).to.be.equal(1);
       expect(results.pages).to.exist;
-      expect(results.pages).to.be.equal(1);
+      expect(results.pages).to.be.at.least(1);
       expect(results.lastModified).to.exist;
       expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
         results.lastModified
@@ -114,7 +114,7 @@ describe('Predefine Get', () => {
       expect(results.page).to.exist;
       expect(results.page).to.be.equal(1);
       expect(results.pages).to.exist;
-      expect(results.pages).to.be.equal(1);
+      expect(results.pages).to.be.at.least(1);
       expect(results.lastModified).to.exist;
       expect(_.maxBy(results.data, 'updatedAt').updatedAt).to.be.at.most(
         results.lastModified

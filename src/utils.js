@@ -4,7 +4,9 @@ import {
   forEach,
   get,
   includes,
+  isArray,
   isEmpty,
+  isFunction,
   keys,
   isMap,
   map,
@@ -19,6 +21,7 @@ import {
 } from 'lodash';
 import { topology as toTopoJSON } from 'topojson-server';
 import {
+  areNotEmpty,
   mergeObjects,
   permissionsFor,
   randomColor,
@@ -1168,7 +1171,7 @@ export const transformToPredefine = (val) => {
  * @function checkIfBucketExists
  * @name checkIfBucketExists
  * @description Check if bucket exists or allowed.
- * @param {string} bucket valid bukcet name
+ * @param {string} bucket valid bucket name
  * @param {Function} done callback to invoke on success or error
  * @returns {Error} error if not exists else true
  * @author lally elias <lallyelias87@gmail.com>
@@ -1193,4 +1196,57 @@ export const checkIfBucketExists = (bucket, done) => {
     return done(error);
   }
   return done(null, true);
+};
+
+/**
+ * @function fakeByNamespace
+ * @name fakeByNamespace
+ * @description Schema plugin to extend predefine faking by namespace
+ * @param {object} schema valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.9.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * // plug into schema
+ * PredefineSchema.plugin(fakeByNamespace);
+ *
+ * // use alias
+ * Predefine.fakeSetting(); //=> Predefine{...}
+ */
+export const fakeByNamespace = (schema) => {
+  // use namespace map to build namespaced faker
+  forEach(NAMESPACE_MAP, (predefine) => {
+    const { namespace, bucket } = predefine;
+    // ensure namespace and bucket
+    if (areNotEmpty(namespace, bucket)) {
+      // derive namespace faker method name
+      const methodName = `fake${namespace}`;
+      // check if namespaced faker exists
+      if (!isFunction(schema.statics[methodName])) {
+        // extend schema with namespaced fakers
+        schema.static({
+          // args: size = 1, locale = 'en', only = undefined, except = undefined
+          [methodName](...args) {
+            // this: refer to model static context
+            const fakes = this.fake(...args);
+            // update with namespace and bucket
+            if (isArray(fakes)) {
+              forEach(fakes, (fake) => {
+                fake.set({ namespace, bucket });
+                return fake;
+              });
+            } else {
+              fakes.set({ namespace, bucket });
+            }
+            // return fake
+            return fakes;
+          },
+        });
+      }
+    }
+  });
 };
