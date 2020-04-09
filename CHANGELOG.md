@@ -1,3 +1,22 @@
+#### 1.9.0 (2020-04-09)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([286bd333](https://github.com/lykmapipo/predefine/commit/286bd333a4bb77dca4cdae0f7fc51296eba95378))
+  *  bump acorn from 7.1.0 to 7.1.1 ([2c649718](https://github.com/lykmapipo/predefine/commit/2c649718725b6b9df9f05796fe3600dd1fd0facb))
+
+##### New Features
+
+*  implement find recursive by parent ([c9ff5844](https://github.com/lykmapipo/predefine/commit/c9ff5844905070cc813713f2c9114283c4f1d70c))
+*  allow fake by namespace ([c1ff17bc](https://github.com/lykmapipo/predefine/commit/c1ff17bcb371af4e844a04bc3b4d9ef43817e0f3))
+
+##### Tests
+
+*  add category namespace ([83cbb916](https://github.com/lykmapipo/predefine/commit/83cbb916138402cc3de8c0fbe2b871c7b0bd3a94))
+*  rename itemunit to unit ([63b4561b](https://github.com/lykmapipo/predefine/commit/63b4561bcda583faa58da2a8584bb2dc6ec3e321))
+* **get:**  allow nested parent relations ([9473ec23](https://github.com/lykmapipo/predefine/commit/9473ec233194411935762ce51b5ac48ad3b13de0))
+
 #### 1.8.0 (2020-04-08)
 
 ##### Chores
