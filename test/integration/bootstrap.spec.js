@@ -3,7 +3,7 @@ import { connect, clear, drop } from '@lykmapipo/mongoose-test-helpers';
 process.env.NODE_ENV = 'test';
 process.env.DEFAULT_LOCALE = 'en';
 process.env.LOCALES = 'en,sw';
-process.env.PREDEFINE_NAMESPACES = 'Setting,Currency,Item,Unit';
+process.env.PREDEFINE_NAMESPACES = 'Setting,Currency,Item,Unit,Category';
 process.env.PREDEFINE_STRINGS = 'account';
 process.env.PREDEFINE_NUMBERS = 'steps';
 process.env.PREDEFINE_DATES = 'startedAt,endedAt';

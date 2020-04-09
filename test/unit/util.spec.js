@@ -522,6 +522,12 @@ describe('Predefine Utils', () => {
     expect(currency.bucket).to.be.equal('currencies');
     expect(Predefine.fakeCurrency(2)).to.have.length(2);
 
+    expect(Predefine.fakeCategory).to.exist;
+    const caregory = Predefine.fakeCategory();
+    expect(caregory.namespace).to.be.equal('Category');
+    expect(caregory.bucket).to.be.equal('categories');
+    expect(Predefine.fakeCategory(2)).to.have.length(2);
+
     expect(Predefine.fakeItem).to.exist;
     const item = Predefine.fakeItem();
     expect(item.namespace).to.be.equal('Item');
