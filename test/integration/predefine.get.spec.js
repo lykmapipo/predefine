@@ -3,26 +3,10 @@ import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Get', () => {
-  const grands = Predefine.fakeCategory(4);
-
-  const parents = _.map(Predefine.fakeCategory(4), (parent, index) => {
-    const relations = { parent: grands[index % 4] };
-    parent.set({ relations });
-    return parent;
-  });
-
-  const kids = _.map(Predefine.fakeItem(24), (kid, index) => {
-    const relations = { parent: parents[index % 4] };
-    kid.set({ relations });
-    return kid;
-  });
-
-  const predefines = [...grands, ...parents, ...kids];
+  const predefines = Predefine.fake(32);
 
   before((done) => clear(done));
-  before((done) => create(...grands, done));
-  before((done) => create(...parents, done));
-  before((done) => create(...kids, done));
+  before((done) => create(...predefines, done));
 
   it('should be able to get without options', (done) => {
     Predefine.get((error, results) => {

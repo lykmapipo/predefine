@@ -1,6 +1,15 @@
-import { forEach, get, isArray, isEmpty, map, pick, trim } from 'lodash';
+import {
+  forEach,
+  get,
+  isArray,
+  isEmpty,
+  map,
+  pick,
+  trim,
+  uniqWith,
+} from 'lodash';
 import { waterfall } from 'async';
-import { idOf, compact, flat, mergeObjects } from '@lykmapipo/common';
+import { idOf, compact, flat, mergeObjects, uniq } from '@lykmapipo/common';
 import { isTest } from '@lykmapipo/env';
 import { createSchema, model, Mixed } from '@lykmapipo/mongoose-common';
 import {
@@ -848,6 +857,91 @@ PredefineSchema.statics.deleteByExtension = (optns, done) => {
 
   // return
   return waterfall([ensureBucket, del, transform], done);
+};
+
+/**
+ * @name findRecursive
+ * @function findRecursive
+ * @description Find existing predefine recursively using given criteria
+ * @param {object} criteria valid ancestor query options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} found predefines or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 1.9.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const criteria = { _id: ... };
+ * Predefine.findRecursive(criteria, (error, results) => { ... });
+ * // => [ Predefine{ ... }, ... ]
+ *
+ */
+PredefineSchema.statics.findRecursive = (criteria, done) => {
+  // TODO: use $graphLookUp
+  // TODO: improve n-queries
+
+  // ref
+  const Predefine = model(MODEL_NAME);
+  let results = [];
+
+  // collect results
+  const collectResults = (updates) => {
+    let collected = uniq([].concat(results).concat(updates));
+    collected = uniqWith(collected, (a, b) => {
+      return a.equals(b);
+    });
+    return collected;
+  };
+
+  // find ancestors
+  const findAncestors = (next) => {
+    return Predefine.find(criteria)
+      .setOptions({ autopopulate: false })
+      .exec((error, ancestors) => {
+        if (error) {
+          return next(error);
+        }
+        results = collectResults(ancestors);
+        const parentIds = uniq(map(ancestors, '_id'));
+        return next(null, parentIds);
+      });
+  };
+
+  // find children by their parents
+  const findChildren = (parents, next) => {
+    const conditions = { 'relations.parent': { $in: [].concat(parents) } };
+    return Predefine.find(conditions)
+      .setOptions({ autopopulate: false })
+      .exec(next);
+  };
+
+  // find children recursively
+  const findChildrenRecursive = (parents, next) => {
+    // ensure parents
+    if (!isEmpty(parents)) {
+      return findChildren(parents, (error, children) => {
+        // back-off on error
+        if (error) {
+          return next(error);
+        }
+        // collect result
+        results = collectResults(children);
+        // continue find children
+        const parentIds = uniq(map(children, '_id'));
+        return findChildrenRecursive(parentIds, next);
+      });
+    }
+    // continue
+    return next(null, results);
+  };
+
+  // prepare tasks
+  const tasks = [findAncestors, findChildrenRecursive];
+
+  // do find recursively
+  return waterfall(tasks, done);
 };
 
 /* export predefine model */
