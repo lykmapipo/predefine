@@ -1,18 +1,28 @@
 import _ from 'lodash';
-import { expect, clear } from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Get', () => {
-  before((done) => clear(done));
+  const grands = Predefine.fake(4);
 
-  let predefines = Predefine.fake(32);
-
-  before((done) => {
-    Predefine.insertMany(predefines, (error, created) => {
-      predefines = created;
-      done(error, created);
-    });
+  const parents = _.map(Predefine.fake(4), (parent, index) => {
+    const relations = { parent: grands[index % 4] };
+    parent.set({ relations });
+    return parent;
   });
+
+  const kids = _.map(Predefine.fake(24), (kid, index) => {
+    const relations = { parent: parents[index % 4] };
+    kid.set({ relations });
+    return kid;
+  });
+
+  const predefines = [...grands, ...parents, ...kids];
+
+  before((done) => clear(done));
+  before((done) => create(...grands, done));
+  before((done) => create(...parents, done));
+  before((done) => create(...kids, done));
 
   it('should be able to get without options', (done) => {
     Predefine.get((error, results) => {
