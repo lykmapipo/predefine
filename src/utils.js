@@ -1242,7 +1242,7 @@ export const fakeByNamespace = (schema) => {
             } else {
               fakes.set({ namespace, bucket });
             }
-            // return fake
+            // return fakes
             return fakes;
           },
         });

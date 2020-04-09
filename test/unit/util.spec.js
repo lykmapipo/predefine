@@ -132,7 +132,7 @@ describe('Predefine Utils', () => {
     expect(relations.options.emitIndexErrors).to.be.true;
 
     expect(relations.path('itemUnit')).to.not.exist;
-    expect(relations.path('ItemUnit')).to.not.exist;
+    expect(relations.path('Unit')).to.not.exist;
   });
 
   it('should provide strings schema paths', () => {
@@ -361,7 +361,7 @@ describe('Predefine Utils', () => {
       'Setting',
       'Currency',
       'Item',
-      'ItemUnit'
+      'Unit'
     );
     expect(_.map(permissions, 'wildcard')).to.include(
       'setting:create',
@@ -528,10 +528,10 @@ describe('Predefine Utils', () => {
     expect(item.bucket).to.be.equal('items');
     expect(Predefine.fakeItem(2)).to.have.length(2);
 
-    expect(Predefine.fakeItemUnit).to.exist;
-    const unit = Predefine.fakeItemUnit();
-    expect(unit.namespace).to.be.equal('ItemUnit');
-    expect(unit.bucket).to.be.equal('itemunits');
-    expect(Predefine.fakeItemUnit(2)).to.have.length(2);
+    expect(Predefine.fakeUnit).to.exist;
+    const unit = Predefine.fakeUnit();
+    expect(unit.namespace).to.be.equal('Unit');
+    expect(unit.bucket).to.be.equal('units');
+    expect(Predefine.fakeUnit(2)).to.have.length(2);
   });
 });
