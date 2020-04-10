@@ -17,7 +17,7 @@ describe('Predefine findRecursive', () => {
   before((done) => create(kid, done));
 
   it('should find 1-level recursively', (done) => {
-    Predefine.findRecursive({ _id: idOf(kid) }, (error, found) => {
+    Predefine.findChildren({ _id: idOf(kid) }, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist.and.to.have.length(1);
       expect(idOf(found[0])).to.be.eql(idOf(kid));
@@ -26,7 +26,7 @@ describe('Predefine findRecursive', () => {
   });
 
   it('should find 2-level recursively', (done) => {
-    Predefine.findRecursive({ _id: idOf(parent) }, (error, found) => {
+    Predefine.findChildren({ _id: idOf(parent) }, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist.and.to.have.length(2);
       expect(idOf(found[0])).to.be.eql(idOf(parent));
@@ -36,7 +36,7 @@ describe('Predefine findRecursive', () => {
   });
 
   it('should find 3-level recursively', (done) => {
-    Predefine.findRecursive({ _id: idOf(grand) }, (error, found) => {
+    Predefine.findChildren({ _id: idOf(grand) }, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist.and.to.have.length(3);
       expect(idOf(found[0])).to.be.eql(idOf(grand));
@@ -48,7 +48,7 @@ describe('Predefine findRecursive', () => {
 
   it('should find nth-level recursively', (done) => {
     const criteria = { _id: { $in: [idOf(grand)] } };
-    Predefine.findRecursive(criteria, (error, found) => {
+    Predefine.findChildren(criteria, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist.and.to.have.length(3);
       done(error, found);
@@ -57,7 +57,7 @@ describe('Predefine findRecursive', () => {
 
   it('should find nth-level recursively', (done) => {
     const criteria = { _id: { $in: [idOf(grand), idOf(parent)] } };
-    Predefine.findRecursive(criteria, (error, found) => {
+    Predefine.findChildren(criteria, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist.and.to.have.length(3);
       done(error, found);
@@ -66,7 +66,7 @@ describe('Predefine findRecursive', () => {
 
   it('should find nth-level recursively', (done) => {
     const criteria = { _id: { $in: [idOf(grand), idOf(parent), idOf(kid)] } };
-    Predefine.findRecursive(criteria, (error, found) => {
+    Predefine.findChildren(criteria, (error, found) => {
       expect(error).to.not.exist;
       expect(found).to.exist.and.to.have.length(3);
       done(error, found);
