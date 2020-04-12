@@ -869,7 +869,7 @@ PredefineSchema.statics.deleteByExtension = (optns, done) => {
  * @name findChildren
  * @function findChildren
  * @description Find predefine children recursively using given criteria
- * @param {object} criteria valid ancestor query options
+ * @param {object} criteria valid parent query options
  * @param {Function} done callback to invoke on success or error
  * @returns {object|Error} found predefines or error
  *
@@ -916,6 +916,9 @@ PredefineSchema.statics.findChildren = (criteria, done) => {
       if (!isEmpty(children)) {
         results = collectResults(...children);
         const parentIds = uniq(toObjectIds(...children));
+        if (isEmpty(parentIds)) {
+          return next(null, results);
+        }
         return findKids({ 'relations.parent': { $in: parentIds } }, next);
       }
 
@@ -926,6 +929,73 @@ PredefineSchema.statics.findChildren = (criteria, done) => {
 
   // do find recursively
   return findKids(criteria, done);
+};
+
+/**
+ * @name findParents
+ * @function findParents
+ * @description Find predefine parent recursively using given criteria
+ * @param {object} criteria valid child query options
+ * @param {Function} done callback to invoke on success or error
+ * @returns {object|Error} found predefines or error
+ *
+ * @author lally elias <lallyelias87@gmail.com>
+ * @since 1.10.0
+ * @version 0.1.0
+ * @static
+ * @example
+ *
+ * const criteria = { _id: ... };
+ * Predefine.findParents(criteria, (error, results) => { ... });
+ * // => [ Predefine{ ... }, ... ]
+ *
+ */
+PredefineSchema.statics.findParents = (criteria, done) => {
+  // TODO: use $graphLookUp
+
+  // ref
+  const Predefine = model(MODEL_NAME);
+  let results = [];
+
+  // collect results
+  const collectResults = (...updates) => {
+    let collected = uniq([...results, ...updates]);
+    collected = uniqWith(collected, areSameInstance);
+    return collected;
+  };
+
+  // find parent by her children
+  const findAncestors = (conditions, next) => {
+    // prepare query
+    const query = Predefine.find(conditions).setOptions({
+      autopopulate: false,
+    });
+
+    // execute query
+    return query.exec((error, ancestors) => {
+      // back-off on error
+      if (error) {
+        return next(error);
+      }
+
+      // continue find parent
+      if (!isEmpty(ancestors)) {
+        results = collectResults(...ancestors);
+        const ancestorIds = uniq(map(ancestors, 'relations.parent'));
+        const parentIds = uniq(toObjectIds(...ancestorIds));
+        if (isEmpty(parentIds)) {
+          return next(null, results);
+        }
+        return findAncestors({ _id: { $in: parentIds } }, next);
+      }
+
+      // continue
+      return next(null, results);
+    });
+  };
+
+  // do find recursively
+  return findAncestors(criteria, done);
 };
 
 /* export predefine model */
