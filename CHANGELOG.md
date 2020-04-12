@@ -1,3 +1,13 @@
+#### 1.10.0 (2020-04-12)
+
+##### New Features
+
+*  implement find parents recursive ([6d863763](https://github.com/lykmapipo/predefine/commit/6d863763dc8ff1323876c8c8c972d4304971dfaf))
+
+##### Refactors
+
+* **model:**  reduce queries on find children recursive ([def72c62](https://github.com/lykmapipo/predefine/commit/def72c6258f70956de837a595efddbadd965bf6b))
+
 #### 1.9.0 (2020-04-09)
 
 ##### Chores
