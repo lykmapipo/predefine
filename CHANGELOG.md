@@ -1,3 +1,13 @@
+#### 1.11.0 (2020-04-22)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([3944d493](https://github.com/lykmapipo/predefine/commit/3944d49397bf0cdbcd18d379451fddb12b6f009f))
+
+##### Refactors
+
+* **utils:**  ignore direct schema path on properties transform ([69a25314](https://github.com/lykmapipo/predefine/commit/69a253145cd00d81408a73d101e9ca31312d659b))
+
 #### 1.10.1 (2020-04-18)
 
 ##### Chores
