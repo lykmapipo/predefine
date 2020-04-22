@@ -1,3 +1,13 @@
+#### 1.12.0 (2020-04-22)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([3093972d](https://github.com/lykmapipo/predefine/commit/3093972d8f0289a9f5694eff2b367ee059dff99a))
+
+##### New Features
+
+* **plugins:**  ensure namespaced finders & fakers ([0d4c7d5d](https://github.com/lykmapipo/predefine/commit/0d4c7d5d6f13979cdea031f5c0c4ff741079db32))
+
 #### 1.11.0 (2020-04-22)
 
 ##### Chores
