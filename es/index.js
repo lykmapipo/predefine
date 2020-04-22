@@ -3,7 +3,7 @@ import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVer
 import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, Mixed, toObjectIds, areSameInstance, connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
-import { map, zipObject, without, keys, mapValues, pick, includes, omit, omitBy, isEmpty, toUpper, find, forEach, merge, get, isFunction, isArray, flatMap, isMap, trim, uniqWith } from 'lodash';
+import { map, zipObject, without, keys, mapValues, pick, includes, omit, omitBy, isEmpty, toUpper, find, forEach, merge, get, flatMap, isMap, isFunction, isArray, trim, uniqWith } from 'lodash';
 import { topology } from 'topojson-server';
 import { localizedValuesFor, localizedIndexesFor, localize, localizedAbbreviationsFor, localizedKeysFor } from 'mongoose-locale-schema';
 import { Point, LineString, Polygon, Geometry, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection } from 'mongoose-geojson-schemas';
@@ -1160,6 +1160,10 @@ const checkIfBucketExists = (bucket, done) => {
   return done(null, true);
 };
 
+// TODO: load from PREDEFINE_PLUGINS
+// TODO: load from .rc plugins
+// TODO: create, update by namespace
+
 /**
  * @function fakeByNamespace
  * @name fakeByNamespace
@@ -1168,7 +1172,7 @@ const checkIfBucketExists = (bucket, done) => {
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 1.9.0
- * @version 0.1.0
+ * @version 0.2.0
  * @static
  * @public
  * @example
@@ -1193,6 +1197,7 @@ const fakeByNamespace = (schema) => {
         schema.static({
           // args: size = 1, locale = 'en', only = undefined, except = undefined
           [methodName](...args) {
+            // no-arrow
             // this: refer to model static context
             const fakes = this.fake(...args);
             // update with namespace and bucket
@@ -1206,6 +1211,63 @@ const fakeByNamespace = (schema) => {
             }
             // return fakes
             return fakes;
+          },
+        });
+      }
+    }
+  });
+};
+
+/**
+ * @function findByNamespace
+ * @name findByNamespace
+ * @description Schema plugin to extend predefine find by namespace
+ * @param {object} schema valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.12.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * // plug into schema
+ * PredefineSchema.plugin(findByNamespace);
+ *
+ * // use alias
+ * Predefine.findSetting(); //=> Query{...}
+ */
+const findByNamespace = (schema) => {
+  // use namespace map to build namespaced finder
+  forEach(NAMESPACE_MAP, (predefine) => {
+    const { namespace, bucket } = predefine;
+    // ensure namespace and bucket
+    if (areNotEmpty(namespace, bucket)) {
+      // derive namespace finder method name
+      // TODO: findOne
+      const methodName = `find${namespace}`;
+      // check if namespaced finder exists
+      if (!isFunction(schema.statics[methodName])) {
+        // extend schema with namespaced finder
+        schema.static({
+          // args: filter, [projection], [options], [callback]
+          [methodName](filter, projection, options, callback) {
+            // no-arrow
+            // this: refer to model static context
+
+            // ensure namespace and bucket into filter
+            const actualFilter = isFunction(filter)
+              ? mergeObjects({ namespace, bucket })
+              : mergeObjects({ namespace, bucket }, filter);
+
+            // check for callback
+            const actualCallback = find(
+              [filter, projection, options, callback],
+              isFunction
+            );
+
+            // return
+            return this.find(actualFilter, projection, options, actualCallback);
           },
         });
       }
@@ -1462,6 +1524,7 @@ const PredefineSchema = createSchema(
   SCHEMA_OPTIONS,
   actions,
   exportable,
+  findByNamespace,
   fakeByNamespace
 );
 
