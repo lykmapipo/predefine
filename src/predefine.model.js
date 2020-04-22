@@ -57,8 +57,9 @@ import {
   mapToTopoJSON,
   checkIfBucketExists,
   relationSchemaPaths,
-  fakeByNamespace,
 } from './utils';
+
+import { findByNamespace, fakeByNamespace } from './predefine.plugins';
 
 /**
  * @module Predefine
@@ -309,6 +310,7 @@ const PredefineSchema = createSchema(
   SCHEMA_OPTIONS,
   actions,
   exportable,
+  findByNamespace,
   fakeByNamespace
 );
 
