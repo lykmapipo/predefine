@@ -1110,7 +1110,7 @@ export const mapToTopoJSON = (...predefines) => {
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 1.5.0
- * @version 0.1.0
+ * @version 0.2.0
  * @static
  * @public
  * @example
@@ -1140,6 +1140,13 @@ export const transformToPredefine = (val) => {
     'namespace',
     'bucket',
     'populate',
+    'strings',
+    'numbers',
+    'booleans',
+    'dates',
+    'geos',
+    'properties',
+    'relations',
   ];
 
   // transform to predefine
@@ -1157,7 +1164,10 @@ export const transformToPredefine = (val) => {
     dates: pick(data, ...datePaths),
     geos: pick(data, ...geoPaths),
     relations: pick(data, relationPaths),
-    properties: mergeObjects(data.properties, omit(data, ...knownPaths)),
+    properties: omit(
+      mergeObjects(data.properties, omit(data, ...knownPaths)),
+      ...knownPaths
+    ),
   });
 
   // omit empty paths

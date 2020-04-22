@@ -475,6 +475,15 @@ describe('Predefine Utils', () => {
       point: randomPoint(),
       parent: new MongooseTypes.ObjectId().toString(),
       city: faker.address.city(),
+      properties: {
+        country: faker.address.country(),
+        strings: {},
+        numbers: {},
+        booleans: {},
+        dates: {},
+        geos: {},
+        relations: {},
+      },
     };
     const predefine = transformToPredefine(val);
     expect(predefine).to.be.eql({
@@ -487,7 +496,7 @@ describe('Predefine Utils', () => {
       dates: { startedAt: val.startedAt },
       geos: { point: val.point },
       relations: { parent: val.parent },
-      properties: { city: val.city },
+      properties: { city: val.city, country: val.properties.country },
     });
   });
 
