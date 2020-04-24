@@ -1,3 +1,5 @@
+import { omit } from 'lodash';
+import { copyInstance, syncIndexes } from '@lykmapipo/mongoose-common';
 import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
@@ -107,6 +109,42 @@ describe('Predefine Relations Instance Post', () => {
       expect(created.relations.status).to.exist;
       expect(created.relations.status._id).to.eql(status._id);
       done(error, created);
+    });
+  });
+
+  after((done) => clear(done));
+});
+
+describe('Predefine Post Unique Constraints', () => {
+  before((done) => clear(done));
+  before((done) => syncIndexes(done));
+
+  const father = Predefine.fake();
+  const guardian = Predefine.fake();
+
+  const predefine = Predefine.fake();
+  predefine.set({ relations: { parent: father } });
+
+  before((done) => create(father, guardian, done));
+  before((done) => create(predefine, done));
+
+  it('should fail to post with same namespace, name & parent', (done) => {
+    const copied = omit(copyInstance(predefine), '_id');
+    Predefine.post(copied, (error) => {
+      expect(error).to.exist;
+      expect(error.name).to.be.eql('ValidationError');
+      done();
+    });
+  });
+
+  it('should post with same namespace, name & different parent', (done) => {
+    const copied = omit(copyInstance(predefine), '_id');
+    copied.relations.parent = guardian;
+
+    Predefine.post(copied, (error, created) => {
+      expect(error).to.not.exist;
+      expect(created).to.exist;
+      done();
     });
   });
 
