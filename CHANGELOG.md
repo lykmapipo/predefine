@@ -1,3 +1,17 @@
+#### 1.13.0 (2020-04-24)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([39d47dcb](https://github.com/lykmapipo/predefine/commit/39d47dcbe7f73bf6ea2e4b3cd3bd9da18b2a0d07))
+
+##### Refactors
+
+* **indexes:**  include parent relation in unique index ([9c2ea359](https://github.com/lykmapipo/predefine/commit/9c2ea35907bbe2a0cbe025b67d760b6ba816c854))
+
+##### Tests
+
+*  check for create constraints ([8f3d05ee](https://github.com/lykmapipo/predefine/commit/8f3d05ee73f75cdca8bcf75d86dcd68d40dd34b2))
+
 #### 1.12.0 (2020-04-22)
 
 ##### Chores
