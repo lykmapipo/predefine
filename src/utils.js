@@ -241,7 +241,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
- * @version 0.1.0
+ * @version 0.2.0
  * @static
  * @public
  * @example
@@ -252,7 +252,7 @@ export const DEFAULT_BOOLEAN_PATHS = [
  */
 export const uniqueIndexes = () => {
   const indexes = mergeObjects(
-    { namespace: 1, bucket: 1, 'strings.code': 1 },
+    { namespace: 1, bucket: 1, 'relations.parent': 1, 'strings.code': 1 },
     localizedIndexesFor('strings.name')
   );
   return indexes;
