@@ -116,3 +116,81 @@ export const findByNamespace = (schema) => {
     }
   });
 };
+
+/**
+ * @function findRecursiveByNamespace
+ * @name findRecursiveByNamespace
+ * @description Schema plugin to extend predefine find recursive by namespace
+ * @param {object} schema valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.12.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * // plug into schema
+ * PredefineSchema.plugin(findRecursiveByNamespace);
+ *
+ * // use alias
+ * Predefine.findSettingParents(); //=> Query{...}
+ *
+ * Predefine.findSettingChildren(); //=> Query{...}
+ *
+ */
+export const findRecursiveByNamespace = (schema) => {
+  // use namespace map to build namespaced recursive finder
+  forEach(NAMESPACE_MAP, (predefine) => {
+    const { namespace, bucket } = predefine;
+    // ensure namespace and bucket
+    if (areNotEmpty(namespace, bucket)) {
+      // derive recursive namespace finder methods name
+      const parentsMethodName = `find${namespace}Parents`;
+      const childrenMethodName = `find${namespace}Children`;
+
+      // check if namespaced parents recursive finder exists
+      if (!isFunction(schema.statics[parentsMethodName])) {
+        // extend schema with namespaced recursive parents finder
+        schema.static({
+          // args: criteria, [callback]
+          [parentsMethodName](criteria, callback) {
+            // no-arrow
+            // this: refer to model static context
+
+            // ensure namespace and bucket into filter
+            // ensure namespace and bucket into criteria
+            const actualCriteria = mergeObjects(
+              { namespace, bucket },
+              criteria
+            );
+
+            // return
+            return this.findParents(actualCriteria, callback);
+          },
+        });
+      }
+
+      // check if namespaced children recursive finder exists
+      if (!isFunction(schema.statics[childrenMethodName])) {
+        // extend schema with namespaced recursive children finder
+        schema.static({
+          // args: criteria, [callback]
+          [childrenMethodName](criteria, callback) {
+            // no-arrow
+            // this: refer to model static context
+
+            // ensure namespace and bucket into criteria
+            const actualCriteria = mergeObjects(
+              { namespace, bucket },
+              criteria
+            );
+
+            // return
+            return this.findChildren(actualCriteria, callback);
+          },
+        });
+      }
+    }
+  });
+};

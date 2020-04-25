@@ -130,5 +130,31 @@ describe('Predefine findRecursive', () => {
     });
   });
 
+  describe('With Namespace', () => {
+    it('should find children 2-level recursively', (done) => {
+      Predefine.findCategoryChildren({ _id: idOf(parent) }, (error, found) => {
+        expect(error).to.not.exist;
+        expect(found).to.exist.and.to.have.length(2);
+        expect(idOf(found[0])).to.be.eql(idOf(parent));
+        expect(found[0].namespace).to.exist.and.to.be.eql('Category');
+        expect(idOf(found[1])).to.be.eql(idOf(kid));
+        expect(found[1].namespace).to.exist.and.to.be.eql('Category');
+        done(error, found);
+      });
+    });
+
+    it('should find parent 2-level recursively', (done) => {
+      Predefine.findCategoryParents({ _id: idOf(parent) }, (error, found) => {
+        expect(error).to.not.exist;
+        expect(found).to.exist.and.to.have.length(2);
+        expect(idOf(found[0])).to.be.eql(idOf(parent));
+        expect(found[0].namespace).to.exist.and.to.be.eql('Category');
+        expect(idOf(found[1])).to.be.eql(idOf(grand));
+        expect(found[1].namespace).to.exist.and.to.be.eql('Category');
+        done(error, found);
+      });
+    });
+  });
+
   after((done) => clear(done));
 });

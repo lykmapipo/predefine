@@ -59,7 +59,11 @@ import {
   relationSchemaPaths,
 } from './utils';
 
-import { findByNamespace, fakeByNamespace } from './predefine.plugins';
+import {
+  findByNamespace,
+  fakeByNamespace,
+  findRecursiveByNamespace,
+} from './predefine.plugins';
 
 /**
  * @module Predefine
@@ -311,6 +315,7 @@ const PredefineSchema = createSchema(
   actions,
   exportable,
   findByNamespace,
+  findRecursiveByNamespace,
   fakeByNamespace
 );
 
