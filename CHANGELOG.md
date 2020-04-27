@@ -1,3 +1,9 @@
+#### 1.14.1 (2020-04-27)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([7263ce41](https://github.com/lykmapipo/predefine/commit/7263ce41adcd470c11378ebcc7f46857a7256e0e))
+
 #### 1.14.0 (2020-04-25)
 
 ##### Chores
