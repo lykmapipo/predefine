@@ -63,6 +63,7 @@ import {
   findByNamespace,
   fakeByNamespace,
   findRecursiveByNamespace,
+  findOneByNamespace,
 } from './predefine.plugins';
 
 /**
@@ -316,6 +317,7 @@ const PredefineSchema = createSchema(
   exportable,
   findByNamespace,
   findRecursiveByNamespace,
+  findOneByNamespace,
   fakeByNamespace
 );
 

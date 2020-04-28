@@ -86,7 +86,6 @@ export const findByNamespace = (schema) => {
     // ensure namespace and bucket
     if (areNotEmpty(namespace, bucket)) {
       // derive namespace finder method name
-      // TODO: findOne
       const methodName = `find${namespace}`;
       // check if namespaced finder exists
       if (!isFunction(schema.statics[methodName])) {
@@ -188,6 +187,68 @@ export const findRecursiveByNamespace = (schema) => {
 
             // return
             return this.findChildren(actualCriteria, callback);
+          },
+        });
+      }
+    }
+  });
+};
+
+/**
+ * @function findOneByNamespace
+ * @name findOneByNamespace
+ * @description Schema plugin to extend predefine findOne by namespace
+ * @param {object} schema valid mongoose schema
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 1.15.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * // plug into schema
+ * PredefineSchema.plugin(findOneByNamespace);
+ *
+ * // use alias
+ * Predefine.findOneSetting(); //=> Query{...}
+ */
+export const findOneByNamespace = (schema) => {
+  // use namespace map to build namespaced finder
+  forEach(NAMESPACE_MAP, (predefine) => {
+    const { namespace, bucket } = predefine;
+    // ensure namespace and bucket
+    if (areNotEmpty(namespace, bucket)) {
+      // derive namespace finder one method name
+      // TODO: findById
+      const methodName = `findOne${namespace}`;
+      // check if namespaced finder exists
+      if (!isFunction(schema.statics[methodName])) {
+        // extend schema with namespaced finder
+        schema.static({
+          // args: [conditions], [projection], [options], [callback]
+          [methodName](conditions, projection, options, callback) {
+            // no-arrow
+            // this: refer to model static context
+
+            // ensure namespace and bucket into conditions
+            const actualConditions = isFunction(conditions)
+              ? mergeObjects({ namespace, bucket })
+              : mergeObjects({ namespace, bucket }, conditions);
+
+            // check for callback
+            const actualCallback = find(
+              [conditions, projection, options, callback],
+              isFunction
+            );
+
+            // return
+            return this.findOne(
+              actualConditions,
+              projection,
+              options,
+              actualCallback
+            );
           },
         });
       }
