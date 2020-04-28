@@ -1,3 +1,15 @@
+#### 1.15.0 (2020-04-28)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([d1c79a49](https://github.com/lykmapipo/predefine/commit/d1c79a49d9c3e88c11b6f42d187165b118544569))
+  *  force latest version & audit fix ([f24f4fc5](https://github.com/lykmapipo/predefine/commit/f24f4fc57f2dc27faefc5adbc1aa3f07cda5607b))
+
+##### New Features
+
+* **query:**  allow findOne namespaced finder ([d597b75e](https://github.com/lykmapipo/predefine/commit/d597b75eea1bb83a67562657674b700e9c85cace))
+
 #### 1.14.1 (2020-04-27)
 
 ##### Chores
