@@ -1,3 +1,19 @@
+#### 1.16.0 (2020-05-09)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([1e36c9e6](https://github.com/lykmapipo/predefine/commit/1e36c9e6eb16d795a84f2426e9bfe2f1e2a3c95b))
+
+##### New Features
+
+*  support env autopopulate option ([e5672473](https://github.com/lykmapipo/predefine/commit/e5672473e058df1dd1637b22681c53577bb443a3))
+* **releations:**  remove duplicates ([e50d82f1](https://github.com/lykmapipo/predefine/commit/e50d82f16d7b4e7a9f50565be5c10ae34bf02791))
+
+##### Tests
+
+* **taggable:**  check for relations inclusion ([4120a4e2](https://github.com/lykmapipo/predefine/commit/4120a4e219fd748d21dbd6b369ccf5c3149c3731))
+* **aggregations:**  check for relations inclusion ([60421689](https://github.com/lykmapipo/predefine/commit/6042168977a5e6b3ef6acf2b2acb1e9559a1db0b))
+
 #### 1.15.1 (2020-05-03)
 
 ##### Chores
