@@ -34,6 +34,7 @@ import {
   rcFor,
 } from '@lykmapipo/env';
 import {
+  areSameObjectId,
   collectionNameOf,
   copyInstance,
   createSubSchema,
@@ -109,6 +110,7 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 export const BUCKETS = sortedUniq(map(NAMESPACE_MAP, 'bucket'));
 
+// TODO: PREDEFINE_AUTOPOPULATE_OPTION
 export const OPTION_SELECT = {
   'strings.name': 1,
   'strings.abbreviation': 1,
@@ -369,13 +371,15 @@ export const parseGivenRelations = () => {
 
     // prepare relation schema
     const relationSchema = mergeObjects(relation, {
+      // FIX: type: array ? [ObjectId] : ObjectId,
       type: ObjectId,
       ref,
       index: true,
       autopopulate: autopopulateOptns,
       taggable: true,
-      // exportable: true,
+      // TODO: exportable: true,
       aggregatable: { unwind: true },
+      duplicate: areSameObjectId,
       default: undefined,
     });
 
