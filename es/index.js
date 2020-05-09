@@ -1,6 +1,6 @@
 import { sortedUniq, permissionsFor, scopesFor, mergeObjects, randomColor, variableNameFor, areNotEmpty, idOf, flat, compact, uniq, pkg } from '@lykmapipo/common';
-import { rcFor, getString, getStringSet, isTest, getObject, apiVersion as apiVersion$1 } from '@lykmapipo/env';
-import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, model, createSchema, Mixed, toObjectIds, areSameInstance, connect } from '@lykmapipo/mongoose-common';
+import { rcFor, getString, getStringSet, getObject, isTest, apiVersion as apiVersion$1 } from '@lykmapipo/env';
+import { collectionNameOf, createSubSchema, copyInstance, createVarySubSchema, ObjectId, areSameObjectId, model, createSchema, Mixed, toObjectIds, areSameInstance, connect } from '@lykmapipo/mongoose-common';
 import { mount } from '@lykmapipo/express-common';
 import { Router, getFor, schemaFor, downloadFor, postFor, getByIdFor, patchFor, putFor, deleteFor, start as start$1 } from '@lykmapipo/express-rest-actions';
 import { map, zipObject, without, keys, mapValues, pick, includes, omit, omitBy, isEmpty, toUpper, find, forEach, merge, get, flatMap, isMap, isFunction, isArray, trim, uniqWith } from 'lodash';
@@ -75,10 +75,10 @@ const OPTION_SELECT = {
   'booleans.preset': 1,
 };
 
-const OPTION_AUTOPOPULATE = {
+const OPTION_AUTOPOPULATE = getObject('PREDEFINE_AUTOPOPULATE_OPTION', {
   select: OPTION_SELECT,
   maxDepth: 1,
-};
+});
 
 const LOCALIZED_STRING_PATHS = ['name', 'abbreviation', 'description'];
 
@@ -324,13 +324,15 @@ const parseGivenRelations = () => {
 
     // prepare relation schema
     const relationSchema = mergeObjects(relation, {
+      // FIX: type: array ? [ObjectId] : ObjectId,
       type: ObjectId,
       ref,
       index: true,
       autopopulate: autopopulateOptns,
       taggable: true,
-      // exportable: true,
+      // TODO: exportable: true,
       aggregatable: { unwind: true },
+      duplicate: areSameObjectId,
       default: undefined,
     });
 
