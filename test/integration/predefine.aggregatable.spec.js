@@ -6,7 +6,7 @@ import {
 } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
-describe('Predefine Relations Aggegation', () => {
+describe('Predefine Relations Aggregation', () => {
   const groups = Predefine.fakeCategory(2);
   const parent = Predefine.fakeCategory();
 
