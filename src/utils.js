@@ -110,7 +110,6 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 export const BUCKETS = sortedUniq(map(NAMESPACE_MAP, 'bucket'));
 
-// TODO: PREDEFINE_AUTOPOPULATE_OPTION
 export const OPTION_SELECT = {
   'strings.name': 1,
   'strings.abbreviation': 1,
@@ -122,10 +121,10 @@ export const OPTION_SELECT = {
   'booleans.preset': 1,
 };
 
-export const OPTION_AUTOPOPULATE = {
+export const OPTION_AUTOPOPULATE = getObject('PREDEFINE_AUTOPOPULATE_OPTION', {
   select: OPTION_SELECT,
   maxDepth: 1,
-};
+});
 
 export const LOCALIZED_STRING_PATHS = ['name', 'abbreviation', 'description'];
 
