@@ -86,7 +86,7 @@ describe('Predefine Utils', () => {
         },
       });
       expect(relation.taggable).to.exist.and.be.true;
-      expect(relation.default).to.be.undefined;
+      expect(relation.default).to.be.a('function');
     });
   });
 
@@ -110,7 +110,7 @@ describe('Predefine Utils', () => {
       expect(rel.autopopulate.maxDepth).to.exist.and.be.equal(1);
       expect(rel.autopopulate.select).to.exist;
       expect(rel.taggable).to.exist.and.be.true;
-      expect(rel.default).to.be.undefined;
+      expect(rel.default).to.be.a('function');
     });
   });
 
@@ -246,7 +246,7 @@ describe('Predefine Utils', () => {
   it('should provide booleans schema paths', () => {
     const paths = booleanSchemaPaths();
     expect(paths).to.exist.and.be.an('array');
-    expect(paths).to.include.members(['default', 'preset']);
+    expect(paths).to.include.members(['default', 'preset', 'system']);
   });
 
   it('should provide booleans default value', () => {
@@ -274,6 +274,14 @@ describe('Predefine Utils', () => {
     expect(preset.options.exportable).to.be.true;
     expect(preset.options.fake).to.exist.and.be.a('function');
     expect(preset.options.fake(faker)).to.exist;
+
+    const system = booleans.path('system');
+    expect(system).to.exist;
+    expect(system).to.be.an.instanceof(SchemaTypes.Boolean);
+    expect(system.options.index).to.be.true;
+    expect(system.options.exportable).to.be.true;
+    expect(system.options.fake).to.exist.and.be.a('function');
+    expect(system.options.fake(faker)).to.exist;
   });
 
   it('should provide dates schema paths', () => {

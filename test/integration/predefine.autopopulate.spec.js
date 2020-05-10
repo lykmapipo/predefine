@@ -1,10 +1,5 @@
 import { idOf } from '@lykmapipo/common';
-import {
-  expect,
-  clear,
-  create,
-  // enableDebug,
-} from '@lykmapipo/mongoose-test-helpers';
+import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Relations Autopopulate', () => {

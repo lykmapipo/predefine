@@ -232,6 +232,14 @@ export const DEFAULT_BOOLEAN_PATHS = [
     default: () => false,
     fake: (f) => f.random.boolean(),
   },
+  {
+    name: 'system',
+    type: Boolean,
+    index: true,
+    exportable: true,
+    default: () => false,
+    fake: (f) => f.random.boolean(),
+  },
 ];
 
 /**
@@ -332,7 +340,7 @@ export const parseNamespaceRelations = () => {
       taggable: true,
       // exportable: true,
       aggregatable: { unwind: true },
-      default: undefined,
+      default: () => undefined,
     });
   });
 
@@ -379,7 +387,7 @@ export const parseGivenRelations = () => {
       // TODO: exportable: true,
       aggregatable: { unwind: true },
       duplicate: areSameObjectId,
-      default: undefined,
+      default: () => undefined,
     });
 
     // return relation schema
