@@ -1,3 +1,13 @@
+#### 1.17.0 (2020-05-10)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([3b2bc537](https://github.com/lykmapipo/predefine/commit/3b2bc537fe826b1c9825f57cdf1c5f4676ba371f))
+
+##### New Features
+
+*  ensure defaults & add system value flag ([cdb6bbc1](https://github.com/lykmapipo/predefine/commit/cdb6bbc1953b26b8f687f565fb411c50bc6e9673))
+
 #### 1.16.1 (2020-05-10)
 
 ##### Chores
