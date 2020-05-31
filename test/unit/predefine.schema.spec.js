@@ -3,7 +3,7 @@ import { Schema, SchemaTypes } from '@lykmapipo/mongoose-common';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
 import Predefine from '../../src/predefine.model';
 
-describe('Predefine Schema', () => {
+describe.only('Predefine Schema', () => {
   it('should have namespace field', () => {
     const namespace = Predefine.path('namespace');
 
@@ -374,9 +374,21 @@ describe('Predefine Schema', () => {
 
   it('should have relations field', () => {
     const relations = Predefine.path('relations');
+    const parent = Predefine.path('relations.parent');
 
     expect(relations).to.exist;
+    expect(relations).to.be.an.instanceof(SchemaTypes.Embedded);
     expect(relations.options.type).to.be.an.instanceof(Schema);
+
+    expect(parent).to.exist;
+    expect(parent).to.be.an.instanceof(SchemaTypes.ObjectId);
+    expect(parent.options).to.exist;
+    expect(parent.options).to.be.an('object');
+    expect(parent.options.type).to.exist;
+    expect(parent.options.ref).to.exist;
+    expect(parent.options.exists).to.exist;
+    expect(parent.options.autopopulate).to.exist;
+    expect(parent.options.index).to.be.true;
   });
 
   it('should have properties field', () => {
