@@ -1,3 +1,16 @@
+#### 1.18.0 (2020-05-31)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([2682c9c7](https://github.com/lykmapipo/predefine/commit/2682c9c7501d4f4cece19f655eedaf4122896314))
+
+##### Bug Fixes
+
+* **model:**
+  *  use merge on patch & put ([eda111af](https://github.com/lykmapipo/predefine/commit/eda111af0c21bd4ce5452be15fc5efbd24bab127))
+  *  improve relation schema options ([1fb1be19](https://github.com/lykmapipo/predefine/commit/1fb1be19842955af99d0a55447bd91aa2a3da356))
+* **models:**  safe merge relations ([66e3d0fc](https://github.com/lykmapipo/predefine/commit/66e3d0fc9f39f4feccfeb02259fffd9b6942183c))
+
 #### 1.17.1 (2020-05-20)
 
 ##### Chores
