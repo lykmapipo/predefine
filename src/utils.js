@@ -19,7 +19,6 @@ import {
 } from 'lodash';
 import { topology as toTopoJSON } from 'topojson-server';
 import {
-  safeMergeObjects,
   mergeObjects,
   permissionsFor,
   randomColor,
@@ -332,7 +331,7 @@ export const parseNamespaceRelations = () => {
   // map relations to valid schema definitions
   let relations = zipObject(paths, paths);
   relations = mapValues(relations, () => {
-    return safeMergeObjects({
+    return mergeObjects({
       type: ObjectId,
       ref: MODEL_NAME,
       index: true,
@@ -378,9 +377,8 @@ export const parseGivenRelations = () => {
         : mergeObjects(autopopulate, { maxDepth: 1 });
 
     // prepare relation schema
-    const relationSchema = safeMergeObjects(relation, {
-      // FIX: type: array ? [ObjectId] : ObjectId,
-      type: ObjectId,
+    const relationSchema = mergeObjects(relation, {
+      type: array ? [{ type: ObjectId, ref }] : ObjectId,
       ref,
       index: true,
       autopopulate: autopopulateOptns,
@@ -392,7 +390,7 @@ export const parseGivenRelations = () => {
     });
 
     // return relation schema
-    return array ? [relationSchema] : relationSchema;
+    return relationSchema;
   });
 
   // return parsed relations
@@ -470,7 +468,8 @@ export const createRelationsSchema = () => {
     return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
   });
 
-  return createSubSchema(allowedRelations);
+  const relationsSubSchema = createSubSchema(allowedRelations);
+  return relationsSubSchema;
 };
 
 /**

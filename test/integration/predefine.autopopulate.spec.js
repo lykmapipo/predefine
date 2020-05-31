@@ -1,5 +1,10 @@
 import { idOf } from '@lykmapipo/common';
-import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
+import {
+  expect,
+  clear,
+  create,
+  // enableDebug,
+} from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Relations Autopopulate', () => {
@@ -7,7 +12,7 @@ describe('Predefine Relations Autopopulate', () => {
   const parent = Predefine.fakeCategory();
 
   const kid = Predefine.fakeCategory();
-  kid.set({ relations: { parent, groups } });
+  kid.set({ relations: { parent, groups: [...groups, ...groups] } });
 
   before((done) => clear(done));
   before((done) => create(parent, done));
@@ -27,7 +32,7 @@ describe('Predefine Relations Autopopulate', () => {
       expect(found[0].relations.parent.numbers).to.exist;
       expect(found[0].relations.parent.booleans).to.exist;
 
-      // asser populated groups
+      // assert populated groups
       expect(found[0].relations.groups).to.exist;
       expect(found[0].relations.groups).to.have.length(2);
       expect(found[0].relations.groups[0].strings).to.exist;

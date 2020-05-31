@@ -3,7 +3,7 @@ import { Schema, SchemaTypes } from '@lykmapipo/mongoose-common';
 import { expect } from '@lykmapipo/mongoose-test-helpers';
 import Predefine from '../../src/predefine.model';
 
-describe.only('Predefine Schema', () => {
+describe('Predefine Schema', () => {
   it('should have namespace field', () => {
     const namespace = Predefine.path('namespace');
 
