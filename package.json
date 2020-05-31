@@ -12,6 +12,7 @@
     "pretest": "npm run lint",
     "posttest": "rimraf test/fixtures/*.csv",
     "posttest:unit": "rimraf test/fixtures/*.csv",
+    "posttest:integration": "rimraf test/fixtures/*.csv",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --exit --timeout=8000 --require @babel/register test/**/*.spec.js",
     "test:unit": "NODE_ENV=test npm run pretest && NODE_ENV=test mocha --exit --timeout=8000 --require @babel/register test/unit/**/*.spec.js",
     "test:integration": "NODE_ENV=test npm run pretest && NODE_ENV=test mocha --exit --timeout=8000 --require @babel/register test/integration/**/*.spec.js",
@@ -113,7 +114,7 @@
     "lodash": ">=4.17.15",
     "mongoose-geojson-schemas": ">=0.12.3",
     "mongoose-locale-schema": ">=0.4.22",
-    "mongoose-rest-actions": ">=0.29.24",
+    "mongoose-rest-actions": ">=0.30.0",
     "topojson-server": ">=3.0.1"
   },
   "engines": {

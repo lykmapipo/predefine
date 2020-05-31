@@ -1,12 +1,19 @@
 import _ from 'lodash';
-import { expect, clear, create } from '@lykmapipo/mongoose-test-helpers';
+import {
+  expect,
+  clear,
+  create,
+  // enableDebug,
+} from '@lykmapipo/mongoose-test-helpers';
 import { Predefine } from '../../src';
 
 describe('Predefine Static Patch', () => {
+  const groups = Predefine.fake(2);
   const predefine = Predefine.fake();
 
   before((done) => clear(done));
 
+  before((done) => create(groups, done));
   before((done) => create(predefine, done));
 
   it('should be able to patch', (done) => {
@@ -16,6 +23,28 @@ describe('Predefine Static Patch', () => {
       expect(updated).to.exist;
       expect(updated._id).to.eql(predefine._id);
       expect(updated.strings.description.en).to.eql(strings.description.en);
+      done(error, updated);
+    });
+  });
+
+  it('should be able to patch with relations', (done) => {
+    const updates = { relations: { groups } };
+    Predefine.patch(predefine._id, updates, (error, updated) => {
+      expect(error).to.not.exist;
+      expect(updated).to.exist;
+      expect(updated._id).to.eql(predefine._id);
+      expect(updated.relations.groups).to.have.length(2);
+      done(error, updated);
+    });
+  });
+
+  it('should be able to patch with changed relations', (done) => {
+    const updates = { relations: { groups: [groups[0]] } };
+    Predefine.patch(predefine._id, updates, (error, updated) => {
+      expect(error).to.not.exist;
+      expect(updated).to.exist;
+      expect(updated._id).to.eql(predefine._id);
+      expect(updated.relations.groups).to.have.length(1);
       done(error, updated);
     });
   });
