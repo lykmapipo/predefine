@@ -1,3 +1,13 @@
+#### 1.19.1 (2020-06-23)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([5b4028f7](https://github.com/lykmapipo/predefine/commit/5b4028f755f46ecd3b45ac378b4f1e72af3a0dd6))
+
+##### New Features
+
+* **utils:**  ensure namespace & domain on transform ([09a1f2b5](https://github.com/lykmapipo/predefine/commit/09a1f2b5b6fb0dbb82fdeb066825410830576492))
+
 #### 1.19.0 (2020-06-23)
 
 ##### Chores
