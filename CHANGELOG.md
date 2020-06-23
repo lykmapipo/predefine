@@ -1,3 +1,13 @@
+#### 1.19.0 (2020-06-23)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([e63857ff](https://github.com/lykmapipo/predefine/commit/e63857ff00f96aa4fbed2cb09930c0fa895d32e7))
+
+##### New Features
+
+* **model:**  add domain field ([5dd299fa](https://github.com/lykmapipo/predefine/commit/5dd299fa81518fa28e869409148d32480c856f8b))
+
 #### 1.18.1 (2020-06-11)
 
 ##### Chores
