@@ -1083,7 +1083,7 @@ const mapToTopoJSON = (...predefines) => {
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 1.5.0
- * @version 0.2.0
+ * @version 0.3.0
  * @static
  * @public
  * @example
@@ -1112,6 +1112,7 @@ const transformToPredefine = (val) => {
     ...relationPaths,
     'namespace',
     'bucket',
+    'domain',
     'populate',
     'strings',
     'numbers',
@@ -1126,6 +1127,7 @@ const transformToPredefine = (val) => {
   let predefine = mergeObjects({
     namespace: data.namespace,
     bucket: data.bucket,
+    domain: data.domain,
     strings: mapValues(pick(data, ...stringPaths), (value, key) => {
       if (includes(LOCALIZED_STRING_PATHS, key)) {
         return localizedValuesFor({ en: value });
