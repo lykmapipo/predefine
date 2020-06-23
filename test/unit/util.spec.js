@@ -40,6 +40,7 @@ describe('Predefine Utils', () => {
     expect(indexes).to.exist.and.be.an('object');
     expect(indexes.namespace).to.exist.and.be.equal(1);
     expect(indexes.bucket).to.exist.and.be.equal(1);
+    expect(indexes.domain).to.exist.and.be.equal(1);
     expect(indexes['relations.parent']).to.exist.and.be.equal(1);
     expect(indexes['strings.code']).to.exist.and.be.equal(1);
     expect(indexes['strings.name.en']).to.exist.and.be.equal(1);

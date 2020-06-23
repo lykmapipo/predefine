@@ -38,6 +38,23 @@ describe('Predefine Schema', () => {
     expect(bucket.options.fake).to.exist;
   });
 
+  it('should have domain field', () => {
+    const domain = Predefine.path('domain');
+
+    expect(domain).to.exist;
+    expect(domain).to.be.instanceof(SchemaTypes.String);
+    expect(domain.options).to.exist;
+    expect(domain.options).to.be.an('object');
+    expect(domain.options.type).to.exist;
+    expect(domain.options.trim).to.be.true;
+    // expect(domain.options.required).to.be.true;
+    expect(domain.options.index).to.be.true;
+    expect(domain.options.searchable).to.be.true;
+    expect(domain.options.taggable).to.be.true;
+    expect(domain.options.hide).to.exist;
+    expect(domain.options.fake).to.exist;
+  });
+
   it('should have name field', () => {
     const name = Predefine.path('strings.name');
     const en = Predefine.path('strings.name.en');

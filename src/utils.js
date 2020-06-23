@@ -110,6 +110,11 @@ export const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 export const BUCKETS = sortedUniq(map(NAMESPACE_MAP, 'bucket'));
 
+export const DOMAINS = getStringSet(
+  'PREDEFINE_DOMAINS',
+  [...NAMESPACES].concat(rc.domains)
+);
+
 export const OPTION_SELECT = {
   'strings.name': 1,
   'strings.abbreviation': 1,
@@ -261,7 +266,13 @@ export const DEFAULT_BOOLEAN_PATHS = [
  */
 export const uniqueIndexes = () => {
   const indexes = mergeObjects(
-    { namespace: 1, bucket: 1, 'relations.parent': 1, 'strings.code': 1 },
+    {
+      namespace: 1,
+      bucket: 1,
+      domain: 1,
+      'relations.parent': 1,
+      'strings.code': 1,
+    },
     localizedIndexesFor('strings.name')
   );
   return indexes;
