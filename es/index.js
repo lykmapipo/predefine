@@ -64,6 +64,11 @@ const DEFAULT_BUCKET = collectionNameOf(DEFAULT_NAMESPACE);
 
 const BUCKETS = sortedUniq(map(NAMESPACE_MAP, 'bucket'));
 
+const DOMAINS = getStringSet(
+  'PREDEFINE_DOMAINS',
+  [...NAMESPACES].concat(rc.domains)
+);
+
 const OPTION_SELECT = {
   'strings.name': 1,
   'strings.abbreviation': 1,
@@ -215,7 +220,13 @@ const DEFAULT_BOOLEAN_PATHS = [
  */
 const uniqueIndexes = () => {
   const indexes = mergeObjects(
-    { namespace: 1, bucket: 1, 'relations.parent': 1, 'strings.code': 1 },
+    {
+      namespace: 1,
+      bucket: 1,
+      domain: 1,
+      'relations.parent': 1,
+      'strings.code': 1,
+    },
     localizedIndexesFor('strings.name')
   );
   return indexes;
@@ -332,8 +343,7 @@ const parseGivenRelations = () => {
 
     // prepare relation schema
     const relationSchema = mergeObjects(relation, {
-      // FIX: type: array ? [ObjectId] : ObjectId,
-      type: ObjectId,
+      type: array ? [{ type: ObjectId, ref }] : ObjectId,
       ref,
       index: true,
       autopopulate: autopopulateOptns,
@@ -345,7 +355,7 @@ const parseGivenRelations = () => {
     });
 
     // return relation schema
-    return array ? [relationSchema] : relationSchema;
+    return relationSchema;
   });
 
   // return parsed relations
@@ -423,7 +433,8 @@ const createRelationsSchema = () => {
     return includes(ignoredRelations, key) || includes(ignoredRelations, ref);
   });
 
-  return createSubSchema(allowedRelations);
+  const relationsSubSchema = createSubSchema(allowedRelations);
+  return relationsSubSchema;
 };
 
 /**
@@ -1454,8 +1465,9 @@ const PredefineSchema = createSchema(
   {
     /**
      * @name namespace
-     * @alias domain
-     * @description Human readable namespace of a predefined.
+     * @description Machine readable namespace of a predefined.
+     *
+     * Its a super-class when do data modelling.
      *
      * @type {object}
      * @property {object} type - schema(data) type
@@ -1494,6 +1506,8 @@ const PredefineSchema = createSchema(
      * @alias key
      * @description Machine readable collection name of a predefine.
      *
+     * Its a table or collection name as when do database modelling.
+     *
      * @type {object}
      * @property {object} type - schema(data) type
      * @property {boolean} required - mark required
@@ -1519,6 +1533,42 @@ const PredefineSchema = createSchema(
       trim: true,
       required: true,
       enum: BUCKETS,
+      index: true,
+      searchable: true,
+      taggable: true,
+      hide: !isTest(),
+      fake: true,
+    },
+
+    /**
+     * @name domain
+     * @description Human readable domain of a predefined.
+     *
+     * Its a sub-class inherit from super-class(namespace) when do
+     * data modelling.
+     *
+     * @type {object}
+     * @property {object} type - schema(data) type
+     * @property {boolean} trim - force trimming
+     * @property {boolean} enum - list of acceptable values
+     * @property {boolean} index - ensure database index
+     * @property {boolean} searchable - allow for searching
+     * @property {boolean} taggable - allow field use for tagging
+     * @property {boolean} hide - mark field as hidden
+     * @property {boolean} default - default value set when none provided
+     * @property {object|boolean} fake - fake data generator options
+     *
+     * @since 1.19.0
+     * @version 0.1.0
+     * @instance
+     * @example
+     * Unit, Currency
+     *
+     */
+    domain: {
+      type: String,
+      trim: true,
+      enum: DOMAINS,
       index: true,
       searchable: true,
       taggable: true,
@@ -1767,6 +1817,9 @@ PredefineSchema.methods.preValidate = function preValidate(done) {
   const bucketAndNamespace = ensureBucketAndNamespace(bucketOrNamespace);
   this.set(bucketAndNamespace);
 
+  // ensure domain
+  this.domain = this.domain || this.namespace;
+
   // ensure code
   this.strings.code =
     trim(this.strings.code) || this.strings.abbreviation[DEFAULT_LOCALE];
@@ -1820,7 +1873,7 @@ PredefineSchema.statics.prepareSeedCriteria = (seed) => {
   // use fields to criteria
   const names = localizedKeysFor('strings.name');
   const fieldsCriteria = flat(
-    pick(copyOfSeed, 'namespace', 'bucket', 'strings.code', ...names)
+    pick(copyOfSeed, 'namespace', 'bucket', 'domain', 'strings.code', ...names)
   );
   criteria = mergeObjects(criteria, fieldsCriteria);
 
@@ -1866,7 +1919,7 @@ PredefineSchema.statics.prepareSeedCriteria = (seed) => {
  */
 PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   // normalize criteria
-  const { _id, namespace, bucket, ...filters } = mergeObjects(criteria);
+  const { _id, namespace, bucket, domain, ...filters } = mergeObjects(criteria);
 
   const allowDefault = !isEmpty(namespace || bucket);
   const allowId = !isEmpty(_id);
@@ -1875,6 +1928,7 @@ PredefineSchema.statics.getOneOrDefault = (criteria, done) => {
   const byDefault = mergeObjects({
     namespace,
     bucket,
+    domain,
     'booleans.default': true,
   });
   const byId = mergeObjects({ _id });
