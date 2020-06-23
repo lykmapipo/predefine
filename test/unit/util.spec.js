@@ -477,6 +477,9 @@ describe('Predefine Utils', () => {
 
   it('should transform value to predefine', () => {
     const val = {
+      namespace: 'AdministrativeArea',
+      bucket: 'administrativeareas',
+      domain: 'Region',
       name: faker.name.findName(),
       description: faker.lorem.sentence(),
       weight: 1,
@@ -497,6 +500,9 @@ describe('Predefine Utils', () => {
     };
     const predefine = transformToPredefine(val);
     expect(predefine).to.be.eql({
+      namespace: 'AdministrativeArea',
+      bucket: 'administrativeareas',
+      domain: 'Region',
       strings: {
         name: { en: val.name, sw: val.name },
         description: { en: val.description, sw: val.description },
