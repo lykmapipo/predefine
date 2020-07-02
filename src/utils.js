@@ -1167,6 +1167,7 @@ export const transformToPredefine = (val) => {
     'geos',
     'properties',
     'relations',
+    '_id',
   ];
 
   // transform to predefine
